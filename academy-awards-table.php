@@ -3,7 +3,7 @@
  * Plugin Name: Lunara Film - Academy Awards Database
  * Plugin URI: https://lunarafilm.com/oscars/
  * Description: A premium, server-side searchable database of every Academy Award nominee and winner (1st ceremony through 2025), compiled and maintained by Lunara Film.
- * Version: 2.8.20
+ * Version: 2.8.21
  * Author: Lunara Film (Dalton Johnson)
  * Author URI: https://lunarafilm.com/
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('AAT_VERSION', '2.8.20');
+define('AAT_VERSION', '2.8.21');
 define('AAT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AAT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AAT_BUNDLED_CSV_PATH', AAT_PLUGIN_DIR . 'data/oscars.csv');
@@ -91,6 +91,15 @@ class Academy_Awards_Table {
     const LABEL_RULES = 'l2';
     // 2.8.12: seconds Batcache/edge keep an anonymous Oscars route (was the platform's 300).
     const VIRTUAL_ROUTE_MAX_AGE = 900;
+    // 2.8.21: what a poster tells the browser about its rendered width. Measured
+    // on lunarafilm.com: posters render 72-180px wide on phones and 86-340px on
+    // desktop, so WordPress's default "(max-width: 768px) 100vw, 768px" made a
+    // phone fetch the 780w file for a 96px card. Callers that know their layout
+    // pass their own 'sizes'; WordPress prepends "auto, " for lazy images itself.
+    const POSTER_SIZES_DEFAULT = '(max-width: 820px) 180px, 340px';
+    // 2.8.21: srcset widths added between WordPress's 200w and 683w, as image-CDN
+    // resizes of the original, so a 96px card at 3x (288px) can pick 320w, not 683w.
+    const POSTER_SRCSET_WIDTHS = array(320, 400, 480, 600);
 
     private static $instance = null;
 
@@ -15148,18 +15157,67 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
             'loading' => 'lazy',
             'decoding' => 'async',
             'class' => 'aat-poster-img',
+            'sizes' => self::POSTER_SIZES_DEFAULT, // 2.8.21
         );
         if ($display_title !== '') {
             $defaults['alt'] = $display_title . ' poster';
         }
         $attrs = is_array($attrs) ? array_merge($defaults, $attrs) : $defaults;
+        // 2.8.21: only this call gets the extra srcset widths; other images on the page are untouched.
+        add_filter('wp_calculate_image_srcset', array($this, 'add_poster_srcset_widths'), 20, 5);
         $html = wp_get_attachment_image($aid, $size, false, $attrs);
+        remove_filter('wp_calculate_image_srcset', array($this, 'add_poster_srcset_widths'), 20);
         if ($display_title !== '' && is_string($html) && $html !== '') {
             $safe_title = esc_attr($display_title . ' poster');
             $html = preg_replace('/\salt="[^"]*"/i', ' alt="' . $safe_title . '"', $html, 1);
             $html = preg_replace('/\sdata-image-title="[^"]*"/i', ' data-image-title="' . $safe_title . '"', $html, 1);
         }
         return $html;
+    }
+
+    /**
+     * 2.8.21: add POSTER_SRCSET_WIDTHS to a poster's srcset as image-CDN resizes
+     * of the original. Runs after Jetpack's own srcset filter (priority 10),
+     * which on this site adds nothing: its 2x/3x multiples of the content width
+     * exceed a 780px poster. Skips a width within 50px of an existing candidate
+     * or wider than the original, and does nothing when no CDN is available
+     * (a `?w=` on a plain upload URL would just serve the full file).
+     */
+    public function add_poster_srcset_widths($sources, $size_array, $image_src, $image_meta, $attachment_id) {
+        if (!is_array($sources) || !is_array($image_meta) || empty($image_meta['file']) || empty($image_meta['width'])) {
+            return $sources;
+        }
+        $cdn = null;
+        if (class_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core') && method_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url')) {
+            $cdn = array('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url');
+        } elseif (function_exists('jetpack_photon_url')) {
+            $cdn = 'jetpack_photon_url';
+        }
+        if (!$cdn) {
+            return $sources;
+        }
+        $full_width = (int) $image_meta['width'];
+        $upload     = wp_get_upload_dir();
+        $full_url   = trailingslashit((string) ($upload['baseurl'] ?? '')) . ltrim((string) $image_meta['file'], '/');
+        $existing   = array_map('intval', array_keys($sources));
+        foreach (self::POSTER_SRCSET_WIDTHS as $width) {
+            if ($width >= $full_width) {
+                continue;
+            }
+            foreach ($existing as $have) {
+                if (abs($have - $width) < 50) {
+                    continue 2;
+                }
+            }
+            $url = call_user_func($cdn, $full_url, array('w' => $width));
+            if (!is_string($url) || $url === '') {
+                continue;
+            }
+            $sources[$width] = array('url' => $url, 'descriptor' => 'w', 'value' => $width);
+            $existing[]      = $width;
+        }
+        ksort($sources);
+        return $sources;
     }
 
     private function get_omdb_audit_local_poster_summary($tt) {

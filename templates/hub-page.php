@@ -1440,6 +1440,8 @@ get_header();
                             array(
                                 'loading'       => 'eager',
                                 'fetchpriority' => 'high',
+                                // 2.8.21: the frame renders ~147px wide on phones, 180px on desktop. This is the LCP image on ceremony pages.
+                                'sizes'         => '(max-width: 820px) 150px, 180px',
                             )
                         );
                         if (!empty($dossier_visual['poster_html'])) {

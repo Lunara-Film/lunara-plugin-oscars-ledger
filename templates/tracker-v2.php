@@ -137,7 +137,7 @@ foreach (array('prediction','lock','watch','longshot') as $t) {
 
                                 $poster_html = '';
                                 if ($show_posters && $etype === 'title' && preg_match('/^tt\\d+$/', $eid)) {
-                                    $poster_html = $aat->get_poster_img_html_for_title($eid, array(72, 108), array('class' => 'aat-tracker-poster-img'));
+                                    $poster_html = $aat->get_poster_img_html_for_title($eid, array(72, 108), array('class' => 'aat-tracker-poster-img', 'sizes' => '72px'));
                                 }
                             ?>
                                 <div class="aat-tracker-pick">
