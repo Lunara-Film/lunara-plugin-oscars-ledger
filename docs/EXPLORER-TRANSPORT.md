@@ -35,6 +35,16 @@ five-minute freshness bound is explicit; an already open page is not a realtime
 subscription to later edits. All arbitrary filter combinations and every pager
 URL remain available through PHP regardless of static-cache capacity.
 
+The HTML Page Store explicitly excludes `/oscars/explore/`; its multi-hour TTL
+does not hold an Explorer descriptor. An already open document or an upstream
+HTML cache can still carry an old descriptor. Each successful dynamic fragment
+response advertises the current manifest and its newly published snapshot URL.
+The browser learns that descriptor, discards old-generation entries, and can use
+the new static fragments on subsequent visits to those states without reloading
+the document. An expired manifest initially falls back to PHP. Learning a pointer
+does not renew its payload: the immutable file's own generation and timestamp
+must still pass the five-minute check, even if the dynamic response was cached.
+
 A bounded WordPress cron warmer requests six common first-page states (plain,
 winners, and grouped film/person/company/category). It stops on a failed response
 or its time budget. A daily collector removes expired JSON files after a full day;
@@ -59,6 +69,8 @@ initial load plus `lunara:page:mount`/`lunara:page:teardown` window events.
 `detail.root` scopes each lifecycle. Repeated mounts are idempotent. Cleanup removes
 listeners/captions, aborts requests and cancels timers, animation frames and
 observers. Motion teardown restores final counts and visible server content.
+Ceremony reveals share one observer across mounted sections, retaining the existing
+under-2,000-byte source budget rather than widening the delivery allowance.
 
 Explorer history merges existing state and updates both top-level `url` and
 `lle:{base,url}`. It only owns a popstate when an attached Explorer root matches
@@ -87,6 +99,8 @@ page, the root's `data-lle-snapshot` descriptor, a matching manifest and payload
 served as JSON, and static miss/error fallback. Verify uploads/CDN CORS if its
 origin differs from the page. Verify import/edit invalidation against the current
 generation and the theme lifecycle during enter/filter/back/leave navigation.
+Check descriptor recovery after its five-minute expiry and after a source edit:
+the first miss may use PHP, then repeated states should use fresh static files.
 
 Plain JSON is the portable artifact. Writing a `.gz` sibling does not configure
 WordPress.com or a CDN, so this implementation does not claim it does. Inspect

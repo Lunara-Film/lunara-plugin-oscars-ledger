@@ -25,6 +25,9 @@ const scripts=['ledger-motion','ceremony-dossier'].map(name=>fs.readFileSync(pat
    await page.evaluate(()=>{window.LunaraLedgerMotion.mount(document);window.LunaraCeremonyDossier.mount(document);});
    assert.equal(await page.locator('.aat-motion-caption').count(),sections,'Repeated mount never duplicates phone captions');checks++;
    assert.equal(await page.locator('[data-aat-motion].is-armed').count(),reduced?0:sections,'Reduced motion keeps finished records visible');checks++;
+   assert.equal(await page.evaluate(()=>window.fixtureObservers.filter(io=>[...io.targets].some(el=>el.closest('.aat-ceremony-dossier'))).length),reduced?0:1,'Ceremony sections share one observer without observing reduced-motion content');checks++;
+   await page.evaluate(()=>{const section=document.querySelector('.aat-ceremony-dossier > section:not(.aat-ceremony-dossier-hero)');window.LunaraCeremonyDossier.teardown(section);window.LunaraCeremonyDossier.mount(section);});
+   assert.equal(await page.locator('.aat-dossier-reveal').count(),reduced?0:2,'A section-scoped remount includes that root while leaving the hero visible');checks++;
    await page.locator('.aat-motion-link').first().click();
    assert.equal(await page.locator('.aat-motion-caption.has-pick').count(),1,'Phone tap still shows a caption');checks++;
    await page.evaluate(()=>{for(const observer of window.fixtureObservers){observer.callback([...observer.targets].map(target=>({target,isIntersecting:true})));}});

@@ -92,12 +92,42 @@
             return fallback();
         });
     }
-    if (snapshotConfig.url && snapshotConfig.generation) {
+    function validSnapshotConfig(config) {
+        if (!config || typeof config.generation !== 'string' || !config.generation || typeof config.url !== 'string') { return false; }
+        try {
+            var url = new URL(config.url);
+            return /^https?:$/.test(url.protocol) && !url.username && !url.password;
+        } catch (error) { return false; }
+    }
+    function loadManifest() {
+        if (!validSnapshotConfig(snapshotConfig)) { return; }
+        if (manifestRequest) { manifestRequest.abort(); }
         manifestRequest = abortable();
         readJson(snapshotConfig.url, manifestRequest ? manifestRequest.signal : undefined, true).then(function (data) {
-            if (!disposed && freshSnapshot(data) && data.entries && typeof data.entries === 'object') { snapshots = data.entries; }
+            if (disposed || !freshSnapshot(data) || !data.entries || typeof data.entries !== 'object') { return; }
+            Object.keys(data.entries).forEach(function (url) {
+                var entry = data.entries[url];
+                if (entry && (!snapshots[url] || Number(entry.created_at) > Number(snapshots[url].created_at))) { snapshots[url] = entry; }
+            });
         }).catch(function () {});
     }
+    function learnSnapshot(data) {
+        // A valid same-origin dynamic response may outlive the HTML document's
+        // descriptor. Adopt its current generation before trusting its pointers.
+        var config = data.snapshot_manifest;
+        if (validSnapshotConfig(config)) {
+            var changed = config.generation !== snapshotConfig.generation || config.url !== snapshotConfig.url;
+            if (config.generation !== snapshotConfig.generation) { snapshots = {}; }
+            snapshotConfig = config;
+            if (changed) { loadManifest(); }
+        }
+        if (data.snapshot_url && trustedSnapshotUrl(data.snapshot_url)) {
+            snapshots[data.url] = {url:data.snapshot_url,created_at:Date.now()/1000};
+        }
+        // The immutable payload's own timestamp is still checked on every hit;
+        // learning a pointer never extends the underlying fragment's lifetime.
+    }
+    loadManifest();
 
     function fragmentUrl(url) {
         var u = new URL(url, window.location.href);
@@ -149,7 +179,7 @@
                 document.title = data.title;
             }
             var next = data.url || url;
-            if (data.snapshot_url && trustedSnapshotUrl(data.snapshot_url)) { snapshots[next] = {url: data.snapshot_url, created_at: Date.now() / 1000}; }
+            learnSnapshot(data);
             if (push) {
                 window.history.pushState(historyState(next), '', next);
             } else {

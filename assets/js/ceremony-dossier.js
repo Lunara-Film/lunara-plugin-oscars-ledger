@@ -1,39 +1,41 @@
-/** The server-rendered dossier stays visible without JS and after teardown. */
 (function () {
-    'use strict';
-    if (window.LunaraCeremonyDossier) { window.LunaraCeremonyDossier.mount(document); return; }
-    var instances = new Map();
-    function mount(scope) {
-        scope = scope || document;
-        if (!('IntersectionObserver' in window) || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) { return; }
-        var selector = '.aat-ceremony-dossier > section:not(.aat-ceremony-dossier-hero), .aat-ceremony-dossier > nav, .aat-ceremony-dossier > div.aat-hub-section';
-        var blocks = Array.from(scope.querySelectorAll(selector));
-        if (scope.matches && scope.matches(selector)) { blocks.unshift(scope); }
-        blocks.forEach(function (block) {
-            if (instances.has(block)) { return; }
-            var active = true;
-            var io = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (active && entry.isIntersecting) { entry.target.classList.add('aat-inview'); io.unobserve(entry.target); }
-                });
-            }, {threshold:0,rootMargin:'0px 0px -60px 0px'});
-            block.classList.add('aat-dossier-reveal');
-            io.observe(block);
-            instances.set(block, function () { active = false; io.disconnect(); block.classList.remove('aat-dossier-reveal', 'aat-inview'); });
-        });
-    }
-    function teardown(scope) {
-        instances.forEach(function (cleanup, block) {
-            if (!scope || scope === block || (scope.contains && scope.contains(block))) { cleanup(); instances.delete(block); }
-        });
-    }
-    window.LunaraCeremonyDossier = {mount:mount,teardown:teardown};
-    if (window.LunaraApp && typeof window.LunaraApp.register === 'function') {
-        window.LunaraApp.register('ceremony-dossier', function (scope) { mount(scope); return function () { teardown(scope); }; });
-    } else {
-        window.addEventListener('lunara:page:mount', function (event) { mount(event.detail && event.detail.root); });
-        window.addEventListener('lunara:page:teardown', function (event) { teardown(event.detail && event.detail.root); });
-        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', function () { mount(document); }, {once:true}); }
-        else { mount(document); }
-    }
+  'use strict';
+  var key = 'LunaraCeremonyDossier', blocks = new Set(), io;
+  if (window[key]) { window[key].mount(document); return; }
+  function mount(root) {
+    root = root || document;
+    if (!window.IntersectionObserver || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    if (!io) io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (blocks.has(entry.target) && entry.isIntersecting) {
+          entry.target.classList.add('aat-inview'); io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0, rootMargin:'0px 0px -60px 0px'});
+    var s = '.aat-ceremony-dossier > :is(section:not(.aat-ceremony-dossier-hero),nav,div.aat-hub-section)';
+    var targets = Array.from(root.querySelectorAll(s));
+    if (root.matches && root.matches(s)) targets.push(root);
+    targets.forEach(function (block) {
+      if (blocks.has(block)) return;
+      blocks.add(block); block.classList.add('aat-dossier-reveal'); io.observe(block);
+    });
+  }
+  function teardown(root) {
+    blocks.forEach(function (block) {
+      if (!root || root.contains(block)) {
+        io.unobserve(block); blocks.delete(block); block.classList.remove('aat-dossier-reveal', 'aat-inview');
+      }
+    });
+    if (io && !blocks.size) io.disconnect();
+  }
+  window[key] = {mount:mount, teardown:teardown};
+  if (window.LunaraApp && typeof window.LunaraApp.register === 'function') {
+    window.LunaraApp.register('ceremony-dossier', function (root) { mount(root); return function () { teardown(root); }; });
+  } else {
+    ['mount', 'teardown'].forEach(function (event) {
+      window.addEventListener('lunara:page:' + event, function (e) { window[key][event](e.detail && e.detail.root); });
+    });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { mount(document); }, {once:true});
+    else mount(document);
+  }
 })();

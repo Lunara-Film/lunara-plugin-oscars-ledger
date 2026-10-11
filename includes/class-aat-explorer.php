@@ -351,6 +351,8 @@ final class AAT_Explorer {
         $payload = array('url' => $page['url'], 'title' => self::document_title(''), 'regions' => $page['regions']);
         $static = AAT_Explorer_Store::publish($payload, (string) self::$page_generation, !empty($page['cacheable']));
         if ($static !== '') { $payload['snapshot_url'] = $static; }
+        $descriptor = AAT_Explorer_Store::descriptor((string) self::$page_generation);
+        if ($descriptor) { $payload['snapshot_manifest'] = $descriptor; }
         return $payload;
     }
 
@@ -360,8 +362,8 @@ final class AAT_Explorer {
         $state = $page['state'];
         $dataset = (array) ($page['status']['dataset'] ?? array());
         $search_url = rest_url(AAT_Read_API::NS . '/search');
-        self::fragment_data();
-        $snapshot = AAT_Explorer_Store::descriptor((string) self::$page_generation);
+        $fragment = self::fragment_data();
+        $snapshot = $fragment['snapshot_manifest'] ?? array();
 
         ob_start();
         ?>
