@@ -3,7 +3,7 @@ Contributors: lunarafilm
 Tags: oscars, academy awards, datatable, film, movies
 Requires at least: 6.0
 Tested up to: 6.4
-Stable tag: 2.8.20
+Stable tag: 2.8.21
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,14 @@ Examples:
 * DataTables assets are loaded from the official DataTables CDN.
 
 == Changelog ==
+
+= 2.8.21 =
+* Posters tell the browser how wide they render. Every poster `<img>` the plugin prints carried WordPress's default `sizes="(max-width: 768px) 100vw, 768px"` while rendering 72-180px wide on phones and 86-340px on desktop, so a phone fetched the 780w file (128 KB) for a 96px card; Safari and Firefox ignore the `auto` WordPress prepends for lazy images, so lazy posters did the same. `get_poster_img_html_for_title()` now defaults `sizes` to `(max-width: 820px) 180px, 340px`; callers that know their layout pass their own (the ceremony dossier poster, which is the LCP image on ceremony pages, says 150px/180px; the tracker says 72px).
+* The srcset gains 320/400/480/600w candidates between WordPress's 200w and 683w, as image-CDN (`?w=`) resizes of the original, so a 96px card at 3x can pick 320w instead of 683w. Added only around the poster call (no other image on the page changes), only when Jetpack's CDN is present, never within 50px of an existing candidate or wider than the original.
+* Card backdrops are fetched at 400px. Hub pages paint the poster behind each card's dark wash as a CSS background at the size the `<img>` was requested in (768px); a ceremony page has 41 such cards and CSS backgrounds are never lazy. New `get_card_backdrop_image_url()` re-asks the CDN (or TMDB) for the image at 400px, which the 54-96% navy gradient cannot tell from 768. The hub and table-display backdrop closures use it; entity-page heroes are unchanged.
+* Measured against the live ceremony page with these changes applied (same run, phone 390px at 3x): image bytes 4,138 KB → 1,778 KB; a 96px card now picks the 320w candidate instead of 683w/780w. Desktop poster bytes 1,147 KB → 719 KB.
+* New `tests/poster-img-sizes-runtime.php` exercises the real builder and the backdrop resizer against WordPress's srcset and lazy-`auto` behavior.
+* Thirteen tests no longer pin the plugin version string (the working agreement forbids version pins; every release was failing them until the pins were bumped by hand). They keep their real assertions.
 
 = 2.8.20 =
 * Page store warmer crash fixed. Every warm run since 2.8.14 died at once with `Call to private method Academy_Awards_Table::get_table_name() from scope AAT_Page_Store` (`class-aat-page-store.php:531`), so the Oscars warmer never warmed a page. 2.8.15 then made each run schedule its successor before starting, which turned that one crash into a fatal error every 60 seconds from WP-Cron, with a WordPress "technical issue" email for each. The method is public now. The 2.8.15 note that the 2.8.14 warmer was "killed by the cron time limit" was wrong; this was the cause.
