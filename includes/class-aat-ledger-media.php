@@ -39,7 +39,8 @@ class AAT_Ledger_Media {
         if (array_key_exists($id, self::$memo)) {
             return self::$memo[$id];
         }
-        $key = 'v' . self::VERSION . ':' . $id;
+        $revision = function_exists('get_option') ? (string) get_option('aat_explorer_snapshot_revision', '') : '';
+        $key = 'v' . self::VERSION . ':' . $revision . ':' . $id;
         $hit = wp_cache_get($key, self::CACHE_GROUP);
         if (is_array($hit)) {
             return self::$memo[$id] = $hit;

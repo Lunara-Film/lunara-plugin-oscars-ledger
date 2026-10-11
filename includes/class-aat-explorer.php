@@ -19,6 +19,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once __DIR__ . '/class-aat-explorer-store.php';
+
 final class AAT_Explorer {
 
     const QUERY_VAR = 'aat_explore';
@@ -27,8 +29,10 @@ final class AAT_Explorer {
 
     private static $state = null;
     private static $page = null;
+    private static $page_generation = null;
 
     public static function init() {
+        AAT_Explorer_Store::init();
         add_action('init', array(__CLASS__, 'register_rewrite'), 9);
         add_action('init', array(__CLASS__, 'ensure_rewrite'), 20);
         add_filter('query_vars', array(__CLASS__, 'query_vars'));
@@ -94,11 +98,7 @@ final class AAT_Explorer {
             header('Content-Type: application/json; charset=' . get_option('blog_charset'));
             header('Cache-Control: public, max-age=300');
             header('X-Robots-Tag: noindex');
-            echo wp_json_encode(array(
-                'url' => $page['url'],
-                'title' => self::document_title(''),
-                'regions' => $page['regions'],
-            ));
+            echo wp_json_encode(self::fragment_data());
             exit;
         }
     }
@@ -276,7 +276,9 @@ final class AAT_Explorer {
         if (self::$page !== null) {
             return self::$page;
         }
+        self::$page_generation = AAT_Explorer_Store::eligible() ? AAT_Explorer_Store::generation() : '';
         $state = self::state();
+        $cacheable = $state['q'] === '';
         $notices = array();
 
         // Free text from the no-JS form: take the best match, as the typeahead would.
@@ -298,6 +300,7 @@ final class AAT_Explorer {
         $status = self::api('/status');
         $facets = self::api('/facets', $filters);
         if (is_wp_error($facets)) {
+            $cacheable = false;
             $notices[] = 'Those filters could not be combined, so they were cleared.';
             $state = array_merge($state, array('ceremony' => 0, 'decade' => 0, 'class' => '', 'category' => '', 'winner' => false, 'entity' => array(), 'pg' => 1));
             self::$state = $state;
@@ -308,6 +311,7 @@ final class AAT_Explorer {
         $entities = array();
         foreach ($state['entity'] as $id) {
             $entity = self::api('/entities/' . $id);
+            if (!is_array($entity)) { $cacheable = false; }
             $entities[$id] = is_array($entity) ? $entity : array('id' => $id, 'name' => strtoupper($id), 'missing' => true);
         }
 
@@ -317,12 +321,14 @@ final class AAT_Explorer {
             $list = self::api('/nominations', $filters + array('sort' => $state['sort'], 'page' => $state['pg'], 'per_page' => self::PER_PAGE));
         }
         if (is_wp_error($list)) {
+            $cacheable = false;
             $list = array('total' => 0, 'items' => array(), 'page' => 1, 'pages' => 1);
             $notices[] = 'The ledger could not be read just now. Please try again.';
         }
 
         $heading = self::heading($state, $entities);
         self::$page = array(
+            'cacheable' => $cacheable && is_array($status) && !empty($status['dataset']['nominations']),
             'state' => $state,
             'url' => self::url($state, array('pg' => $state['pg'])),
             'heading' => $heading,
@@ -339,16 +345,27 @@ final class AAT_Explorer {
         return self::$page;
     }
 
+    /** The identical transport contract for full pages and enhanced navigation. */
+    public static function fragment_data() {
+        $page = self::page();
+        $payload = array('url' => $page['url'], 'title' => self::document_title(''), 'regions' => $page['regions']);
+        $static = AAT_Explorer_Store::publish($payload, (string) self::$page_generation, !empty($page['cacheable']));
+        if ($static !== '') { $payload['snapshot_url'] = $static; }
+        return $payload;
+    }
+
     /** The whole page body; the template wraps it in the theme's header and footer. */
     public static function render_page() {
         $page = self::page();
         $state = $page['state'];
         $dataset = (array) ($page['status']['dataset'] ?? array());
         $search_url = rest_url(AAT_Read_API::NS . '/search');
+        self::fragment_data();
+        $snapshot = AAT_Explorer_Store::descriptor((string) self::$page_generation);
 
         ob_start();
         ?>
-<div id="lle" class="lle" data-lle-root data-lle-base="<?php echo esc_url(self::base_url()); ?>" data-lle-search="<?php echo esc_url($search_url); ?>">
+<div id="lle" class="lle" data-lle-root data-lle-base="<?php echo esc_url(self::base_url()); ?>" data-lle-search="<?php echo esc_url($search_url); ?>" data-lle-snapshot="<?php echo esc_attr(wp_json_encode($snapshot)); ?>">
     <section class="lle-hero" aria-labelledby="lle-title">
         <div class="lle-hero__inner">
             <h1 id="lle-title" class="lle-title">Oscar Ledger Explorer</h1>

@@ -8,8 +8,33 @@
  * caption still works), and a section already on screen at load plays immediately.
  */
 ( function () {
-	'use strict';
-
+    'use strict';
+    if (window.LunaraLedgerMotion) { window.LunaraLedgerMotion.mount(document); return; }
+    var instances = new Map();
+    function create(section) {
+        var disposed = false, timers = new Set(), frames = new Set(), removers = [], boxes = [], observer = null;
+        function listen(target, type, callback, options) {
+            target.addEventListener(type, callback, options);
+            removers.push(function () { target.removeEventListener(type, callback, options); });
+        }
+        function frame(callback) {
+            var id = window.requestAnimationFrame(function (at) { frames.delete(id); if (!disposed) { callback(at); } });
+            frames.add(id); return id;
+        }
+        function later(callback, delay) {
+            var id = window.setTimeout(function () { timers.delete(id); if (!disposed) { callback(); } }, delay);
+            timers.add(id); return id;
+        }
+        function cleanup() {
+            disposed = true;
+            if (observer) { observer.disconnect(); }
+            timers.forEach(window.clearTimeout); frames.forEach(window.cancelAnimationFrame);
+            removers.forEach(function (remove) { remove(); });
+            boxes.forEach(function (box) { box.remove(); });
+            section.classList.remove('is-armed', 'is-playing');
+            section.querySelectorAll('.is-selected').forEach(function (link) { link.classList.remove('is-selected'); });
+            section.querySelectorAll('[data-aat-count]').forEach(function (el) { el.textContent = el.getAttribute('data-aat-count'); });
+        }
 	var still = !! ( window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches );
 	var phone = window.matchMedia ? window.matchMedia( '(max-width: 640px)' ) : null;
 
@@ -27,11 +52,11 @@
 			var p = Math.min( 1, ( now - start ) / duration );
 			el.textContent = String( Math.round( from + ( to - from ) * p ) );
 			if ( p < 1 ) {
-				window.requestAnimationFrame( step );
+				frame( step );
 			}
 		};
-		window.setTimeout( function () {
-			window.requestAnimationFrame( step );
+		later( function () {
+			frame( step );
 		}, delay );
 	}
 
@@ -53,7 +78,7 @@
 		var stopped = false;
 		var stop = function () { stopped = true; };
 		[ 'pointerdown', 'wheel', 'touchstart', 'keydown' ].forEach( function ( type ) {
-			stage.addEventListener( type, stop, { passive: true, once: true } );
+			listen( stage, type, stop, { passive: true, once: true } );
 		} );
 		var max = stage.scrollWidth - stage.clientWidth;
 		var start = 0;
@@ -69,11 +94,11 @@
 			var eased = p < 0.5 ? 2 * p * p : 1 - Math.pow( -2 * p + 2, 2 ) / 2;
 			stage.scrollLeft = max * eased;
 			if ( p < 1 ) {
-				window.requestAnimationFrame( step );
+				frame( step );
 			}
 		};
-		window.setTimeout( function () {
-			window.requestAnimationFrame( step );
+		later( function () {
+			frame( step );
 		}, 250 );
 	}
 
@@ -85,8 +110,8 @@
 		var winStep = ( parseFloat( getComputedStyle( section ).getPropertyValue( '--wstep' ) ) || ( isRing ? 0.26 : 0.22 ) ) * 1000;
 
 		// Two frames: commit the armed state, then let the transitions run.
-		window.requestAnimationFrame( function () {
-			window.requestAnimationFrame( function () {
+		frame( function () {
+			frame( function () {
 				section.classList.add( 'is-playing' );
 			} );
 		} );
@@ -133,10 +158,12 @@
 		box.appendChild( meta );
 		box.appendChild( go );
 		var stage = section.querySelector( '.aat-motion-stage' );
+		if ( ! stage ) { return; }
 		stage.parentNode.insertBefore( box, stage.nextSibling );
+		boxes.push( box );
 
 		var current = null;
-		section.addEventListener( 'click', function ( event ) {
+		listen( section, 'click', function ( event ) {
 			var link = event.target.closest ? event.target.closest( '.aat-motion-link' ) : null;
 			if ( ! link || ! phone || ! phone.matches || link === current ) {
 				return; // Desktop, or the second tap: follow the link.
@@ -156,45 +183,43 @@
 		} );
 	}
 
-	function boot() {
-		var sections = document.querySelectorAll( '[data-aat-motion]' );
-		if ( ! sections.length ) {
-			return;
-		}
-		Array.prototype.forEach.call( sections, caption );
-		if ( still ) {
-			return; // Reduced motion: the finished picture stays, captions still work.
-		}
-		if ( ! ( 'IntersectionObserver' in window ) ) {
-			return; // The finished picture stays.
-		}
-		var observer = new IntersectionObserver( function ( entries ) {
-			entries.forEach( function ( entry ) {
-				if ( entry.isIntersecting ) {
-					observer.unobserve( entry.target );
-					play( entry.target );
-				}
-			} );
-		}, { threshold: 0.3 } );
 
-		sections.forEach( function ( section ) {
-			var stage = section.querySelector( '.aat-motion-stage' );
-			if ( stage && section.classList.contains( 'aat-ledger-motion--arc' ) ) {
-				edge( stage );
-				stage.addEventListener( 'scroll', function () { edge( stage ); }, { passive: true } );
-				window.addEventListener( 'resize', function () { edge( stage ); } );
-			}
-			section.classList.add( 'is-armed' );
-			section.querySelectorAll( '[data-aat-count]' ).forEach( function ( el ) {
-				el.textContent = '0';
-			} );
-			observer.observe( section );
-		} );
-	}
-
-	if ( 'loading' === document.readyState ) {
-		document.addEventListener( 'DOMContentLoaded', boot );
-	} else {
-		boot();
-	}
+        caption(section);
+        if (still || !('IntersectionObserver' in window)) { return cleanup; }
+        observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!disposed && entry.isIntersecting) { observer.unobserve(entry.target); play(entry.target); }
+            });
+        }, {threshold:0.3});
+        var stage = section.querySelector('.aat-motion-stage');
+        if (stage && section.classList.contains('aat-ledger-motion--arc')) {
+            edge(stage);
+            listen(stage, 'scroll', function () { edge(stage); }, {passive:true});
+            listen(window, 'resize', function () { edge(stage); });
+        }
+        section.classList.add('is-armed');
+        section.querySelectorAll('[data-aat-count]').forEach(function (el) { el.textContent = '0'; });
+        observer.observe(section);
+        return cleanup;
+    }
+    function mount(scope) {
+        scope = scope || document;
+        var sections = Array.from(scope.querySelectorAll('[data-aat-motion]'));
+        if (scope.matches && scope.matches('[data-aat-motion]')) { sections.unshift(scope); }
+        sections.forEach(function (section) { if (!instances.has(section)) { instances.set(section, create(section)); } });
+    }
+    function teardown(scope) {
+        instances.forEach(function (cleanup, section) {
+            if (!scope || scope === section || (scope.contains && scope.contains(section))) { cleanup(); instances.delete(section); }
+        });
+    }
+    window.LunaraLedgerMotion = {mount:mount,teardown:teardown};
+    if (window.LunaraApp && typeof window.LunaraApp.register === 'function') {
+        window.LunaraApp.register('ledger-motion', function (scope) { mount(scope); return function () { teardown(scope); }; });
+    } else {
+        window.addEventListener('lunara:page:mount', function (event) { mount(event.detail && event.detail.root); });
+        window.addEventListener('lunara:page:teardown', function (event) { teardown(event.detail && event.detail.root); });
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', function () { mount(document); }, {once:true}); }
+        else { mount(document); }
+    }
 }() );

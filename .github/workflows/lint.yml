@@ -48,8 +48,10 @@ jobs:
             | xargs -0 -n1 php -l > /dev/null
           echo "PHP clean"
 
-      - name: Public Ledger presentation behavior
-        run: npm run test:editorial
+      - name: Public Ledger browser behavior
+        run: |
+          set -e
+          for test in tests/*.js; do node "$test"; done
 
       - name: JS syntax
         run: |
