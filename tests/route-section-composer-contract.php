@@ -103,12 +103,12 @@ $expected_entity_sections = array(
     'hero',
     'latest-result',
     'stats-bar',
-    'ledger-motion',
-    'crossroads',
     'review-module',
     'oscar-history',
     'filmography',
     'related-reviews',
+    'ledger-motion',
+    'crossroads',
     'footer',
 );
 $entity_sections = $section_keys($entity_template);

@@ -66,7 +66,7 @@
     font-family: var(--lunara-font-body, Georgia, serif);
     max-width: 1400px;
     margin: 0 auto;
-    padding: clamp(20px, 4vw, 48px) clamp(16px, 3vw, 32px);
+    padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
     background:
         transparent;
     border: 0;
@@ -401,7 +401,7 @@ body.aat-shell-page aside[data-type="type-2"] {
 }
 
 .aat-footer-mobile-hint {
-    display: inline-block;
+    display: none;
     margin-left: 10px;
     color: rgba(255,255,255,0.74);
 }
@@ -462,9 +462,9 @@ body.aat-shell-page aside[data-type="type-2"] {
 /* WordPress editor content injected into hub pages (Ceremonies/Categories/About)
    so Lunara can control intro copy without editing plugin templates. */
 .aat-hub-wp-content {
-    max-width: 900px;
-    margin: 18px auto 0;
-    padding: 16px 18px;
+    max-width: 62ch;
+    margin: 0 auto;
+    padding: 0;
     background: transparent;
     border: 0;
     border-radius: 0;
@@ -549,14 +549,16 @@ body.aat-shell-page aside[data-type="type-2"] {
 }
 
 .aat-hub-card-title {
-    color: var(--aat-gold);
-    font-weight: 700;
-    margin: 0 0 6px 0;
+    color: var(--aat-white);
+    font-weight: 400;
+    margin: 0 0 4px 0;
 }
 
 .aat-hub-card-meta {
-    color: rgba(255,255,255,0.74);
-    font-size: 0.95rem;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
     margin: 0;
 }
 
@@ -584,564 +586,24 @@ body.aat-shell-page aside[data-type="type-2"] {
 }
 
 .aat-hub-chip {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     padding: 8px 14px;
     border-radius: 2px;
     border: 1px solid rgba(201, 169, 97, 0.28);
     color: var(--aat-gold-light);
-    background: rgba(201, 169, 97, 0.08);
+    background: transparent;
     text-decoration: none;
-    transition: var(--aat-transition);
+    transition: border-color .18s ease, color .18s ease;
 }
 
 .aat-hub-chip:hover {
     border-color: var(--aat-gold);
-    background: rgba(201, 169, 97, 0.14);
-    color: var(--aat-gold);
-}
-
-/* Premium category dossier: route-family visual system pass. */
-.aat-premium-category-dossier {
-    display: grid;
-    gap: clamp(22px, 3vw, 34px);
-}
-
-body .aat-container .aat-premium-category-dossier {
-    display: grid !important;
-    gap: clamp(22px, 3vw, 34px) !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
-}
-
-.aat-dossier-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.38fr) minmax(300px, .82fr);
-    gap: clamp(18px, 3vw, 34px);
-    align-items: stretch;
-    padding: 16px 0;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-    box-shadow: none;
-    position: relative;
-    overflow: hidden;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-dossier-hero {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.38fr) minmax(300px, .82fr) !important;
-    gap: clamp(18px, 3vw, 34px) !important;
-    align-items: stretch !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-dossier-hero-copy,
-body .aat-container .aat-premium-category-dossier .aat-hub-subtitle {
-    min-width: 0 !important;
-    max-width: 100% !important;
-}
-
-.aat-dossier-hero > * {
-    position: relative;
-    z-index: 1;
-}
-
-.aat-dossier-hero-copy {
-    display: grid;
-    align-content: center;
-    gap: 14px;
-}
-
-.aat-dossier-hero .aat-hub-title {
-    text-align: left;
-    color: var(--aat-light-gray);
-    letter-spacing: normal;
-    text-transform: none;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    max-width: 100%;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-dossier-hero .aat-hub-title {
-    color: var(--aat-light-gray) !important;
-    font-size: clamp(2rem, 4vw, 3.5rem) !important;
-    line-height: 1.12 !important;
-    max-width: 100% !important;
-    text-align: left !important;
-    text-transform: none !important;
-}
-
-.aat-dossier-hero .aat-hub-subtitle {
-    margin: 0;
-    max-width: 62ch;
-    color: rgba(244,239,227,0.84);
-    text-align: left;
-    font-size: clamp(1rem, 1.18vw, 1.12rem);
-}
-
-.aat-dossier-command-band {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    align-self: center;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-dossier-command-band {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-    align-self: center !important;
-    min-width: 0 !important;
-}
-
-.aat-dossier-command-card {
-    min-height: 118px;
-    padding: 16px 0;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-    display: grid;
-    align-content: end;
-    gap: 8px;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-dossier-command-card {
-    display: grid !important;
-    align-content: end !important;
-    gap: 8px !important;
-    min-height: 118px !important;
-    padding: 16px 0 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background:
-        transparent !important;
-}
-
-.aat-dossier-command-card.is-latest {
-    grid-column: 1 / -1;
-    min-height: 148px;
-    background:
-        transparent;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-dossier-command-card.is-latest {
-    grid-column: 1 / -1 !important;
-    min-height: 148px !important;
-}
-
-.aat-dossier-command-card span {
+    background: transparent;
     color: var(--aat-gold-light);
-    font-size: .875rem;
-    letter-spacing: normal;
-    text-transform: none;
 }
 
-.aat-dossier-command-card strong {
-    color: var(--aat-white);
-    font-size: clamp(1.18rem, 2.2vw, 1.72rem);
-    line-height: 1.08;
-    text-wrap: balance;
-}
-
-.aat-dossier-actions {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-    margin-top: 0;
-}
-
-.aat-premium-category-dossier .aat-category-latest-winner {
-    margin-top: 0;
-    border-radius: 2px;
-}
-
-.aat-premium-category-dossier .aat-stats-bar.aat-entity-stats {
-    display: none;
-}
-
-.aat-era-browser {
-    padding: clamp(20px, 3vw, 30px);
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-era-browser {
-    display: block !important;
-    padding: clamp(20px, 3vw, 30px) !important;
-}
-
-.aat-era-browser .aat-section-head {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 16px 22px;
-    align-items: end;
-    margin-bottom: 18px;
-}
-
-.aat-era-browser .aat-section-head .aat-hub-kicker,
-.aat-era-browser .aat-section-title,
-.aat-era-browser .aat-section-description {
-    grid-column: 1;
-}
-
-.aat-era-browser .aat-category-history-mode {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-    align-self: center;
-}
-
-.aat-era-browser .aat-section-title {
-    font-size: clamp(1.75rem, 3vw, 2.72rem);
-    color: var(--aat-white);
-    letter-spacing: normal;
-}
-
-.aat-era-browser .aat-section-description {
-    max-width: 78ch;
-}
-
-.aat-era-browser .aat-decade-nav {
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 14px;
-    border: 1px solid rgba(201,169,97,.14);
-    border-radius: 2px;
-    background: rgba(2,8,15,.34);
-}
-
-.aat-era-browser .aat-decade-pill {
-    border-radius: 2px;
-    min-height: 44px;
-    padding: 9px 12px;
-    background: rgba(255,255,255,.035);
-}
-
-.aat-era-chapter {
-    margin-top: clamp(24px, 4vw, 46px);
-    padding: clamp(16px, 2.6vw, 26px);
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-}
-
-.aat-era-chapter .aat-decade-heading {
-    margin: 0 0 16px;
-    color: var(--aat-gold);
-    font-size: clamp(1.45rem, 2.7vw, 2.28rem);
-    line-height: 1.05;
-}
-
-.aat-era-chapter-visual {
-    display: grid;
-    grid-template-columns: minmax(96px, 148px) minmax(0, 1fr);
-    gap: 18px;
-    align-items: stretch;
-    margin: 0 0 18px;
-    padding: 14px;
-    border: 1px solid rgba(201,169,97,.18);
-    border-radius: 2px;
-    background:
-        linear-gradient(115deg, rgba(6,14,24,.54), rgba(6,14,24,.94) 54%, rgba(6,14,24,.98)),
-        rgba(6,15,26,.84);
-}
-
-body .aat-container .aat-premium-category-dossier .aat-era-chapter-visual {
-    display: grid !important;
-    grid-template-columns: minmax(96px, 148px) minmax(0, 1fr) !important;
-    gap: 18px !important;
-    margin: 0 0 18px !important;
-    padding: 14px !important;
-}
-
-.aat-era-chapter-media {
-    display: block;
-    min-height: 188px;
-    border-radius: 8px;
-    overflow: hidden;
-    background: rgba(255,255,255,.04);
-    text-decoration: none;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-era-chapter-media {
-    display: block !important;
-    min-height: 188px !important;
-    max-width: 148px !important;
-    aspect-ratio: 2 / 3 !important;
-}
-
-.aat-era-chapter-media img,
-.aat-era-chapter-media .aat-poster-img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.aat-era-chapter-copy {
-    display: grid;
-    align-content: end;
-    gap: 9px;
-    padding: 8px 6px;
-}
-
-.aat-era-chapter-copy h4 {
-    margin: 0;
-    color: var(--aat-white);
-    font-size: clamp(1.22rem, 2.2vw, 1.72rem);
-    line-height: 1.1;
-}
-
-.aat-era-chapter-copy p {
-    margin: 0;
-    max-width: 54ch;
-    color: rgba(244,239,227,0.76);
-    line-height: 1.55;
-}
-
-.aat-premium-category-dossier .aat-decade-ceremonies {
-    display: grid;
-    gap: 14px;
-}
-
-.aat-ledger-card {
-    display: grid;
-    grid-template-columns: minmax(136px, .26fr) minmax(0, 1fr);
-    gap: 16px;
-    align-items: start;
-    padding: 16px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-}
-
-body .aat-container .aat-premium-category-dossier .aat-ledger-card {
-    display: grid !important;
-    grid-template-columns: minmax(136px, .26fr) minmax(0, 1fr) !important;
-    gap: 16px !important;
-}
-
-.aat-ledger-card .aat-category-ceremony-meta {
-    display: grid;
-    gap: 8px;
-    align-content: start;
-    min-width: 0;
-}
-
-.aat-ledger-card .aat-category-history-winner {
-    padding: 0;
-    border: 0;
-    background: transparent;
-}
-
-.aat-ledger-card .aat-category-history-title {
-    font-size: clamp(1.18rem, 1.8vw, 1.54rem);
-    line-height: 1.14;
-}
-
-.aat-premium-category-dossier .aat-ledger-card .aat-category-history-meta {
-    max-width: 64ch;
-}
-
-.aat-premium-category-dossier .aat-ledger-card .aat-category-history-actions {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    margin-top: 8px !important;
-    padding-top: 8px !important;
-    border-top-style: solid;
-}
-
-.aat-premium-category-dossier .aat-ledger-card .aat-category-history-actions .aat-winner-circle-action,
-.aat-premium-category-dossier .aat-ledger-card .aat-nominee-trail-compact .aat-winner-circle-action {
-    width: auto !important;
-    min-height: 44px !important;
-    padding: 6px 10px !important;
-    flex: 0 1 auto !important;
-    font-size: .875rem;
-    letter-spacing: normal;
-}
-
-.aat-premium-category-dossier .aat-ledger-card .aat-nominee-trail-compact {
-    padding-top: 2px;
-}
-
-.aat-premium-category-dossier .aat-ledger-card .aat-nominee-trail-compact .aat-nominee-trail-summary {
-    min-height: 44px;
-    padding: 4px 11px;
-    border: 1px solid rgba(201,169,97,.18);
-    border-radius: 2px;
-    background: rgba(4,13,22,.26);
-    color: rgba(244,239,227,0.84);
-    display: inline-flex;
-    align-items: center;
-}
-
-.aat-ledger-card .aat-nominee-trail {
-    grid-column: 2;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .aat-dossier-hero::before {
-        background-position: 0 0;
-    }
-}
-
-@media (max-width: 900px) {
-    .aat-dossier-hero,
-    .aat-era-browser .aat-section-head {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    body .aat-container .aat-premium-category-dossier .aat-dossier-hero,
-    body .aat-container .aat-premium-category-dossier .aat-era-browser .aat-section-head {
-        grid-template-columns: minmax(0, 1fr) !important;
-    }
-
-    .aat-era-browser .aat-category-history-mode {
-        grid-column: 1;
-        grid-row: auto;
-        justify-self: start;
-    }
-
-    .aat-dossier-command-band {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .aat-ledger-card {
-        grid-template-columns: minmax(110px, .3fr) minmax(0, 1fr);
-    }
-
-    body .aat-container .aat-premium-category-dossier .aat-ledger-card {
-        grid-template-columns: minmax(110px, .3fr) minmax(0, 1fr) !important;
-    }
-}
-
-@media (max-width: 620px) {
-    .aat-dossier-hero,
-    .aat-era-browser,
-    .aat-era-chapter {
-        border-radius: 0;
-    }
-
-    .aat-dossier-hero {
-        padding: 16px 0;
-    }
-
-    .aat-dossier-hero .aat-hub-title {
-        max-width: 100%;
-        font-size: clamp(2rem, 4vw, 3.5rem);
-    }
-
-    .aat-dossier-command-band,
-    .aat-era-chapter-visual,
-    .aat-ledger-card {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    body .aat-container .aat-premium-category-dossier .aat-dossier-command-band,
-    body .aat-container .aat-premium-category-dossier .aat-era-chapter-visual,
-    body .aat-container .aat-premium-category-dossier .aat-ledger-card {
-        grid-template-columns: minmax(0, 1fr) !important;
-    }
-
-    .aat-dossier-command-card,
-    .aat-dossier-command-card.is-latest {
-        min-height: 0;
-        padding: 16px 0;
-    }
-
-    body .aat-container .aat-premium-category-dossier .aat-dossier-command-card,
-    body .aat-container .aat-premium-category-dossier .aat-dossier-command-card.is-latest {
-        min-height: 0 !important;
-        padding: 16px 0 !important;
-    }
-
-    .aat-dossier-actions {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .aat-dossier-actions .aat-btn {
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        justify-content: center;
-    }
-
-    .aat-era-browser {
-        padding: 16px;
-    }
-
-    .aat-era-browser .aat-decade-nav {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .aat-era-browser .aat-decade-pill {
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .aat-era-chapter {
-        padding: 14px;
-    }
-
-    .aat-era-chapter-media {
-        min-height: 0;
-        max-width: 158px;
-        aspect-ratio: 2 / 3;
-    }
-
-    body .aat-container .aat-premium-category-dossier .aat-era-chapter-media {
-        min-height: 0 !important;
-        max-width: 158px !important;
-        aspect-ratio: 2 / 3 !important;
-    }
-
-    .aat-ledger-card .aat-nominee-trail {
-        grid-column: auto;
-    }
-
-    .aat-premium-category-dossier .aat-ledger-card {
-        padding: 12px;
-        gap: 10px;
-    }
-
-    .aat-premium-category-dossier .aat-ledger-card .aat-category-ceremony-meta {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-    }
-
-    .aat-premium-category-dossier .aat-ledger-card .aat-category-history-winner {
-        display: grid;
-        gap: 8px;
-    }
-
-    .aat-premium-category-dossier .aat-ledger-card .aat-category-history-actions {
-        gap: 5px !important;
-        margin-top: 4px !important;
-        padding-top: 6px !important;
-    }
-
-    .aat-premium-category-dossier .aat-ledger-card .aat-category-history-actions .aat-winner-circle-action,
-    .aat-premium-category-dossier .aat-ledger-card .aat-nominee-trail-compact .aat-winner-circle-action {
-        width: auto !important;
-        min-height: 44px !important;
-        padding: 5px 9px !important;
-        flex: 0 1 auto !important;
-        font-size: .875rem;
-    }
-}
 .aat-hub-kicker {
     margin: 0 0 10px;
     color: var(--aat-gold-light);
@@ -1455,9 +917,9 @@ body .aat-container .aat-premium-category-dossier .aat-ledger-card {
 .aat-winner-circle-action.is-kind-person-history,
 .aat-winner-circle-action.is-kind-producer-history,
 .aat-winner-circle-action.is-kind-company-history {
-    border-color: rgba(114,172,166,.34);
-    background: rgba(114,172,166,.08);
-    color: #d7f0ec;
+    border-color: rgba(201,169,97,.3);
+    background: transparent;
+    color: var(--aat-gold-light);
 }
 .aat-winner-circle-action.is-kind-film-history:hover,
 .aat-winner-circle-action.is-kind-film-history:focus,
@@ -1467,9 +929,9 @@ body .aat-container .aat-premium-category-dossier .aat-ledger-card {
 .aat-winner-circle-action.is-kind-producer-history:focus,
 .aat-winner-circle-action.is-kind-company-history:hover,
 .aat-winner-circle-action.is-kind-company-history:focus {
-    border-color: rgba(114,172,166,.54);
-    background: rgba(114,172,166,.16);
-    color: #ffffff;
+    border-color: rgba(201,169,97,.55);
+    background: rgba(201,169,97,.08);
+    color: var(--aat-white);
 }
 .aat-winner-circle-media {
     display: block;
@@ -1543,9 +1005,9 @@ body .aat-container .aat-premium-category-dossier .aat-ledger-card {
 }
 
 .aat-winner-circle-card.is-hero-latest {
-    padding: 20px 20px 22px;
-    min-height: 520px;
-    gap: 16px;
+    padding: 16px 0;
+    min-height: 0;
+    gap: 12px;
     background:
         transparent;
     box-shadow: none;
@@ -1556,14 +1018,12 @@ body .aat-container .aat-premium-category-dossier .aat-ledger-card {
 }
 
 .aat-winner-circle-card.is-hero-latest .aat-winner-circle-media {
-    margin: -20px -20px 4px;
-    border-radius: 18px 18px 16px 16px;
-    border-left: 0;
-    border-right: 0;
-    border-top: 0;
-    aspect-ratio: 4 / 3;
-    min-height: 320px;
-    background: #060d16;
+    margin: 0 0 4px;
+    border-radius: 2px;
+    border: 1px solid rgba(201,169,97,.18);
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+    background: rgba(255,255,255,.03);
 }
 
 .aat-winner-circle-card.is-hero-latest .aat-winner-circle-photo,
@@ -1601,19 +1061,24 @@ body .aat-container .aat-premium-category-dossier .aat-ledger-card {
 }
 
 .aat-winner-circle-grid.is-marquee-latest {
-    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 24px;
 }
 
 .aat-winner-circle-card.is-marquee-latest {
-    min-height: 580px;
-    padding: 22px 22px 24px;
+    min-height: 0;
+    padding: 16px 0;
+    border-top: 1px solid rgba(201,169,97,.14);
 }
 
 .aat-winner-circle-card.is-marquee-latest .aat-winner-circle-media {
-    margin: -22px -22px 6px;
-    aspect-ratio: 3 / 2;
-    min-height: 360px;
+    margin: 0 0 8px;
+    width: min(100%, 220px);
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+    border: 1px solid rgba(201,169,97,.18);
+    border-radius: 2px;
+    background: rgba(255,255,255,.03);
 }
 
 .aat-winner-circle-card.is-marquee-latest .aat-winner-circle-title {
@@ -1806,11 +1271,6 @@ table.aat-datatable thead th.aat-col-control {
     font-weight: 700;
     text-transform: none;
     letter-spacing: normal;
-}
-
-.aat-winner-badge::before {
-    content: "🏆";
-    font-size: 0.9rem;
 }
 
 .aat-nominee-badge {
@@ -2132,7 +1592,7 @@ table.dataTable > tbody > tr.child ul.dtr-details .dtr-data {
 /* Mobile Responsive */
 @media screen and (max-width: 768px) {
     .aat-container {
-        padding: clamp(20px, 4vw, 48px) clamp(16px, 3vw, 32px);
+        padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
         border-radius: 0;
         font-family: var(--lunara-font-body, Georgia, serif);
         font-size: 1rem;
@@ -2288,7 +1748,7 @@ table.dataTable > tbody > tr.child ul.dtr-details .dtr-data {
         font-family: var(--lunara-font-body, Georgia, serif);
         font-size: 1rem;
         line-height: 1.6;
-        padding: clamp(20px, 4vw, 48px) clamp(16px, 3vw, 32px);
+        padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
     }
     
     .aat-filters,
@@ -2772,18 +2232,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     box-shadow: none;
 }
 
-.aat-entity-poster-wrap {
-    flex: 0 0 240px;
-    max-width: 240px;
-}
-
-@media (max-width: 700px) {
-    .aat-entity-poster-wrap {
-        flex: 0 0 100%;
-        max-width: 320px;
-    }
-}
-
 
 /* =============================
    Rich Entity Page Enhancements
@@ -3025,11 +2473,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     font-size: .9rem;
     line-height: 1.55;
 }
-.aat-crossroads-card-editorial {
-    border-color: rgba(114,172,166,.24);
-    background:
-        transparent;
-}
 .aat-section-head {
     display: grid;
     gap: 8px;
@@ -3121,7 +2564,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     margin-top: 10px;
 }
 .aat-history-line {
-    font-size: .98rem;
+    font-size: 1.0625rem;
     line-height: 1.6;
     color: var(--aat-light-gray);
 }
@@ -3216,23 +2659,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-entity-meta-line span+span:before{content:'•';margin-right:14px;color:rgba(201,169,97,0.74)}
 .aat-fallback-dot{font-size:0;line-height:0}
 .aat-fallback-dot::before{content:'•';font-size:.92rem;line-height:1;color:rgba(201,169,97,0.74)}
-.aat-no-results-icon{font-size:0}
-.aat-no-results-icon::before{content:'Awards';font-size:.88rem;letter-spacing:normal;text-transform:none;color:rgba(201,169,97,0.78)}
-
-@keyframes aatAmbientDrift {
-    0%, 100% {
-        transform: translate3d(0, 0, 0) scale(1);
-        opacity: .7;
-    }
-    50% {
-        transform: translate3d(18px, -16px, 0) scale(1.08);
-        opacity: 1;
-    }
-}
 
 @media (prefers-reduced-motion: reduce) {
-    .aat-ceremony-marquee::before,
-    .aat-entity-hero::before {
+    .aat-ceremony-marquee::before {
         animation: none;
     }
     .aat-hub-card,
@@ -3292,7 +2721,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     overflow: hidden;
     background:
         transparent;
-    transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease;
+    transition: border-color .18s ease;
     border-bottom: 1px solid rgba(201,169,97,.24);
 }
 
@@ -3313,13 +2742,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-history-item:hover::before,
 .aat-winner-circle-card:hover::after {
     opacity: 1;
-}
-
-.aat-hub-card:hover::after,
-.aat-filmography-card:hover::after,
-.aat-related-review-card:hover::after {
-    opacity: 1;
-    transform: rotate(18deg) translate3d(24px, 0, 0);
 }
 
 .aat-hub-card-title {
@@ -3373,7 +2795,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-related-review-card:hover .aat-related-review-image,
 .aat-related-review-card:hover .aat-related-review-media img {
     transform: none;
-    filter: saturate(1.04) contrast(1.03);
+    filter: none;
 }
 
 .aat-filmography-title,
@@ -3432,7 +2854,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
 /* Rich fallback states so Oscar pages never feel empty */
 .aat-entity-hero.is-no-poster {
-    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .aat-entity-hero.has-person-visual-state-no-portrait {
@@ -3559,18 +2981,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     box-shadow: none;
 }
 .aat-table-shell {
-    animation: aatTableReveal .2s ease-out;
     padding: 24px 0;
-}
-@keyframes aatTableReveal {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 @media (max-width: 840px) {
     .aat-explorer-shell {
@@ -3601,13 +3012,106 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 .aat-database-landing-metrics {
     margin-bottom: 0;
+    gap: 0 24px;
+}
+.aat-database-landing-metrics .aat-hub-metric-card,
+.aat-explorer-signal-grid .aat-hub-metric-card {
+    min-height: 0;
+    padding: 14px 0;
+    border: 0;
+    border-top: 1px solid rgba(201,169,97,.18);
+    border-radius: 0;
+    background: transparent;
+    transition: none;
+}
+.aat-database-landing-metrics .aat-hub-metric-label,
+.aat-explorer-signal-grid .aat-hub-metric-label {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-database-landing-metrics .aat-hub-metric-value,
+.aat-explorer-signal-grid .aat-hub-metric-value {
+    margin-top: 4px;
+    color: var(--aat-white);
+    font-family: var(--lunara-font-display, inherit);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+    line-height: 1.1;
+}
+.aat-database-landing-metrics .aat-hub-metric-copy,
+.aat-explorer-signal-grid .aat-hub-metric-copy {
+    margin: 4px 0 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 .aat-explorer-signal-grid {
     margin: 10px 0 26px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 24px;
 }
-.aat-explorer-signal-grid .aat-hub-metric-card {
-    min-height: 224px;
-    padding: 26px;
+/* The landing masthead's three shortcuts have a plugin baseline; the Theme's portal rules lay them out on /oscars/. */
+.aat-ledger-command {
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+}
+.aat-ledger-command-copy h2 {
+    margin: 0;
+}
+.aat-ledger-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+.aat-ledger-header-action {
+    display: grid;
+    gap: 4px;
+    min-height: 44px;
+    padding: 12px 16px;
+    border: 1px solid rgba(201,169,97,.24);
+    border-radius: 2px;
+    color: inherit;
+    text-decoration: none;
+    text-align: left;
+    transition: border-color .18s ease;
+}
+.aat-ledger-header-action:hover,
+.aat-ledger-header-action:focus-visible {
+    border-color: var(--aat-gold);
+}
+.aat-ledger-header-action.is-primary {
+    border-color: var(--aat-gold);
+}
+.aat-ledger-header-action strong {
+    color: var(--aat-gold-light);
+    font-size: 1rem;
+    line-height: 1.3;
+}
+.aat-ledger-header-action span {
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-view-toggle .aat-btn.is-active {
+    background: transparent;
+    color: var(--aat-gold-light);
+    border: 1px solid var(--aat-gold);
+    cursor: default;
+}
+.aat-footer-line a {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-decoration-color: rgba(224,196,129,.45);
+    text-underline-offset: 4px;
+}
+.aat-footer-count {
+    color: inherit;
 }
 .aat-database-landing-footer {
     padding-top: 6px;
@@ -3718,320 +3222,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     overflow: hidden;
 }
 
-.aat-ceremony-neighbor-nav {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: 16px;
-    align-items: stretch;
-    margin: -10px 0 28px;
-}
-
-.aat-ceremony-neighbor-slot {
-    display: flex;
-    min-width: 0;
-}
-
-.aat-ceremony-neighbor-slot.is-newer {
-    justify-content: flex-start;
-}
-
-.aat-ceremony-neighbor-slot.is-older {
-    justify-content: flex-end;
-    text-align: right;
-}
-
-.aat-ceremony-neighbor-card,
-.aat-ceremony-neighbor-index {
-    display: grid;
-    gap: 5px;
-    min-width: min(100%, 260px);
-    padding: 14px 16px;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-    color: inherit;
-    text-decoration: none;
-    box-shadow: none;
-    transition: transform .2s ease, border-color .2s ease, background .2s ease;
-}
-
-.aat-ceremony-neighbor-card:hover,
-.aat-ceremony-neighbor-card:focus,
-.aat-ceremony-neighbor-index:hover,
-.aat-ceremony-neighbor-index:focus {
-    transform: none;
-    border-color: rgba(201,169,97,.34);
-    background:
-        transparent;
-}
-
-.aat-ceremony-neighbor-kicker,
-.aat-ceremony-neighbor-index span {
-    color: var(--aat-gold);
-    font-size: .875rem;
-    font-weight: 700;
-    letter-spacing: normal;
-    text-transform: none;
-}
-
-.aat-ceremony-neighbor-card strong,
-.aat-ceremony-neighbor-index strong {
-    color: var(--aat-white);
-    font-size: 1rem;
-    line-height: 1.2;
-}
-
-.aat-ceremony-neighbor-card span:last-child {
-    color: rgba(230,238,247,0.74);
-    font-size: .9rem;
-}
-
-.aat-ceremony-neighbor-index {
-    min-width: 132px;
-    place-items: center;
-    text-align: center;
-}
-
-.aat-category-year-ledger .aat-section-head {
-    margin-bottom: 18px;
-}
-
-.aat-year-ledger-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 16px;
-}
-
-.aat-year-ledger-card {
-    display: grid;
-    align-content: start;
-    gap: 14px;
-    min-height: 100%;
-    padding: 18px;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-    box-shadow: none;
-}
-
-.aat-year-ledger-card .aat-timeline-meta {
-    gap: 10px;
-    margin-bottom: 0;
-    padding-bottom: 12px;
-}
-
-.aat-year-ledger-body {
-    display: grid;
-    gap: 10px;
-}
-
-.aat-year-ledger-title {
-    margin: 0;
-    color: var(--aat-white);
-    font-size: 1.08rem;
-    line-height: 1.24;
-}
-
-.aat-year-ledger-meta,
-.aat-year-ledger-detail {
-    margin: 0;
-    color: rgba(230,238,247,0.76);
-    font-size: .92rem;
-    line-height: 1.5;
-}
-
-.aat-year-ledger-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 2px;
-}
-
-.aat-ceremony-ballot-ledger .aat-section-head {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 18px;
-    margin-bottom: 14px;
-}
-
-.aat-ceremony-ledger-mode {
-    display: flex;
-    flex: 0 0 auto;
-    justify-content: flex-end;
-    margin: 0;
-}
-
-.aat-ceremony-ballot-summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 0 0 26px;
-}
-
-.aat-ceremony-ballot-summary span {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 7px 12px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: rgba(230,238,247,0.78);
-    font-size: .875rem;
-    font-weight: 700;
-    letter-spacing: normal;
-    text-transform: none;
-}
-
-.aat-ceremony-ballot-groups {
-    display: grid;
-    gap: 24px;
-}
-
-.aat-ceremony-ballot-group {
-    display: grid;
-    gap: 14px;
-    padding-top: 22px;
-    border-top: 1px solid rgba(201,169,97,.18);
-}
-
-.aat-ceremony-ballot-group-head {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 16px;
-}
-
-.aat-ceremony-ballot-group-head .aat-hub-kicker {
-    margin: 0 0 5px;
-}
-
-.aat-ceremony-ballot-group-head h3 {
-    margin: 0;
-    color: var(--aat-white);
-    font-size: clamp(1.18rem, 2.2vw, 1.6rem);
-    line-height: 1.18;
-}
-
-.aat-ceremony-ballot-group-count {
-    flex: 0 0 auto;
-    margin: 0 0 4px;
-    color: rgba(230,238,247,0.74);
-    font-size: .875rem;
-    font-weight: 700;
-    letter-spacing: normal;
-    text-transform: none;
-}
-
-.aat-ceremony-ballot-rows {
-    display: grid;
-    gap: 10px;
-}
-
-.aat-ceremony-nominee-summary {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 12px 14px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: rgba(230,238,247,0.74);
-    font-size: .875rem;
-    font-weight: 700;
-    letter-spacing: normal;
-    text-transform: none;
-}
-
-.aat-ceremony-nominee-summary .aat-winner-circle-action {
-    margin: 0;
-}
-
-.aat-ceremony-ballot-row {
-    display: grid;
-    grid-template-columns: 96px minmax(0, 1fr) auto;
-    gap: 16px;
-    align-items: start;
-    padding: 16px;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-    box-shadow: none;
-}
-
-.aat-ceremony-ballot-row.is-winner {
-    border-color: rgba(201,169,97,.26);
-    background:
-        transparent;
-}
-
-.aat-ceremony-ballot-status {
-    min-width: 0;
-}
-
-.aat-ceremony-ballot-status .aat-winner-badge,
-.aat-ceremony-ballot-status .aat-nominee-badge {
-    display: inline-flex;
-    width: auto;
-    max-width: 100%;
-    justify-content: center;
-}
-
-.aat-ceremony-ballot-copy {
-    display: grid;
-    gap: 7px;
-    min-width: 0;
-}
-
-.aat-ceremony-ballot-copy h4 {
-    margin: 0;
-    color: var(--aat-white);
-    font-size: 1rem;
-    line-height: 1.25;
-}
-
-.aat-ballot-main-link {
-    font-weight: 800;
-}
-
-.aat-ballot-credit,
-.aat-ballot-detail,
-.aat-ballot-note {
-    margin: 0;
-    color: rgba(230,238,247,0.76);
-    font-size: .9rem;
-    line-height: 1.48;
-}
-
-.aat-ballot-credit strong {
-    color: var(--aat-gold);
-    font-size: .875rem;
-    letter-spacing: normal;
-    text-transform: none;
-}
-
-.aat-ballot-note {
-    color: rgba(168,168,184,0.82);
-}
-
-.aat-ceremony-ballot-actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 8px;
-    min-width: 132px;
-}
-
-.aat-winner-circle-action.is-kind-review {
-    border-color: rgba(224,196,129,.34);
-    color: #e0c481;
-}
 @media (max-width: 900px) {
     .aat-database-landing-actions {
         justify-content: flex-start;
@@ -4043,58 +3233,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
         min-height: 0;
     }
 
-    .aat-ceremony-neighbor-nav {
-        grid-template-columns: 1fr;
-        margin-top: 0;
-    }
-
-    .aat-ceremony-neighbor-slot,
-    .aat-ceremony-neighbor-slot.is-newer,
-    .aat-ceremony-neighbor-slot.is-older {
-        justify-content: stretch;
-        text-align: left;
-    }
-
-    .aat-ceremony-neighbor-card,
-    .aat-ceremony-neighbor-index {
-        width: 100%;
-    }
-
-    .aat-ceremony-ballot-ledger .aat-section-head,
-    .aat-ceremony-ballot-group-head,
-    .aat-ceremony-ballot-row {
-        grid-template-columns: 1fr;
-    }
-
-    .aat-ceremony-ballot-ledger .aat-section-head {
-        display: grid;
-        align-items: start;
-    }
-
-    .aat-ceremony-ledger-mode {
-        justify-content: flex-start;
-    }
-
-    .aat-ceremony-ballot-group-head {
-        align-items: start;
-    }
-
-    .aat-ceremony-ballot-group-count {
-        margin-bottom: 0;
-    }
-
-    .aat-ceremony-ballot-actions {
-        justify-content: flex-start;
-        min-width: 0;
-    }
-
-    .aat-ceremony-nominee-summary {
-        justify-content: flex-start;
-    }
 }
 
 /* Runtime cleanup overrides for legacy encoded symbols. */
-.aat-winner-badge::before { content: "\1F3C6"; }
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control:before,
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before { content: "\2013" !important; }
 .aat-entity-meta-line span+span::before { content: "\2022"; margin-right: 10px; }
@@ -4186,16 +3327,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
         line-height: 1.12;
     }
 
-    .aat-hub-subtitle,
-    .aat-hub-copy,
-    .aat-entity-summary,
-    .aat-entity-overview,
-    .aat-related-review-excerpt,
-    .aat-database-landing-note {
-        font-size: 0.96rem;
-        line-height: 1.68;
-    }
-
     .aat-hub-spotlight-card,
     .aat-entity-status-banner {
         padding: 18px;
@@ -4225,7 +3356,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
 @media (max-width: 480px) {
     .aat-filmography-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
     }
 }
 
@@ -4233,16 +3365,12 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-lunara-review-excerpt,
 .aat-related-review-excerpt {
     color: rgba(230,238,247,0.88);
-    font-size: 0.95rem;
-    line-height: 1.62;
-}
-
-.aat-related-review-excerpt {
-    min-height: 3.3em;
+    font-size: 1.0625rem;
+    line-height: 1.6;
 }
 
 .aat-lunara-review-excerpt {
-    max-width: 34ch;
+    max-width: 64ch;
 }
 
 .aat-related-review-actions {
@@ -4261,7 +3389,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 
 .aat-hub-section h2 {
-    max-width: 16ch;
+    max-width: 28ch;
     line-height: 1.08;
 }
 
@@ -4296,7 +3424,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     gap: 10px;
 }
 
-.aat-hub-chip,
 .aat-hub-chip-rich {
     min-height: 58px;
 }
@@ -4513,8 +3640,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 
 .aat-explorer-copy h2 {
-    max-width: 20ch;
-    line-height: 1.06;
+    max-width: 24ch;
+    line-height: 1.1;
 }
 
 /* Final coherence sweep: make the Oscars control surface feel fully in-family with the theme shell. */
@@ -4552,10 +3679,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-btn-primary:focus-visible,
 .aat-btn-secondary:focus-visible {
     transform: none;
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.05),
-        0 18px 34px rgba(0,0,0,.2),
-        0 0 24px rgba(201,169,97,.12);
+    box-shadow: none;
 }
 
 .aat-hub-header,
@@ -4660,12 +3784,12 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     }
 
     .aat-history-line {
-        font-size: 0.94rem;
-        line-height: 1.58;
+        font-size: 1.0625rem;
+        line-height: 1.6;
     }
 
     .aat-filmography-title {
-        font-size: 0.96rem;
+        font-size: 1rem;
     }
 
     .aat-related-review-card {
@@ -4777,7 +3901,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 /* Mobile database mode: make the table flow usable without crushing the controls. */
 @media (max-width: 640px) {
     .aat-container {
-        padding: clamp(20px, 4vw, 48px) clamp(16px, 3vw, 32px);
+        padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
         border-radius: 0;
         font-family: var(--lunara-font-body, Georgia, serif);
         font-size: 1rem;
@@ -4873,617 +3997,1075 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
 
 /* ============================================================================
- * CATEGORY HISTORY — Round 2 Step 2 (added 2026-05-24)
+ * Category dossier (/oscars/category/{slug}/): one editorial run.
  *
- * Replaces the legacy Year-by-Year Winners block with a decade-grouped
- * ledger including collapsible nominee trails per ceremony. Pairs with
- * .aat-decade-nav (jump pills) and .aat-nominee-trail (details collapse).
+ * Hero (title beside a summary band), latest winner (copy beside artwork),
+ * history grouped by decade (year-led rows, a text "Winner" word, plain
+ * nominee lines, one hairline per row), highlights, reviews and the sortable
+ * ledger callout. Premium and generic dossiers share this block; the premium
+ * profile only adds a decade poster and its own copy. The Theme owns section
+ * margins, action-button geometry, chip and spotlight padding and link colour
+ * (lunara-shell.css, !important); this block sets what the Theme leaves alone.
  * ========================================================================= */
-
-.aat-category-history {
-    margin-top: 32px;
-}
-.aat-category-history > .aat-section-head {
-    margin-bottom: 18px;
-}
-.aat-category-history-mode {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
-}
-
-.aat-generic-category-dossier .aat-generic-category-hero {
+.aat-category-dossier {
     display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(300px, .92fr);
-    gap: 24px;
-    align-items: stretch;
-    padding: 34px;
+    gap: 28px;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+.aat-category-dossier > .aat-hub-section,
+.aat-category-dossier .aat-category-history {
+    margin-top: 0;
+}
+
+/* --- Hero ------------------------------------------------------------------ */
+.aat-category-dossier .aat-dossier-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(280px, .8fr);
+    gap: clamp(22px, 4vw, 48px);
+    align-items: start;
+    padding: 8px 0 0;
     border: 0;
     border-radius: 0;
-    background:
-        transparent;
-    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
 }
 
-.aat-generic-category-dossier .aat-dossier-hero-copy {
-    display: grid;
-    align-content: center;
-    gap: 14px;
+.aat-category-dossier .aat-dossier-hero > * {
+    position: relative;
+    z-index: 1;
     min-width: 0;
 }
 
-.aat-generic-category-dossier .aat-dossier-hero .aat-hub-title {
+.aat-category-dossier .aat-dossier-hero-copy {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+}
+
+.aat-category-dossier .aat-dossier-hero .aat-hub-title {
+    margin: 0;
     max-width: 100%;
     color: var(--aat-light-gray);
+    font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+    line-height: 1.08;
+    letter-spacing: normal;
     text-align: left;
     text-transform: none;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
 }
 
-.aat-generic-category-dossier .aat-dossier-hero .aat-hub-subtitle {
-    max-width: 62ch;
-    color: rgba(244,239,227,0.84);
-    line-height: 1.68;
+.aat-category-dossier .aat-dossier-hero .aat-hub-subtitle {
+    margin: 0;
+    max-width: 58ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: clamp(1rem, .96rem + .3vw, 1.125rem);
+    line-height: 1.6;
+    text-align: left;
+    overflow-wrap: anywhere;
 }
 
-.aat-generic-category-dossier .aat-dossier-command-band {
+.aat-category-dossier .aat-dossier-command-band {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    align-self: center;
+    gap: 0 20px;
+    align-self: start;
     min-width: 0;
+    padding-top: 6px;
+    border-top: 1px solid rgba(201, 169, 97, .2);
 }
 
-.aat-generic-category-dossier .aat-dossier-command-card {
+.aat-category-dossier .aat-dossier-command-card {
     display: grid;
-    align-content: end;
-    gap: 8px;
-    min-height: 112px;
-    padding: 16px 0;
+    align-content: start;
+    gap: 4px;
+    min-height: 0;
+    min-width: 0;
+    padding: 12px 0;
     border: 0;
     border-radius: 0;
     background: transparent;
 }
 
-.aat-generic-category-dossier .aat-dossier-command-card.is-latest {
+.aat-category-dossier .aat-dossier-command-card.is-latest {
     grid-column: 1 / -1;
-    min-height: 142px;
+    padding-top: 14px;
+    border-bottom: 1px solid rgba(201, 169, 97, .12);
 }
 
-.aat-generic-category-dossier .aat-dossier-command-card span {
-    color: var(--aat-gold-light);
+.aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px;
+    column-gap: 16px;
+    align-items: center;
+}
+
+.aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster > span,
+.aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster > strong {
+    grid-column: 1;
+    min-width: 0;
+}
+
+.aat-category-dossier .aat-category-hero-poster {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 72px;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .24);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .04);
+}
+
+.aat-category-dossier .aat-category-hero-poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    border: 0;
+    border-radius: 0;
+    object-fit: cover;
+    transition: none;
+}
+
+.aat-category-dossier .aat-dossier-command-card > span {
+    color: var(--aat-light-gray);
+    opacity: .72;
     font-size: .875rem;
-    font-weight: 700;
+    font-weight: 400;
+    line-height: 1.4;
     letter-spacing: normal;
     text-transform: none;
 }
 
-.aat-generic-category-dossier .aat-dossier-command-card strong {
+.aat-category-dossier .aat-dossier-command-card strong {
     color: var(--aat-white);
-    font-size: 1.38rem;
-    line-height: 1.1;
+    font-family: var(--lunara-font-display, inherit);
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    line-height: 1.15;
+    letter-spacing: normal;
+    text-wrap: balance;
     overflow-wrap: anywhere;
 }
 
-.aat-generic-category-dossier .aat-dossier-command-card.is-latest strong {
-    color: var(--aat-gold);
-    font-size: 1.72rem;
+.aat-category-dossier .aat-dossier-command-card.is-latest strong {
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.1;
 }
 
-.aat-generic-category-dossier .aat-dossier-actions {
+.aat-category-dossier .aat-dossier-actions {
     grid-column: 1 / -1;
-    justify-content: start;
+    justify-content: flex-start;
     margin-top: 4px;
 }
 
-/* --- Decade jump pills ---------------------------------------------------- */
-.aat-decade-nav {
+/* --- Latest winner --------------------------------------------------------- */
+.aat-category-dossier .aat-category-latest-winner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.aat-category-dossier .aat-category-latest-winner .aat-ceremony-marquee-copy {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+}
+
+.aat-category-dossier .aat-category-latest-winner h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-wrap: balance;
+}
+
+.aat-category-dossier .aat-category-latest-winner .aat-hub-copy {
+    margin: 0;
+    max-width: 58ch;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.aat-category-dossier .aat-ceremony-marquee-stack {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+}
+
+.aat-category-dossier .aat-hub-spotlight-card {
+    display: grid;
+    grid-template-columns: minmax(104px, 148px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: none;
+}
+
+.aat-category-dossier .aat-hub-spotlight-card::after,
+.aat-category-dossier .aat-hub-spotlight-media::after {
+    content: none;
+}
+
+.aat-category-dossier .aat-hub-spotlight-media {
+    position: relative;
+    min-height: 0;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .04);
+}
+
+.aat-category-dossier .aat-hub-spotlight-media img,
+.aat-category-dossier .aat-hub-spotlight-media .aat-poster-img,
+.aat-category-dossier .aat-hub-spotlight-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: none;
+    transition: none;
+}
+
+.aat-category-dossier .aat-hub-spotlight-body {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 2px 0 0;
+}
+
+.aat-category-dossier .aat-hub-spotlight-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    line-height: 1.2;
+}
+
+.aat-category-dossier .aat-hub-spotlight-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    align-items: baseline;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+
+
+.aat-category-dossier .aat-hub-chip-stack {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+}
+
+.aat-category-dossier .aat-hub-chip-rich {
+    display: grid;
+    gap: 2px;
+    min-height: 44px;
+    padding: 12px 14px;
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 2px;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    text-decoration: none;
+    transition: border-color .18s ease;
+}
+
+.aat-category-dossier .aat-hub-chip-rich:hover,
+.aat-category-dossier .aat-hub-chip-rich:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+}
+
+.aat-category-dossier .aat-hub-chip-rich strong {
+    color: var(--aat-gold-light);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.aat-category-dossier .aat-hub-chip-rich span {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* --- History: head, decade navigation, decade chapters -------------------- */
+.aat-category-dossier .aat-category-history {
+    display: grid;
+    gap: 22px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.aat-category-dossier .aat-category-history > .aat-section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    margin: 0;
+}
+
+.aat-category-dossier .aat-section-title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-wrap: balance;
+}
+
+.aat-category-dossier .aat-section-description {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.aat-category-dossier .aat-category-history-mode {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    padding: 0 0 4px;
-    margin: 0 0 28px;
-    list-style: none;
+    margin: 0;
 }
-.aat-decade-pill {
+
+.aat-category-dossier .aat-decade-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    list-style: none;
+    overflow: visible;
+}
+
+.aat-category-dossier .aat-decade-pill {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 14px;
-    border: 1px solid rgba(201, 169, 97, 0.32);
+    gap: 8px;
+    min-height: 44px;
+    padding: 6px 12px;
+    border: 1px solid rgba(201, 169, 97, .22);
     border-radius: 2px;
-    background: rgba(7, 15, 26, 0.42);
-    color: #efe8d6;
-    text-decoration: none;
-    font-family: var(--lunara-font-label, sans-serif);
-    font-size: 0.95rem;
+    background: none;
+    color: var(--aat-light-gray);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.3;
     letter-spacing: normal;
     text-transform: none;
-    line-height: 1;
-    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    text-decoration: none;
+    transition: border-color .18s ease, color .18s ease;
 }
-.aat-decade-pill:hover,
-.aat-decade-pill:focus-visible {
-    background: #c9a961;
-    color: #07101b;
-    border-color: #c9a961;
+
+.aat-category-dossier .aat-decade-pill:hover,
+.aat-category-dossier .aat-decade-pill:focus-visible {
+    border-color: var(--aat-gold);
+    background: none;
+    color: var(--aat-white);
     transform: none;
     text-decoration: none;
 }
-.aat-decade-pill-count {
-    display: inline-flex;
+
+.aat-category-dossier .aat-decade-pill-count {
+    display: inline;
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: inherit;
+    letter-spacing: normal;
+    font-variant-numeric: tabular-nums;
+}
+
+.aat-category-dossier .aat-decade-pill:hover .aat-decade-pill-count,
+.aat-category-dossier .aat-decade-pill:focus-visible .aat-decade-pill-count {
+    background: none;
+    color: var(--aat-gold-light);
+}
+
+.aat-category-dossier .aat-decade-groups {
+    display: grid;
+    gap: clamp(36px, 5vw, 56px);
+}
+
+.aat-category-dossier .aat-decade-group {
+    margin: 0;
+    padding: 22px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: none;
+    scroll-margin-top: 88px;
+}
+
+.aat-category-dossier .aat-decade-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
     align-items: center;
-    justify-content: center;
-    min-width: 22px;
-    height: 22px;
-    padding: 0 7px;
-    border-radius: 2px;
-    background: rgba(201, 169, 97, 0.18);
-    color: #c9a961;
-    font-family: var(--lunara-font-body, Georgia, serif);
-    font-size: .875rem;
-    letter-spacing: normal;
-    line-height: 1;
-}
-.aat-decade-pill:hover .aat-decade-pill-count,
-.aat-decade-pill:focus-visible .aat-decade-pill-count {
-    background: rgba(7, 15, 26, 0.22);
-    color: #07101b;
+    margin: 0 0 14px;
 }
 
-/* --- Decade groups ------------------------------------------------------- */
-.aat-decade-groups {
-    display: grid;
-    gap: 40px;
-}
-.aat-decade-group {
-    border-top: 1px solid rgba(201, 169, 97, 0.16);
-    padding-top: 22px;
-    scroll-margin-top: 88px; /* room for sticky site header when anchor-jumping */
-}
-.aat-decade-heading {
-    position: sticky;
-    top: 8px;
-    z-index: 2;
-    display: inline-block;
-    margin: 0 0 18px;
-    padding: 6px 16px;
-    background: rgba(7, 15, 26, 0.92);
-    border: 1px solid rgba(201, 169, 97, 0.34);
-    border-radius: 2px;
-    color: #c9a961;
-    font-family: var(--lunara-font-label, sans-serif);
-    font-size: 1.55rem;
-    letter-spacing: normal;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+.aat-category-dossier .aat-decade-head.has-era-poster {
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: 14px;
 }
 
-.aat-decade-ceremonies {
-    display: grid;
-    gap: 18px;
-}
-
-/* --- Per-ceremony row ---------------------------------------------------- */
-.aat-category-ceremony-row {
-    padding: 16px 0;
+.aat-category-dossier .aat-decade-heading {
+    position: static;
+    display: block;
+    margin: 0;
+    padding: 0;
     border: 0;
     border-radius: 0;
-    background: transparent;
-}
-.aat-category-ceremony-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 14px;
-    margin-bottom: 14px;
-    padding-bottom: 12px;
-    border-bottom: 1px dashed rgba(201, 169, 97, 0.2);
-}
-.aat-category-ceremony-meta .aat-timeline-link {
-    color: #c9a961;
-    font-family: var(--lunara-font-body, Georgia, serif);
-    font-weight: 700;
-    text-decoration: none;
-    font-size: 1.05rem;
-}
-.aat-category-ceremony-meta .aat-timeline-link:hover,
-.aat-category-ceremony-meta .aat-timeline-link:focus-visible {
-    text-decoration: underline;
-}
-.aat-category-ceremony-year {
-    color: rgba(239,232,214,0.74);
-    font-size: 0.94rem;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    color: var(--aat-white);
+    font-family: inherit;
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
+    line-height: 1.1;
     letter-spacing: normal;
-    font-family: var(--lunara-font-body, Georgia, serif);
 }
 
-/* --- Winner block --------------------------------------------------------- */
-.aat-category-history-winner {
-    margin-bottom: 12px;
-}
-.aat-category-history-winner .aat-winner-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 4px;
-    background: var(--aat-gold);
-    color: #07101b;
-    font-family: var(--lunara-font-label, sans-serif);
-    font-size: .875rem;
-    letter-spacing: normal;
-    margin-bottom: 10px;
-}
-.aat-category-history-title {
-    margin: 0 0 6px;
-    font-family: var(--lunara-font-body, Georgia, serif);
-    font-size: 1.32rem;
-    line-height: 1.2;
-    color: #fff;
-}
-.aat-category-history-title a {
-    color: inherit;
-    text-decoration: none;
-}
-.aat-category-history-title a:hover,
-.aat-category-history-title a:focus-visible {
-    color: #e0c481;
-    text-decoration: underline;
-}
-.aat-category-history-meta {
-    margin: 0 0 6px;
-    font-family: var(--lunara-font-body, Georgia, serif);
-    font-style: italic;
-    color: #efe8d6;
-    font-size: 1rem;
-}
-.aat-category-history-detail {
-    margin: 0 0 10px;
-    color: rgba(239,232,214,0.76);
-    font-size: 0.92rem;
-}
-.aat-category-history-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 6px;
-}
-
-.aat-category-dossier .aat-ledger-card {
-    display: grid;
-    grid-template-columns: minmax(136px, .25fr) minmax(0, 1fr);
-    gap: 16px;
-    position: relative;
+.aat-category-dossier .aat-era-chapter-media {
+    display: block;
+    width: 56px;
+    min-height: 0;
+    aspect-ratio: 2 / 3;
     overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .04);
+    text-decoration: none;
 }
 
-.aat-category-dossier .aat-ledger-card > * {
+.aat-category-dossier .aat-era-chapter-media img,
+.aat-category-dossier .aat-era-chapter-media .aat-poster-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- Ceremony rows ---------------------------------------------------------- */
+.aat-category-dossier .aat-decade-ceremonies {
+    display: grid;
+    gap: 0;
+}
+
+.aat-category-dossier .aat-category-ceremony-row {
+    display: grid;
+    grid-template-columns: minmax(112px, .22fr) minmax(0, 1fr);
+    gap: 8px 24px;
+    align-items: start;
+    margin: 0;
+    padding: 18px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .12);
+    border-radius: 0;
+    background: transparent;
     position: relative;
+    overflow: visible;
 }
 
-.aat-category-dossier .aat-ledger-card .aat-category-ceremony-meta {
+.aat-category-dossier .aat-decade-ceremonies > .aat-category-ceremony-row:first-child {
+    border-top: 0;
+    padding-top: 4px;
+}
+
+.aat-category-dossier .aat-category-ceremony-row > * {
+    position: relative;
+    min-width: 0;
+}
+
+.aat-category-dossier .aat-category-ceremony-meta {
     display: grid;
     align-content: start;
-    gap: 8px;
+    gap: 2px;
     margin: 0;
-    padding: 0 16px 0 0;
-    border-right: 1px dashed rgba(201, 169, 97, 0.22);
-    border-bottom: 0;
+    padding: 0;
+    border: 0;
 }
 
-.aat-category-person-strip {
-    display: flex;
-    flex-wrap: wrap;
+.aat-category-dossier .aat-category-ceremony-year {
+    display: block;
+    color: var(--aat-white);
+    font-family: var(--lunara-font-display, inherit);
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    line-height: 1.35;
+    letter-spacing: normal;
+    font-variant-numeric: tabular-nums;
+}
+
+.aat-category-dossier .aat-category-ceremony-meta .aat-timeline-link {
+    display: inline-flex;
     align-items: center;
-    gap: 7px;
-    margin: 10px 0 8px;
-    padding: 10px;
+    min-height: 44px;
+    width: fit-content;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-weight: 400;
+    font-size: .9375rem;
+    line-height: 1.3;
+    text-decoration: none;
+}
+
+.aat-category-dossier .aat-category-ceremony-meta .aat-timeline-link:hover,
+.aat-category-dossier .aat-category-ceremony-meta .aat-timeline-link:focus-visible {
+    color: var(--aat-white);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* --- Winner block ------------------------------------------------------------ */
+.aat-category-dossier .aat-category-history-winner {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
     border: 0;
-    border-radius: 0;
     background: transparent;
 }
 
-.aat-category-person-strip.is-compact {
-    grid-column: 2;
-    margin: 4px 0 2px;
-    padding: 8px;
-}
-
-.aat-category-person-strip-label {
-    color: rgba(201,169,97,0.9);
+.aat-category-dossier .aat-winner-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0 0 2px;
+    padding: 4px 9px;
+    border: 1px solid rgba(201, 169, 97, .32);
+    border-radius: 2px;
+    background: none;
+    color: var(--aat-gold);
+    font-family: inherit;
     font-size: .875rem;
-    font-weight: 800;
+    font-weight: 700;
+    line-height: 1.4;
     letter-spacing: normal;
     text-transform: none;
 }
 
-.aat-category-person-chip {
-    display: inline-flex;
-    align-items: center;
-    min-height: 28px;
-    max-width: 100%;
-    padding: 5px 9px;
-    border: 1px solid rgba(201, 169, 97, 0.25);
-    border-radius: 2px;
-    color: rgba(244,239,227,0.94);
-    background: rgba(255, 255, 255, 0.045);
-    font-size: .875rem;
-    line-height: 1.4;
-    text-decoration: none;
+.aat-category-dossier .aat-winner-badge::before {
+    content: none;
+}
+
+.aat-category-dossier .aat-category-history-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-family: inherit;
+    font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+    line-height: 1.2;
     overflow-wrap: anywhere;
 }
 
-.aat-category-person-chip:hover,
-.aat-category-person-chip:focus-visible {
-    border-color: rgba(201, 169, 97, 0.72);
-    color: #07101b;
-    background: #c9a961;
-    text-decoration: none;
-}
-
-@media (max-width: 700px) {
-    .aat-generic-category-dossier .aat-generic-category-hero,
-    .aat-generic-category-dossier .aat-dossier-command-band,
-    .aat-category-dossier .aat-ledger-card {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .aat-generic-category-dossier .aat-generic-category-hero {
-        padding: 16px;
-        border-radius: 0;
-    }
-
-    .aat-generic-category-dossier .aat-dossier-command-card,
-    .aat-generic-category-dossier .aat-dossier-command-card.is-latest {
-        min-height: 0;
-        padding: 16px 0;
-    }
-
-    .aat-generic-category-dossier .aat-dossier-actions {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        width: 100%;
-    }
-
-    .aat-generic-category-dossier .aat-dossier-actions .aat-btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .aat-category-dossier .aat-ledger-card .aat-category-ceremony-meta {
-        padding: 0 0 10px;
-        border-right: 0;
-        border-bottom: 1px dashed rgba(201, 169, 97, 0.22);
-    }
-
-    .aat-category-person-strip,
-    .aat-category-person-strip.is-compact {
-        grid-column: auto;
-        align-items: stretch;
-    }
-
-    .aat-category-person-chip {
-        justify-content: center;
-        text-align: center;
-    }
-}
-
-/* Generic category dossier final mobile guard: craft categories can carry long credit strings. */
-@media (max-width: 640px) {
-    .aat-container .aat-generic-category-dossier,
-    .aat-container .aat-generic-category-dossier *,
-    .aat-container .aat-generic-category-dossier .aat-hub-breadcrumbs,
-    .aat-container .aat-generic-category-dossier .aat-dossier-hero,
-    .aat-container .aat-generic-category-dossier .aat-dossier-hero-copy,
-    .aat-container .aat-generic-category-dossier .aat-hub-subtitle,
-    .aat-container .aat-generic-category-dossier .aat-dossier-command-band,
-    .aat-container .aat-generic-category-dossier .aat-dossier-command-card,
-    .aat-container .aat-generic-category-dossier .aat-dossier-actions,
-    .aat-container .aat-generic-category-dossier .aat-ledger-card {
-        min-width: 0 !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    body .aat-container .aat-category-dossier.aat-generic-category-dossier {
-        width: min(100%, calc(100vw - 24px)) !important;
-        max-width: calc(100vw - 24px) !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        overflow-x: hidden !important;
-    }
-
-    .aat-container .aat-generic-category-dossier .aat-hub-breadcrumbs {
-        justify-content: flex-start !important;
-        text-align: left !important;
-        overflow-wrap: anywhere !important;
-        white-space: normal !important;
-    }
-
-    .aat-container .aat-generic-category-dossier .aat-dossier-command-card strong,
-    .aat-container .aat-generic-category-dossier .aat-hub-title,
-    .aat-container .aat-generic-category-dossier .aat-hub-subtitle,
-    .aat-container .aat-generic-category-dossier .aat-category-history-title,
-    .aat-container .aat-generic-category-dossier .aat-category-history-meta,
-    .aat-container .aat-generic-category-dossier .aat-category-history-detail {
-        overflow-wrap: anywhere !important;
-        text-wrap: auto !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-    }
-
-    .aat-container .aat-generic-category-dossier .aat-dossier-command-card.is-latest strong {
-        font-size: clamp(1.28rem, 8vw, 1.56rem) !important;
-        line-height: 1.12 !important;
-    }
-}
-
-/* --- Nominee trail (collapsible) ----------------------------------------- */
-.aat-nominee-trail {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(201, 169, 97, 0.14);
-}
-.aat-nominee-trail-summary {
-    cursor: pointer;
-    color: rgba(239,232,214,0.74);
-    font-family: var(--lunara-font-label, sans-serif);
-    font-size: .875rem;
-    letter-spacing: normal;
-    text-transform: none;
-    user-select: none;
-    list-style: none;
-    padding: 6px 0;
-    transition: color 0.18s ease;
-}
-.aat-nominee-trail-summary::-webkit-details-marker {
-    display: none;
-}
-.aat-nominee-trail-summary::before {
-    content: "\25B8";
-    display: inline-block;
-    margin-right: 8px;
-    color: #c9a961;
-    transition: transform 0.2s ease;
-}
-.aat-nominee-trail[open] > .aat-nominee-trail-summary::before {
-    transform: rotate(90deg);
-}
-.aat-nominee-trail-summary:hover,
-.aat-nominee-trail-summary:focus-visible {
-    color: #c9a961;
-    outline: none;
-}
-
-.aat-nominee-trail-list {
-    list-style: none;
-    margin: 14px 0 0;
-    padding: 0;
-    display: grid;
-    gap: 10px;
-}
-.aat-nominee-trail-item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 14px;
-    row-gap: 4px;
-    padding: 10px 14px;
-    background: transparent;
-    border-radius: 0;
-    border-left: 0;
-    font-size: 0.94rem;
-}
-.aat-nominee-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 3px;
-    background: rgba(201, 169, 97, 0.14);
-    color: rgba(201,169,97,0.94);
-    font-family: var(--lunara-font-label, sans-serif);
-    font-size: .875rem;
-    letter-spacing: normal;
-    white-space: nowrap;
-    align-self: start;
-    margin-top: 2px;
-}
-.aat-nominee-primary {
-    color: #efe8d6;
-    font-family: var(--lunara-font-body, Georgia, serif);
-    font-weight: 600;
-}
-.aat-nominee-primary a {
+.aat-category-dossier .aat-category-history-title a {
     color: inherit;
     text-decoration: none;
 }
-.aat-nominee-primary a:hover,
-.aat-nominee-primary a:focus-visible {
-    color: #c9a961;
+
+.aat-category-dossier .aat-category-history-title a:hover,
+.aat-category-dossier .aat-category-history-title a:focus-visible {
+    color: var(--aat-gold-light);
     text-decoration: underline;
+    text-underline-offset: 4px;
 }
-.aat-nominee-secondary {
-    grid-column: 2;
-    color: rgba(239,232,214,0.74);
+
+.aat-category-dossier .aat-category-history-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    font-family: inherit;
     font-style: italic;
+    font-size: 1rem;
+    line-height: 1.55;
 }
-.aat-nominee-detail {
-    grid-column: 2;
-    color: rgba(239,232,214,0.74);
-    font-size: .875rem;
+
+.aat-category-dossier .aat-category-history-detail {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+    line-height: 1.55;
 }
-.aat-nominee-trail-actions {
-    grid-column: 2;
+
+/* Prose links keep their line: no 44px boxes inside sentences. */
+.aat-category-dossier .aat-hub-inline-link,
+.aat-category-dossier .aat-category-history .aat-entity-link {
+    display: inline;
+    min-height: 0;
+    padding: .2em 0;
+    border: 0;
+    line-height: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+    transition: color .18s ease, text-decoration-color .18s ease;
+}
+
+.aat-category-dossier .aat-hub-inline-link:hover,
+.aat-category-dossier .aat-hub-inline-link:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration-color: currentColor;
+    border: 0;
+}
+
+.aat-category-dossier .aat-hub-inline-link-title {
+    text-decoration: none;
+}
+
+.aat-category-dossier .aat-category-person-strip {
     display: flex;
     flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 4px;
+    align-items: baseline;
+    gap: 2px 12px;
+    margin: 2px 0 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: 1rem;
+    line-height: 1.55;
 }
-.aat-nominee-trail-actions .aat-winner-circle-action {
-    min-height: 44px;
-    padding: 5px 9px;
+
+.aat-category-dossier .aat-category-person-strip-label {
+    color: var(--aat-light-gray);
+    opacity: .72;
     font-size: .875rem;
+    font-weight: 400;
     letter-spacing: normal;
+    text-transform: none;
 }
-.aat-nominee-trail-compact {
-    align-items: center;
+
+.aat-category-dossier .aat-category-person-chip {
+    display: inline;
+    min-height: 0;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    line-height: inherit;
+    text-align: left;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+}
+
+.aat-category-dossier .aat-category-person-chip:hover,
+.aat-category-dossier .aat-category-person-chip:focus-visible {
+    color: var(--aat-gold-light);
+    background: none;
+    border: 0;
+    text-decoration-color: currentColor;
+}
+
+/* Action links: one trailing line of hairline 44px targets. The Theme sets the
+   button geometry, weight and colour; the plugin keeps them quiet. */
+.aat-category-dossier .aat-category-history-actions,
+.aat-category-dossier .aat-nominee-trail-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
+    margin: 6px 0 0;
+    padding: 0;
+    border: 0;
 }
-.aat-nominee-trail-compact .aat-nominee-trail-summary {
-    cursor: default;
+
+.aat-category-dossier .aat-winner-circle-action,
+.aat-category-dossier .aat-winner-circle-action.is-kind-ceremony,
+.aat-category-dossier .aat-winner-circle-action.is-kind-category,
+.aat-category-dossier .aat-winner-circle-action.is-kind-film-history,
+.aat-category-dossier .aat-winner-circle-action.is-kind-person-history,
+.aat-category-dossier .aat-winner-circle-action.is-kind-producer-history,
+.aat-category-dossier .aat-winner-circle-action.is-kind-company-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    width: auto;
+    padding: 6px 12px;
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    box-shadow: none;
+    transition: border-color .18s ease, color .18s ease;
 }
-.aat-nominee-trail-compact .aat-nominee-trail-summary::before {
-    content: "";
+
+.aat-category-dossier .aat-winner-circle-action:hover,
+.aat-category-dossier .aat-winner-circle-action:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+    transform: none;
+}
+
+/* --- Nominee trail --------------------------------------------------------- */
+.aat-category-dossier .aat-nominee-trail {
+    grid-column: 2;
+    margin: 4px 0 0;
+    padding: 0;
+    border: 0;
+}
+
+.aat-category-dossier .aat-nominee-trail-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    width: fit-content;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--aat-light-gray);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: color .18s ease;
+}
+
+.aat-category-dossier .aat-nominee-trail-summary::-webkit-details-marker {
     display: none;
 }
 
-/* --- Mobile -------------------------------------------------------------- */
-@media (max-width: 720px) {
-    .aat-decade-nav {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 10px;
-        -webkit-overflow-scrolling: touch;
-    }
-    .aat-decade-pill {
-        flex-shrink: 0;
-        scroll-snap-align: start;
-    }
-    .aat-decade-heading {
-        position: static; /* don't sticky on phones, save scarce vertical room */
-        font-size: 1.32rem;
-    }
-    .aat-decade-groups {
-        gap: 32px;
-    }
-    .aat-category-ceremony-row {
-        padding: 16px 0;
-    }
-    .aat-category-history-title {
-        font-size: 1.18rem;
-    }
-    .aat-nominee-trail-item {
-        grid-template-columns: 1fr;
-    }
-    .aat-nominee-secondary,
-    .aat-nominee-detail,
-    .aat-nominee-trail-actions {
-        grid-column: 1;
-    }
-    .aat-nominee-badge {
-        justify-self: start;
+.aat-category-dossier .aat-nominee-trail-summary::before {
+    content: "\25B8";
+    display: inline-block;
+    color: var(--aat-gold);
+    transition: transform .2s ease;
+}
+
+.aat-category-dossier .aat-nominee-trail[open] > .aat-nominee-trail-summary::before {
+    transform: rotate(90deg);
+}
+
+.aat-category-dossier .aat-nominee-trail-summary:hover {
+    color: var(--aat-white);
+}
+
+.aat-category-dossier .aat-nominee-trail-summary:focus-visible {
+    outline: 2px solid var(--aat-focus-ring);
+    outline-offset: 3px;
+}
+
+.aat-category-dossier .aat-nominee-trail-list {
+    display: grid;
+    gap: 0;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.aat-category-dossier .aat-nominee-trail-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px 10px;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .1);
+    border-radius: 0;
+    background: none;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+
+.aat-category-dossier .aat-nominee-trail-item:first-child {
+    border-top: 0;
+}
+
+/* Every line in "N other nominees" is a nominee: the word stays for assistive
+   technology, the repeated pill does not paint. */
+.aat-category-dossier .aat-category-history .aat-nominee-badge {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.aat-category-dossier .aat-nominee-primary {
+    color: var(--aat-white);
+    font-family: inherit;
+    font-weight: 400;
+}
+
+.aat-category-dossier .aat-nominee-primary a {
+    color: inherit;
+}
+
+.aat-category-dossier .aat-nominee-secondary,
+.aat-category-dossier .aat-nominee-detail,
+.aat-category-dossier .aat-category-person-strip.is-compact,
+.aat-category-dossier .aat-nominee-trail-actions {
+    grid-column: auto;
+}
+
+.aat-category-dossier .aat-nominee-secondary {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-style: italic;
+}
+
+.aat-category-dossier .aat-nominee-detail {
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+}
+
+.aat-category-dossier .aat-category-person-strip.is-compact {
+    margin: 0;
+    padding: 0;
+}
+
+.aat-category-dossier .aat-nominee-trail-actions {
+    margin: 4px 0 0;
+}
+
+.aat-category-dossier .aat-nominee-trail-compact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 16px;
+    grid-column: 2;
+    margin: 4px 0 0;
+    padding: 0;
+}
+
+.aat-category-dossier .aat-nominee-trail-count {
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+
+/* --- Highlights, reviews and the sortable-ledger callout ------------------- */
+.aat-category-dossier .aat-category-gallery-section {
+    display: grid;
+    gap: 16px;
+}
+
+.aat-category-dossier .aat-category-gallery-section h2,
+.aat-category-dossier .aat-related-reviews-section h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: normal;
+}
+
+.aat-category-dossier .aat-hub-film-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+    gap: 20px 14px;
+}
+
+.aat-category-dossier .aat-explorer-callout {
+    padding: 22px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.aat-category-dossier .aat-explorer-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding: 0;
+}
+
+.aat-category-dossier .aat-explorer-copy {
+    display: grid;
+    gap: 8px;
+    max-width: 62ch;
+}
+
+.aat-category-dossier .aat-explorer-copy h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    line-height: 1.12;
+    letter-spacing: normal;
+}
+
+.aat-category-dossier .aat-table-shell {
+    padding: 8px 0 0;
+    animation: none;
+}
+
+@media (min-width: 840px) {
+    .aat-category-dossier .aat-explorer-shell {
+        grid-template-columns: minmax(0, 1.25fr) auto;
+        gap: 18px 22px;
     }
 }
 
-/* --- Reduced motion ------------------------------------------------------ */
-@media (prefers-reduced-motion: reduce) {
-    .aat-decade-pill,
-    .aat-nominee-trail-summary::before {
-        transition: none;
+@media (min-width: 900px) {
+    .aat-category-dossier .aat-dossier-command-band {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    .aat-decade-pill:hover,
-    .aat-decade-pill:focus-visible {
-        transform: none;
+
+    .aat-category-dossier .aat-category-latest-winner {
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+        align-items: start;
+    }
+
+    .aat-category-dossier .aat-category-history > .aat-section-head {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        column-gap: 24px;
+    }
+
+    .aat-category-dossier .aat-section-head .aat-section-title,
+    .aat-category-dossier .aat-section-head .aat-section-description {
+        grid-column: 1;
+    }
+
+    .aat-category-dossier .aat-category-history-mode {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: end;
+    }
+}
+
+@media (max-width: 899px) {
+    .aat-category-dossier .aat-dossier-hero {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .aat-category-dossier {
+        padding-inline: 8px;
+        box-sizing: border-box;
+    }
+
+    .aat-category-dossier .aat-dossier-hero {
+        padding-top: 0;
+    }
+
+    .aat-category-dossier .aat-dossier-command-band {
+        gap: 0 16px;
+    }
+
+    .aat-category-dossier .aat-dossier-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .aat-category-dossier .aat-dossier-actions .aat-btn {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        justify-content: center;
+    }
+
+    .aat-category-dossier .aat-hub-spotlight-card {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .aat-category-dossier .aat-hub-spotlight-media {
+        width: min(100%, 148px);
+    }
+
+    .aat-category-dossier .aat-decade-head.has-era-poster {
+        grid-template-columns: 48px minmax(0, 1fr);
+    }
+
+    .aat-category-dossier .aat-era-chapter-media {
+        width: 48px;
+    }
+
+    .aat-category-dossier .aat-category-ceremony-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    .aat-category-dossier .aat-category-ceremony-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 12px;
+    }
+
+    .aat-category-dossier .aat-nominee-trail,
+    .aat-category-dossier .aat-nominee-trail-compact {
+        grid-column: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aat-category-dossier .aat-decade-pill,
+    .aat-category-dossier .aat-winner-circle-action,
+    .aat-category-dossier .aat-hub-inline-link,
+    .aat-category-dossier .aat-hub-chip-rich,
+    .aat-category-dossier .aat-nominee-trail-summary,
+    .aat-category-dossier .aat-nominee-trail-summary::before {
+        transition: none;
     }
 }
 
@@ -5576,7 +5158,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     border: 0;
     background: transparent;
     color: var(--aat-gold-light);
-    line-height: 1;
+    line-height: 1.4;
 }
 
 .aat-entity-timeline .aat-timeline-year a {
@@ -5585,7 +5167,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 
 .aat-entity-timeline .aat-history-item {
-    align-items: stretch;
+    align-items: start;
     border-radius: 0;
     background:
         transparent;
@@ -5598,7 +5180,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 
 .aat-entity-timeline .aat-history-status {
-    align-items: stretch;
+    align-items: flex-start;
 }
 
 .aat-entity-timeline .aat-winner-badge,
@@ -5617,7 +5199,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-filmography-card:focus-within {
     transform: none;
     border-color: rgba(201,169,97,.34);
-    box-shadow: 0 20px 42px rgba(0,0,0,.24);
+    box-shadow: none;
 }
 
 .aat-filmography-link {
@@ -5644,7 +5226,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     font-size: .875rem;
     font-weight: 800;
     letter-spacing: normal;
-    line-height: 1;
+    line-height: 1.3;
     text-transform: none;
 }
 
@@ -5705,7 +5287,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     font-family: var(--lunara-font-body, Georgia, serif);
     font-size: 1rem;
     line-height: 1.6;
-    padding: clamp(20px, 4vw, 48px) clamp(16px, 3vw, 32px);
+    padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
 }
 
 .aat-entity-page,
@@ -5726,17 +5308,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     display: grid;
     gap: 28px;
     overflow-x: clip;
-}
-
-@media (max-width: 640px) {
-    .aat-container {
-        padding-left: 12px;
-        padding-right: 12px;
-        font-family: var(--lunara-font-body, Georgia, serif);
-        font-size: 1rem;
-        line-height: 1.6;
-        padding: clamp(20px, 4vw, 48px) clamp(16px, 3vw, 32px);
-    }
 }
 
 /* Lunara coherent system: compact Oscars cards and entity posters. */
@@ -5843,8 +5414,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
 .aat-entity-page .aat-entity-overview,
 .aat-entity-page .aat-entity-summary {
-    font-size: .96rem;
-    line-height: 1.58;
+    font-size: 1.0625rem;
+    line-height: 1.6;
 }
 
 .aat-entity-page .aat-entity-status-banner {
@@ -5889,7 +5460,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 
 .aat-entity-page .aat-filmography-title {
-    font-size: .94rem;
+    font-size: 1rem;
     padding: 12px 12px 2px;
 }
 
@@ -5904,41 +5475,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
 .aat-entity-page .aat-history-item {
     padding: 16px 0;
-}
-
-/* Lunara Oscars category pass: keep dense history text readable without tiny tap targets. */
-.aat-hub-page .aat-category-latest-winner .aat-hub-inline-link,
-.aat-hub-page .aat-category-history .aat-hub-inline-link,
-.aat-hub-page .aat-category-history .aat-entity-link {
-    align-items: center;
-    display: inline-flex;
-    line-height: 1.25;
-    min-height: 32px;
-    padding-block: 3px;
-    text-underline-offset: 4px;
-}
-
-.aat-hub-page .aat-category-latest-winner .aat-hub-inline-link-title,
-.aat-hub-page .aat-category-history .aat-hub-inline-link-title {
-    min-height: 34px;
-}
-
-.aat-hub-page .aat-category-history .aat-timeline-link,
-.aat-hub-page .aat-category-history .aat-decade-pill,
-.aat-hub-page .aat-category-history .aat-nominee-trail-summary,
-.aat-hub-page .aat-category-history .aat-winner-circle-action,
-.aat-hub-page .aat-category-latest-winner .aat-hub-chip {
-    line-height: 1.4;
-    min-height: 44px;
-}
-
-.aat-hub-page .aat-category-history .aat-decade-pill {
-    padding-block: 7px;
-}
-
-.aat-hub-page .aat-category-history .aat-nominee-trail-actions .aat-winner-circle-action {
-    min-height: 44px;
-    padding: 7px 10px;
 }
 
 @media (max-width: 720px) {
@@ -6090,215 +5626,393 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     }
 }
 
-/* Premium category dossier final mobile guard: keep marquee category files readable after global route rules. */
-@media (max-width: 640px) {
-    .aat-container .aat-premium-category-dossier,
-    .aat-container .aat-premium-category-dossier *,
-    .aat-container .aat-premium-category-dossier .aat-dossier-hero,
-    .aat-container .aat-premium-category-dossier .aat-dossier-hero-copy,
-    .aat-container .aat-premium-category-dossier .aat-hub-subtitle,
-    .aat-container .aat-premium-category-dossier .aat-dossier-command-band,
-    .aat-container .aat-premium-category-dossier .aat-dossier-command-card,
-    .aat-container .aat-premium-category-dossier .aat-dossier-actions,
-    .aat-container .aat-premium-category-dossier .aat-era-browser,
-    .aat-container .aat-premium-category-dossier .aat-era-chapter,
-    .aat-container .aat-premium-category-dossier .aat-ledger-card {
-        min-width: 0 !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    body .aat-container .aat-category-dossier.aat-premium-category-dossier {
-        width: min(100%, calc(100vw - 24px)) !important;
-        max-width: calc(100vw - 24px) !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        overflow-x: hidden !important;
-    }
-
-    body .aat-container .aat-premium-category-dossier .aat-dossier-hero {
-        width: 100% !important;
-        padding: 16px 0 !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-hub-title,
-    .aat-container .aat-premium-category-dossier .aat-section-title,
-    .aat-container .aat-premium-category-dossier .aat-hub-subtitle,
-    .aat-container .aat-premium-category-dossier .aat-category-history-title,
-    .aat-container .aat-premium-category-dossier .aat-category-history-meta,
-    .aat-container .aat-premium-category-dossier .aat-category-history-detail {
-        overflow-wrap: anywhere !important;
-        text-wrap: auto !important;
-        white-space: normal !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-section-title {
-        max-width: 100% !important;
-        font-size: clamp(1.46rem, 8vw, 1.92rem) !important;
-        line-height: 1.12 !important;
-    }
-
-    body .aat-container .aat-premium-category-dossier .aat-dossier-hero .aat-hub-subtitle {
-        max-width: 29ch !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-hub-spotlight-card {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        min-height: 0 !important;
-        padding: 12px !important;
-        gap: 12px !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-hub-spotlight-media-link,
-    .aat-container .aat-premium-category-dossier .aat-hub-spotlight-media {
-        display: block !important;
-        width: min(100%, 148px) !important;
-        max-width: 148px !important;
-        min-height: 0 !important;
-        aspect-ratio: 2 / 3 !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-hub-spotlight-body,
-    .aat-container .aat-premium-category-dossier .aat-hub-spotlight-title,
-    .aat-container .aat-premium-category-dossier .aat-hub-spotlight-meta,
-    .aat-container .aat-premium-category-dossier .aat-hub-chip-stack,
-    .aat-container .aat-premium-category-dossier .aat-hub-chip {
-        min-width: 0 !important;
-        max-width: 100% !important;
-        overflow-wrap: anywhere !important;
-        text-wrap: auto !important;
-        white-space: normal !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-era-chapter-copy h4,
-    .aat-container .aat-premium-category-dossier .aat-era-chapter-copy p {
-        max-width: 29ch !important;
-        overflow-wrap: anywhere !important;
-        text-wrap: auto !important;
-        white-space: normal !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-dossier-actions {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) !important;
-        width: 100% !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-dossier-actions .aat-btn {
-        justify-content: center !important;
-        width: 100% !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-ceremony-meta {
-        display: grid !important;
-        justify-content: start !important;
-        gap: 4px !important;
-    }
-
-    .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-history-title,
-    .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-history-meta,
-    .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-history-detail {
-        max-width: 29ch !important;
-    }
-
-    .aat-hub-page .aat-premium-category-dossier .aat-ledger-card .aat-winner-circle-action {
-        width: auto !important;
-    }
-
-    .aat-hub-page .aat-premium-category-dossier .aat-hub-chip,
-    .aat-hub-page .aat-premium-category-dossier .aat-winner-circle-action {
-        justify-content: center !important;
-        text-align: center !important;
-        white-space: normal !important;
-    }
+/* ============================================================================
+ * Editorial artwork cards, shared by every Ledger route.
+ *
+ * Film cards (Best Picture field, highlights, nominated films), review cards
+ * and the latest-winner spotlight show their artwork plainly: a 2:3 poster or
+ * 16:10 still inside one hairline, the title as its own link under it, and the
+ * facts in reading size. No gradient washes, zooms, hover filters or blurred
+ * backdrops. Route blocks only set grid columns and copy.
+ * ========================================================================= */
+.aat-hub-page .aat-filmography-card,
+.aat-entity-page .aat-filmography-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    align-content: start;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    isolation: auto;
+    transition: none;
 }
 
-/* Ceremony year dossiers: second Oscars route-family surface. */
+.aat-hub-page .aat-filmography-link,
+.aat-entity-page .aat-filmography-link {
+    display: block;
+    height: auto;
+    color: inherit;
+    text-decoration: none;
+}
+
+.aat-hub-page .aat-filmography-poster-wrap,
+.aat-entity-page .aat-filmography-poster-wrap {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .03);
+    transition: border-color .18s ease;
+}
+
+.aat-hub-page .aat-filmography-link:hover .aat-filmography-poster-wrap,
+.aat-hub-page .aat-filmography-link:focus-visible .aat-filmography-poster-wrap,
+.aat-entity-page .aat-filmography-link:hover .aat-filmography-poster-wrap,
+.aat-entity-page .aat-filmography-link:focus-visible .aat-filmography-poster-wrap {
+    border-color: var(--aat-gold);
+}
+
+.aat-hub-page .aat-filmography-poster-wrap::after,
+.aat-entity-page .aat-filmography-poster-wrap::after,
+.aat-hub-page .aat-related-review-media::after,
+.aat-entity-page .aat-related-review-media::after,
+.aat-hub-page .aat-hub-spotlight-media::after,
+.aat-hub-page .aat-hub-spotlight-card::after {
+    content: none;
+}
+
+.aat-hub-page .aat-filmography-poster,
+.aat-hub-page .aat-filmography-poster-wrap img,
+.aat-entity-page .aat-filmography-poster,
+.aat-entity-page .aat-filmography-poster-wrap img,
+.aat-hub-page .aat-related-review-image,
+.aat-hub-page .aat-related-review-media img,
+.aat-entity-page .aat-related-review-image,
+.aat-entity-page .aat-related-review-media img,
+.aat-hub-page .aat-hub-spotlight-media img,
+.aat-hub-page .aat-hub-spotlight-poster {
+    transform: none;
+    filter: none;
+    transition: none;
+}
+
+.aat-hub-page .aat-filmography-card:hover .aat-filmography-poster,
+.aat-hub-page .aat-filmography-card:hover .aat-filmography-poster-wrap img,
+.aat-entity-page .aat-filmography-card:hover .aat-filmography-poster,
+.aat-entity-page .aat-filmography-card:hover .aat-filmography-poster-wrap img,
+.aat-hub-page .aat-related-review-card:hover .aat-related-review-image,
+.aat-hub-page .aat-related-review-card:hover .aat-related-review-media img,
+.aat-entity-page .aat-related-review-card:hover .aat-related-review-image,
+.aat-entity-page .aat-related-review-card:hover .aat-related-review-media img {
+    transform: none;
+    filter: none;
+}
+
+.aat-hub-page .aat-filmography-title,
+.aat-entity-page .aat-filmography-title {
+    margin: 0;
+    padding: 10px 0 2px;
+    color: var(--aat-white);
+    font-size: 1rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.aat-hub-page .aat-filmography-title a,
+.aat-entity-page .aat-filmography-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.aat-hub-page .aat-filmography-title a:hover,
+.aat-hub-page .aat-filmography-title a:focus-visible,
+.aat-entity-page .aat-filmography-title a:hover,
+.aat-entity-page .aat-filmography-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.aat-hub-page .aat-filmography-meta,
+.aat-entity-page .aat-filmography-meta {
+    margin: 0;
+    padding: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+
+/* A status word on artwork sits on a local dark scrim, never a filled pill. */
+.aat-hub-page .aat-card-badge,
+.aat-entity-page .aat-card-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    border: 0;
+    border-radius: 2px;
+    background: rgba(6, 13, 21, .86);
+    color: var(--aat-gold-light);
+    font-size: .8125rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-hub-page .aat-card-badge::before,
+.aat-entity-page .aat-card-badge::before {
+    content: none;
+}
+
+.aat-hub-page .aat-related-review-card,
+.aat-entity-page .aat-related-review-card {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+}
+
+.aat-hub-page .aat-related-review-media,
+.aat-entity-page .aat-related-review-media {
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .03);
+}
+
+.aat-hub-page .aat-related-review-body,
+.aat-entity-page .aat-related-review-body {
+    gap: 8px;
+    padding: 12px 0 0;
+}
+
+.aat-hub-page .aat-related-review-card.has-no-media .aat-related-review-body,
+.aat-entity-page .aat-related-review-card.has-no-media .aat-related-review-body {
+    min-height: 0;
+    padding: 0;
+}
+
+.aat-hub-page .aat-related-review-title,
+.aat-entity-page .aat-related-review-title {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.aat-hub-page .aat-related-review-meta,
+.aat-entity-page .aat-related-review-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+
+.aat-hub-page .aat-related-review-meta a,
+.aat-entity-page .aat-related-review-meta a {
+    color: inherit;
+    border-bottom: 0;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+
+.aat-hub-page .aat-related-review-actions,
+.aat-entity-page .aat-related-review-actions {
+    gap: 10px;
+    padding-top: 2px;
+}
+
+.aat-hub-page .aat-hub-chips {
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.aat-hub-page .aat-hub-chip {
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 2px;
+    background: transparent;
+    transition: border-color .18s ease;
+}
+
+.aat-hub-page .aat-hub-chip:hover,
+.aat-hub-page .aat-hub-chip:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+}
+
+/* ============================================================================
+ * Ceremony dossier (/oscars/ceremony/N/): base composition.
+ *
+ * Hero (poster with its caption, title, one summary band), neighbour
+ * navigation in time order, the editorial guide as one prose column, the
+ * ceremony at a glance with a ranked list of the most awarded titles, the Best
+ * Picture field, the four major races, the complete ledger, highlights,
+ * reviews, categories and the Winner Circle. ceremony-dossier.css carries the
+ * route-only overrides that must win over the Theme; the landing route shares
+ * the marquee, gallery and Winner Circle components and keeps their generic
+ * rules above.
+ * ========================================================================= */
 .aat-ceremony-dossier {
     display: grid;
-    gap: clamp(20px, 3vw, 34px);
+    gap: 28px;
     min-width: 0;
     max-width: 100%;
 }
 
-.aat-ceremony-dossier .aat-stats-bar.aat-entity-stats {
-    display: none;
+.aat-ceremony-dossier > * {
+    margin-top: 0;
 }
 
+/* --- Hero ------------------------------------------------------------------ */
 .aat-ceremony-dossier-hero {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(300px, .92fr);
-    gap: clamp(18px, 3vw, 32px);
-    align-items: stretch;
-    padding: 16px 0;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+    gap: clamp(22px, 4vw, 48px);
+    align-items: start;
+    padding: 8px 0 0;
     border: 0;
     border-radius: 0;
-    background:
-        transparent;
-    overflow: hidden;
+    background: transparent;
+    overflow: visible;
 }
 
 .aat-ceremony-dossier-hero > * {
     position: relative;
     z-index: 1;
+    min-width: 0;
+}
+
+.aat-ceremony-dossier-lead {
+    display: grid;
+    gap: clamp(16px, 2.4vw, 28px);
+    align-content: start;
+    min-width: 0;
+}
+
+.aat-ceremony-dossier-hero.has-dossier-poster .aat-ceremony-dossier-lead {
+    grid-template-columns: minmax(138px, 182px) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(18px, 2.4vw, 30px);
+}
+
+.aat-ceremony-dossier-poster {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+}
+
+.aat-ceremony-dossier-poster-frame {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 2px;
+    background: rgba(6, 15, 26, .72);
+    box-shadow: none;
+    transition: none;
+}
+
+.aat-ceremony-dossier-poster-frame img,
+.aat-ceremony-dossier-poster-frame .aat-entity-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: none;
+}
+
+.aat-ceremony-dossier-poster-frame .aat-entity-poster-fallback {
+    border: 0;
+    border-radius: 0;
+}
+
+.aat-ceremony-dossier-poster-tag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 6px;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: .875rem;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+    text-align: left;
 }
 
 .aat-ceremony-dossier-copy {
     display: grid;
-    align-content: center;
+    align-content: start;
     gap: 14px;
     min-width: 0;
 }
 
 .aat-ceremony-dossier .aat-ceremony-dossier-hero .aat-hub-title {
-    color: var(--aat-light-gray);
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.12;
+    margin: 0;
     max-width: 100%;
+    color: var(--aat-light-gray);
+    font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+    line-height: 1.08;
+    letter-spacing: normal;
     text-align: left;
     text-transform: none;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
 }
 
 .aat-ceremony-dossier .aat-ceremony-dossier-hero .aat-hub-subtitle {
     margin: 0;
     max-width: 58ch;
-    color: rgba(244,239,227,0.84);
-    line-height: 1.72;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: clamp(1rem, .96rem + .3vw, 1.125rem);
+    line-height: 1.6;
 }
 
 .aat-ceremony-command-band {
     display: grid;
-    grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr);
-    gap: 12px;
-    align-self: center;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+    align-self: start;
     min-width: 0;
+    padding-top: 6px;
+    border-top: 1px solid rgba(201, 169, 97, .2);
 }
 
 .aat-ceremony-command-card {
     display: grid;
-    align-content: end;
-    gap: 8px;
+    align-content: start;
+    gap: 4px;
     min-width: 0;
-    min-height: 124px;
-    padding: 16px 0;
+    min-height: 0;
+    padding: 12px 0;
     border: 0;
     border-radius: 0;
-    background:
-        transparent;
+    background: transparent;
+    transition: none;
 }
 
 .aat-ceremony-command-card.is-primary {
-    grid-row: span 2;
-    min-height: 218px;
+    grid-row: auto;
+    min-height: 0;
 }
 
 .aat-ceremony-command-card span {
-    color: var(--aat-gold-light);
+    color: var(--aat-light-gray);
+    opacity: .72;
     font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
     letter-spacing: normal;
     text-transform: none;
 }
@@ -6306,15 +6020,19 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-ceremony-command-card strong {
     color: var(--aat-white);
     max-width: 100%;
-    font-size: clamp(1.12rem, 1.65vw, 1.72rem);
-    line-height: 1.06;
+    font-family: var(--lunara-font-display, inherit);
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    line-height: 1.15;
+    letter-spacing: normal;
     overflow-wrap: anywhere;
     white-space: normal;
 }
 
 .aat-ceremony-command-card.is-primary strong {
-    color: var(--aat-gold);
-    font-size: clamp(2.25rem, 3.2vw, 2.95rem);
+    color: var(--aat-white);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.1;
 }
 
 .aat-ceremony-dossier-actions {
@@ -6323,131 +6041,156 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     margin-top: 4px;
 }
 
+/* --- Neighbour navigation: earlier, the index, later ---------------------- */
 .aat-ceremony-dossier .aat-ceremony-neighbor-nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: stretch;
     margin: 0;
     min-width: 0;
     max-width: 100%;
+    padding: 0 0 14px;
+    border-bottom: 1px solid rgba(201, 169, 97, .16);
 }
 
-.aat-ceremony-dossier .aat-ceremony-thesis,
-.aat-ceremony-dossier .aat-ceremony-editorial-writeup,
-.aat-ceremony-dossier .aat-ceremony-marquee,
-.aat-ceremony-dossier .aat-ceremony-ballot-ledger,
-.aat-ceremony-dossier .aat-ceremony-gallery-section,
-.aat-ceremony-dossier .aat-winner-circle-section,
-.aat-ceremony-dossier .aat-explorer-callout {
-    margin-top: 0;
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-older {
+    grid-template-columns: auto minmax(0, 1fr);
 }
 
-.aat-ceremony-dossier .aat-hub-metric-grid {
-    margin: 0;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-newer {
+    grid-template-columns: minmax(0, 1fr) auto;
 }
 
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-older .aat-ceremony-neighbor-slot.is-older,
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-newer .aat-ceremony-neighbor-slot.is-newer {
+    display: none;
+}
+
+.aat-ceremony-neighbor-slot {
+    display: flex;
+    min-width: 0;
+}
+
+.aat-ceremony-neighbor-slot.is-older {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.aat-ceremony-neighbor-slot.is-newer {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.aat-ceremony-neighbor-card,
+.aat-ceremony-neighbor-index {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+    padding: 10px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    text-decoration: none;
+    box-shadow: none;
+    transition: color .18s ease;
+}
+
+.aat-ceremony-neighbor-kicker,
+.aat-ceremony-neighbor-index span {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-ceremony-neighbor-card strong,
+.aat-ceremony-neighbor-index strong {
+    color: var(--aat-white);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.3;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+    transition: text-decoration-color .18s ease;
+}
+
+.aat-ceremony-neighbor-card:hover strong,
+.aat-ceremony-neighbor-card:focus-visible strong,
+.aat-ceremony-neighbor-index:hover strong,
+.aat-ceremony-neighbor-index:focus-visible strong {
+    color: var(--aat-gold-light);
+    text-decoration-color: currentColor;
+}
+
+.aat-ceremony-neighbor-card span:last-child {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .9375rem;
+}
+
+.aat-ceremony-neighbor-index {
+    min-width: 0;
+    padding: 10px 16px;
+    place-items: center;
+    text-align: center;
+}
+
+/* --- Editorial guide: one prose column --------------------------------------- */
 .aat-ceremony-editorial-writeup {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(240px, .34fr) minmax(0, .66fr);
-    gap: clamp(18px, 3vw, 34px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
     align-items: start;
-    padding: 16px 0;
+    padding: 0;
     border: 0;
     border-radius: 0;
-    background:
-        transparent;
-    background-size: 56px 56px, 56px 56px, auto, auto, auto;
+    background: transparent;
     box-shadow: none;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .aat-ceremony-editorial-heading {
     display: grid;
-    gap: 15px;
+    gap: 10px;
     align-content: start;
     min-width: 0;
-}
-
-.aat-ceremony-guide-file {
-    justify-self: start;
-    padding-left: 12px;
-    border-left: 0;
-    color: var(--aat-gold);
-    font-size: .875rem;
-    font-weight: 800;
-    letter-spacing: normal;
-    line-height: 1;
-    text-transform: none;
+    max-width: 76ch;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(201, 169, 97, .2);
 }
 
 .aat-ceremony-editorial-writeup h2 {
     margin: 0;
-    max-width: 14ch;
+    max-width: 24ch;
     color: var(--aat-white);
-    font-size: clamp(2rem, 3.55vw, 3.72rem);
-    line-height: 1;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
     text-wrap: balance;
 }
 
 .aat-ceremony-guide-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    max-width: 26rem;
-    color: rgba(244,239,227,0.78);
-    font-size: .875rem;
-    font-weight: 800;
-    letter-spacing: normal;
-    line-height: 1.4;
-    text-transform: none;
-}
-
-.aat-ceremony-guide-meta span {
-    display: inline-flex;
-    align-items: center;
-    min-height: 26px;
-    padding: 5px 9px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-}
-
-.aat-ceremony-guide-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-    margin-top: 2px;
-}
-
-.aat-ceremony-guide-actions .aat-hub-card-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: 10px 13px;
-    border-color: rgba(201,169,97,.26);
-    background: rgba(201,169,97,.08);
-}
-
-.aat-ceremony-guide-actions .aat-hub-card-action:hover,
-.aat-ceremony-guide-actions .aat-hub-card-action:focus-visible {
-    border-color: rgba(201,169,97,.48);
-    background: rgba(201,169,97,.16);
-}
-
-body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-card-action {
-    min-height: 44px !important;
-}
-
-.aat-ceremony-editorial-writeup .aat-hub-copy {
     margin: 0;
-    color: rgba(244,239,227,0.76);
-    line-height: 1.62;
+    max-width: 62ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: clamp(1rem, .96rem + .3vw, 1.125rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 .aat-ceremony-editorial-body {
     min-width: 0;
     max-width: 76ch;
-    padding: clamp(16px, 2.4vw, 24px);
+    padding: 0;
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -6456,195 +6199,187 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
 
 .aat-ceremony-editorial-body p {
     margin: 0;
-    color: rgba(244,239,227,0.84);
-    font-size: clamp(1rem, 1.05vw, 1.08rem);
-    line-height: 1.76;
+    color: var(--aat-light-gray);
+    opacity: .9;
+    font-size: clamp(1.0625rem, 1.1vw, 1.125rem);
+    line-height: 1.7;
 }
 
 .aat-ceremony-editorial-body p + p {
     margin-top: 1em;
 }
 
-.aat-ceremony-guide-copy p:first-child::first-letter {
-    float: left;
-    margin: .06em .16em 0 0;
-    color: var(--aat-gold);
-    font-size: 3.15rem;
-    font-weight: 900;
-    line-height: .82;
-}
-
-.aat-ceremony-thesis {
+/* --- Ceremony at a glance -------------------------------------------------- */
+.aat-ceremony-dossier .aat-ceremony-marquee {
     display: grid;
-    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
-    gap: clamp(18px, 3vw, 30px);
-    align-items: stretch;
-    padding: 16px 0;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-    overflow: hidden;
-}
-
-.aat-ceremony-thesis-copy {
-    display: grid;
-    align-content: start;
-    gap: 14px;
-    min-width: 0;
-}
-
-.aat-ceremony-thesis h2 {
-    margin: 0;
-    max-width: 15ch;
-    color: var(--aat-white);
-    font-size: clamp(2rem, 3.4vw, 3.65rem);
-    line-height: 1.02;
-    text-wrap: balance;
-}
-
-.aat-ceremony-thesis .aat-hub-copy {
-    margin: 0;
-    max-width: 62ch;
-}
-
-.aat-ceremony-thesis-stats {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    min-width: 0;
-}
-
-.aat-ceremony-thesis-stats span {
-    display: grid;
-    gap: 2px;
-    min-width: 0;
-    padding: 11px 12px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+    padding: 0;
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: rgba(255,255,255,0.74);
-    font-size: .875rem;
-    font-weight: 800;
-    letter-spacing: normal;
-    line-height: 1.25;
-    text-transform: none;
+    overflow: visible;
 }
 
-.aat-ceremony-thesis-stats strong {
-    color: var(--aat-gold);
-    font-size: clamp(1.15rem, 2vw, 1.65rem);
-    letter-spacing: normal;
-    line-height: 1;
-}
-
-.aat-ceremony-critical-path,
-.aat-major-race-briefing-head {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.aat-ceremony-critical-path {
-    padding-top: 4px;
-}
-
-.aat-major-race-briefing {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    min-width: 0;
-}
-
-.aat-major-race-briefing-card {
+.aat-ceremony-dossier .aat-ceremony-marquee-copy {
     display: grid;
     align-content: start;
-    gap: 9px;
-    min-width: 0;
-    padding: 16px 0;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent;
-    box-shadow: none;
+    gap: 10px;
 }
 
-.aat-major-race-briefing-card.is-complete {
-    border-color: rgba(201,169,97,.26);
-}
-
-.aat-major-race-briefing-card h3 {
+.aat-ceremony-dossier .aat-ceremony-marquee h2 {
     margin: 0;
+    max-width: 24ch;
     color: var(--aat-white);
-    font-size: clamp(1.08rem, 1.55vw, 1.42rem);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
     line-height: 1.08;
+}
+
+.aat-ceremony-dossier .aat-ceremony-marquee .aat-hub-copy {
+    margin: 0;
+    max-width: 58ch;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.aat-ceremony-dossier .aat-ceremony-marquee-stack {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+
+.aat-ceremony-leaders-title {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.aat-ceremony-dossier .aat-ceremony-leaders {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: leaders;
+}
+
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich {
+    display: grid;
+    grid-template-columns: 2.5ch minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    row-gap: 2px;
+    min-height: 0;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    color: var(--aat-light-gray);
+    counter-increment: leaders;
+}
+
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich::before {
+    content: counter(leaders);
+    grid-row: 1 / span 2;
+    align-self: start;
+    color: var(--aat-light-gray);
+    opacity: .6;
+    font-size: 1rem;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+}
+
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich strong {
+    color: var(--aat-white);
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich span {
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.4;
+}
+
+/* --- Best Picture field ------------------------------------------------------ */
+.aat-ceremony-dossier .aat-best-picture-nominees-section {
+    display: grid;
+    gap: 16px;
+}
+
+.aat-ceremony-dossier .aat-hub-section > h2,
+.aat-ceremony-dossier .aat-section-title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: normal;
     text-wrap: balance;
 }
 
-.aat-major-race-briefing-secondary,
-.aat-major-race-briefing-meta {
+.aat-ceremony-dossier .aat-section-description {
     margin: 0;
-    color: rgba(255,255,255,0.74);
-    font-size: .875rem;
-    line-height: 1.42;
+    max-width: 62ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.65;
 }
 
-.aat-major-race-briefing-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    color: rgba(255,255,255,0.74);
+.aat-ceremony-dossier .aat-best-picture-grid {
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 20px 16px;
 }
 
-.aat-major-race-briefing-meta span {
-    color: var(--aat-gold-light);
-}
-
-.aat-major-race-briefing-jump {
-    justify-self: start;
-    color: var(--aat-gold);
-    font-size: .875rem;
-    font-weight: 900;
-    letter-spacing: normal;
-    text-transform: none;
-}
-
+/* --- The major races ---------------------------------------------------------- */
 .aat-ceremony-major-races {
-    padding: 16px 0;
+    display: grid;
+    gap: 18px;
+    padding: 0;
     border: 0;
     border-radius: 0;
-    background:
-        transparent;
-    overflow: hidden;
+    background: transparent;
+    overflow: visible;
 }
 
 .aat-ceremony-major-races .aat-section-head {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 16px 20px;
-    align-items: end;
-    margin-bottom: 18px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    margin: 0;
 }
 
 .aat-major-race-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 0 32px;
 }
 
 .aat-major-race-card {
     position: relative;
     display: grid;
     gap: 14px;
+    align-content: start;
     min-width: 0;
-    padding: 16px 0;
+    padding: 20px 0;
     border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .18);
     border-radius: 0;
-    background:
-        transparent;
+    background: transparent;
     box-shadow: none;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .aat-major-race-card > * {
@@ -6660,16 +6395,17 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
 .aat-major-race-actions {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 8px 12px;
 }
 
-.aat-major-race-category,
-.aat-major-race-nominee-label {
-    color: var(--aat-gold-light);
-    font-size: .875rem;
-    font-weight: 800;
+.aat-major-race-category {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.4;
     letter-spacing: normal;
     text-transform: none;
 }
@@ -6678,7 +6414,7 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
     display: grid;
     grid-template-columns: minmax(92px, 126px) minmax(0, 1fr);
     gap: 16px;
-    align-items: center;
+    align-items: start;
 }
 
 .aat-major-race-card.is-best-picture .aat-major-race-feature {
@@ -6697,10 +6433,10 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
     display: block;
     width: 100%;
     aspect-ratio: 2 / 3;
-    border-radius: 10px;
+    border-radius: 2px;
     overflow: hidden;
-    border: 1px solid rgba(201,169,97,.22);
-    background: rgba(0,0,0,.24);
+    border: 1px solid rgba(201, 169, 97, .22);
+    background: rgba(255, 255, 255, .03);
 }
 
 .aat-major-race-media img,
@@ -6718,8 +6454,8 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
 .aat-major-race-title {
     margin: 0;
     color: var(--aat-white);
-    font-size: clamp(1.22rem, 2.15vw, 2.05rem);
-    line-height: 1.06;
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    line-height: 1.12;
     text-wrap: balance;
     /* Names break between words, never inside one; a single word longer than
        the card may still wrap rather than overflow. */
@@ -6730,9 +6466,11 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
 
 .aat-major-race-meta,
 .aat-major-race-summary {
-    margin: 8px 0 0;
-    color: rgba(255,255,255,0.74);
-    line-height: 1.56;
+    margin: 6px 0 0;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.55;
 }
 
 .aat-major-race-nominees {
@@ -6740,13 +6478,13 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
     gap: 8px;
     min-width: 0;
     padding-top: 12px;
-    border-top: 1px solid rgba(201,169,97,.13);
+    border-top: 1px solid rgba(201, 169, 97, .13);
 }
 
 .aat-major-race-nominee-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 12px;
+    gap: 0 20px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -6764,68 +6502,415 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
     border: 0;
     border-radius: 0;
     background: transparent;
-    border-top: 1px solid rgba(201,169,97,.18);
+    border-top: 1px solid rgba(201, 169, 97, .1);
 }
 
 .aat-major-race-nominee-primary {
-    color: rgba(255,255,255,0.88);
-    font-size: .88rem;
-    line-height: 1.4;
+    color: var(--aat-white);
+    font-size: 1rem;
+    line-height: 1.45;
 }
 
 .aat-major-race-nominee-secondary {
-    color: rgba(255,255,255,0.74);
+    color: var(--aat-light-gray);
+    opacity: .78;
     font-size: .875rem;
     line-height: 1.4;
 }
 
-.aat-ceremony-dossier .aat-ceremony-ballot-ledger .aat-section-head {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
+/* --- Complete ceremony ledger -------------------------------------------------- */
+.aat-ceremony-ballot-ledger {
+    display: grid;
+    gap: 16px;
 }
 
-.aat-ceremony-dossier .aat-ceremony-ballot-summary {
-    justify-content: flex-start;
-}
-
-.aat-ceremony-dossier .aat-ceremony-ballot-group {
-    border-radius: 0;
-}
-
-.aat-ceremony-dossier .aat-ceremony-ballot-row {
-    grid-template-columns: minmax(74px, .16fr) minmax(0, 1fr) minmax(160px, .28fr);
-    gap: 14px;
+.aat-ceremony-ballot-ledger .aat-section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
     align-items: start;
+    margin: 0;
 }
 
-.aat-ceremony-dossier .aat-ceremony-ballot-actions {
+.aat-ceremony-ledger-mode {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: flex-start;
+    margin: 0;
 }
 
-.aat-ceremony-dossier .aat-ceremony-ballot-actions .aat-winner-circle-action,
-.aat-ceremony-dossier .aat-ceremony-nominee-summary .aat-winner-circle-action {
-    width: auto;
-    min-height: 44px;
-    padding: 6px 10px;
-    flex: 0 1 auto;
+.aat-ceremony-ballot-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.aat-ceremony-ballot-summary span {
+    display: inline;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-ceremony-ballot-groups {
+    display: grid;
+    gap: 8px;
+}
+
+.aat-ceremony-ballot-group {
+    display: grid;
+    gap: 6px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(201, 169, 97, .18);
+}
+
+.aat-ceremony-ballot-group-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+}
+
+.aat-ceremony-ballot-group-head h3 {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    line-height: 1.18;
+}
+
+.aat-ceremony-ballot-group-count {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-ceremony-ballot-rows {
+    display: grid;
+    gap: 0;
+}
+
+.aat-ceremony-nominee-summary {
+    margin: 0;
+    padding: 2px 0 6px;
+    border: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-ceremony-ballot-row {
+    display: grid;
+    grid-template-columns: minmax(84px, .14fr) minmax(0, 1fr) auto;
+    gap: 8px 20px;
+    align-items: start;
+    padding: 12px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .1);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.aat-ceremony-ballot-rows > .aat-ceremony-ballot-row:first-child {
+    border-top: 0;
+}
+
+.aat-ceremony-ballot-status {
+    min-width: 0;
+}
+
+.aat-ceremony-ballot-status .aat-winner-badge,
+.aat-ceremony-ballot-status .aat-nominee-badge {
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
+}
+
+.aat-ceremony-ballot-copy {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.aat-ceremony-ballot-copy h4 {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: 1.05rem;
+    line-height: 1.3;
+}
+
+.aat-ballot-main-link {
+    font-weight: 400;
+}
+
+.aat-ballot-credit,
+.aat-ballot-detail,
+.aat-ballot-note {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.aat-ballot-credit strong {
+    color: var(--aat-light-gray);
+    opacity: .72;
     font-size: .875rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-ballot-note {
+    font-size: .9375rem;
+}
+
+.aat-ceremony-ballot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* --- Status words and action links on this route ------------------------------ */
+.aat-ceremony-dossier .aat-winner-badge,
+.aat-ceremony-dossier .aat-nominee-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    width: fit-content;
+    padding: 4px 9px;
+    border: 1px solid rgba(201, 169, 97, .32);
+    border-radius: 2px;
+    background: none;
+    color: var(--aat-gold);
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-ceremony-dossier .aat-nominee-badge {
+    border-color: rgba(201, 169, 97, .18);
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-weight: 400;
+}
+
+.aat-ceremony-dossier .aat-winner-badge::before {
+    content: none;
+}
+
+.aat-ceremony-dossier .aat-winner-circle-action,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-ceremony,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-category,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-review,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-film-history,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-person-history,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-producer-history,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-company-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    width: auto;
+    padding: 6px 12px;
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    box-shadow: none;
+    transition: border-color .18s ease, color .18s ease;
+}
+
+.aat-ceremony-dossier .aat-winner-circle-action:hover,
+.aat-ceremony-dossier .aat-winner-circle-action:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+    transform: none;
+}
+
+.aat-ceremony-dossier .aat-hub-inline-link {
+    display: inline;
+    min-height: 0;
+    padding: .2em 0;
+    border: 0;
+    line-height: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+
+.aat-ceremony-dossier .aat-hub-inline-link:hover,
+.aat-ceremony-dossier .aat-hub-inline-link:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration-color: currentColor;
+}
+
+.aat-ceremony-dossier .aat-hub-inline-link-title {
+    text-decoration: none;
+}
+
+/* --- Winner Circle and the sortable-ledger callout -------------------------- */
+.aat-ceremony-dossier .aat-winner-circle-section {
+    display: grid;
+    gap: 16px;
+}
+
+.aat-ceremony-dossier .aat-winner-circle-card {
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+}
+
+.aat-ceremony-dossier .aat-winner-circle-category {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.aat-ceremony-dossier .aat-winner-circle-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.aat-ceremony-dossier .aat-winner-circle-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.aat-ceremony-dossier .aat-winner-circle-actions {
+    margin-top: 4px;
+    padding-top: 0;
+    border-top: 0;
+    gap: 8px;
+}
+
+.aat-ceremony-dossier .aat-explorer-callout {
+    padding: 22px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.aat-ceremony-dossier .aat-explorer-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding: 0;
+}
+
+.aat-ceremony-dossier .aat-explorer-copy {
+    display: grid;
+    gap: 8px;
+    max-width: 62ch;
+}
+
+.aat-ceremony-dossier .aat-explorer-copy h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    line-height: 1.12;
     letter-spacing: normal;
 }
 
+.aat-ceremony-dossier .aat-table-shell {
+    padding: 8px 0 0;
+    animation: none;
+}
+
+@media (min-width: 840px) {
+    .aat-ceremony-dossier .aat-explorer-shell {
+        grid-template-columns: minmax(0, 1.25fr) auto;
+        gap: 18px 22px;
+    }
+}
+
+@media (min-width: 900px) {
+    .aat-ceremony-dossier .aat-ceremony-marquee {
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, .9fr);
+        gap: clamp(22px, 4vw, 48px);
+    }
+
+    .aat-ceremony-major-races .aat-section-head,
+    .aat-ceremony-ballot-ledger .aat-section-head {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        column-gap: 24px;
+    }
+
+    .aat-ceremony-ballot-ledger .aat-section-head .aat-section-title,
+    .aat-ceremony-ballot-ledger .aat-section-head .aat-section-description {
+        grid-column: 1;
+    }
+
+    .aat-ceremony-ballot-ledger .aat-ceremony-ledger-mode {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: end;
+    }
+}
+
 @media (max-width: 980px) {
-    .aat-ceremony-dossier-hero,
-    .aat-ceremony-dossier .aat-ceremony-ballot-ledger .aat-section-head {
+    .aat-ceremony-dossier-hero {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .aat-ceremony-editorial-writeup,
-    .aat-ceremony-thesis,
-    .aat-major-race-briefing {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .aat-ceremony-dossier .aat-hub-metric-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .aat-ceremony-dossier-hero.has-dossier-poster .aat-ceremony-dossier-lead {
+        grid-template-columns: minmax(120px, 154px) minmax(0, 1fr);
     }
 
     .aat-major-race-grid,
@@ -6838,22 +6923,20 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .aat-ceremony-dossier .aat-ceremony-ballot-row {
+    .aat-ceremony-ballot-row {
         grid-template-columns: minmax(72px, .2fr) minmax(0, 1fr);
     }
 
-    .aat-ceremony-dossier .aat-ceremony-ballot-actions {
+    .aat-ceremony-ballot-actions {
         grid-column: 2;
+        justify-content: flex-start;
     }
 }
 
 @media (max-width: 640px) {
-    body .aat-container .aat-ceremony-dossier {
-        width: min(100%, calc(100vw - 24px));
-        max-width: calc(100vw - 24px);
-        margin-left: auto;
-        margin-right: auto;
-        overflow-x: hidden;
+    .aat-ceremony-dossier {
+        padding-inline: 8px;
+        box-sizing: border-box;
     }
 
     .aat-ceremony-dossier,
@@ -6864,143 +6947,51 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
     .aat-ceremony-editorial-writeup,
     .aat-ceremony-editorial-heading,
     .aat-ceremony-editorial-body,
-    .aat-ceremony-thesis,
-    .aat-major-race-briefing,
-    .aat-major-race-briefing-card,
-    .aat-ceremony-dossier .aat-ceremony-ballot-row,
-    .aat-ceremony-dossier .aat-ceremony-ballot-copy {
+    .aat-ceremony-ballot-row,
+    .aat-ceremony-ballot-copy {
         min-width: 0;
         max-width: 100%;
         box-sizing: border-box;
     }
 
     .aat-ceremony-dossier-hero {
+        padding: 0;
+    }
+
+    .aat-ceremony-dossier-hero.has-dossier-poster .aat-ceremony-dossier-lead {
         grid-template-columns: minmax(0, 1fr);
-        padding: 16px 0;
-        border-radius: 0;
+        justify-items: start;
+        gap: 16px;
     }
 
-    .aat-ceremony-dossier .aat-ceremony-dossier-hero .aat-hub-title {
-        font-size: clamp(2rem, 4vw, 3.5rem);
-        max-width: 100%;
+    .aat-ceremony-dossier-poster {
+        max-width: 150px;
     }
 
-    .aat-ceremony-dossier .aat-ceremony-dossier-hero .aat-hub-subtitle,
     .aat-ceremony-dossier .aat-ceremony-neighbor-nav,
-    .aat-ceremony-dossier .aat-ceremony-neighbor-nav *,
-    .aat-ceremony-dossier .aat-ceremony-neighbor-card,
-    .aat-ceremony-dossier .aat-ceremony-neighbor-card strong,
-    .aat-ceremony-dossier .aat-ceremony-neighbor-index,
-    .aat-ceremony-dossier .aat-ceremony-guide-file,
-    .aat-ceremony-dossier .aat-ceremony-guide-meta,
-    .aat-ceremony-dossier .aat-ceremony-guide-meta span,
-    .aat-ceremony-dossier .aat-ceremony-guide-actions,
-    .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-card-action,
-    .aat-ceremony-dossier .aat-ceremony-editorial-writeup h2,
-    .aat-ceremony-dossier .aat-ceremony-editorial-writeup .aat-hub-copy,
-    .aat-ceremony-dossier .aat-ceremony-editorial-body,
-    .aat-ceremony-dossier .aat-ceremony-editorial-body p,
-    .aat-ceremony-dossier .aat-ceremony-thesis h2,
-    .aat-ceremony-dossier .aat-ceremony-thesis .aat-hub-copy,
-    .aat-ceremony-dossier .aat-major-race-briefing-card h3,
-    .aat-ceremony-dossier .aat-major-race-briefing-secondary,
-    .aat-ceremony-dossier .aat-major-race-briefing-meta,
-    .aat-ceremony-dossier .aat-ceremony-marquee .aat-hub-copy,
-    .aat-ceremony-dossier .aat-ceremony-marquee .aat-hub-copy *,
-    .aat-ceremony-dossier .aat-ceremony-ballot-copy h4,
-    .aat-ceremony-dossier .aat-ballot-credit,
-    .aat-ceremony-dossier .aat-ballot-detail,
-    .aat-ceremony-dossier .aat-ballot-note {
-        max-width: 29ch;
-        overflow-wrap: anywhere;
-        text-wrap: auto;
-        white-space: normal;
-    }
-
-    .aat-ceremony-dossier .aat-ceremony-neighbor-nav {
+    .aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-older,
+    .aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-newer {
         grid-template-columns: minmax(0, 1fr);
-        gap: 10px;
+        gap: 4px;
     }
 
-    .aat-ceremony-dossier .aat-ceremony-neighbor-slot,
-    .aat-ceremony-dossier .aat-ceremony-neighbor-index {
+    .aat-ceremony-neighbor-slot,
+    .aat-ceremony-neighbor-slot.is-older,
+    .aat-ceremony-neighbor-slot.is-newer {
+        justify-content: stretch;
+        text-align: left;
+    }
+
+    .aat-ceremony-neighbor-card,
+    .aat-ceremony-neighbor-index {
         width: 100%;
-        min-width: 0;
-        justify-self: stretch;
+        padding: 10px 0;
+        place-items: start;
+        text-align: left;
     }
 
-    .aat-ceremony-command-band,
-    .aat-ceremony-editorial-writeup,
-    .aat-ceremony-dossier .aat-hub-metric-grid,
-    .aat-ceremony-thesis,
-    .aat-ceremony-thesis-stats,
-    .aat-major-race-briefing,
-    .aat-ceremony-major-races .aat-section-head,
-    .aat-major-race-grid,
-    .aat-major-race-card,
-    .aat-major-race-card.is-best-picture,
-    .aat-major-race-feature,
-    .aat-major-race-card.is-best-picture .aat-major-race-feature,
-    .aat-major-race-nominee-list,
-    .aat-major-race-card.is-best-picture .aat-major-race-nominee-list,
-    .aat-ceremony-dossier .aat-ceremony-ballot-row {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .aat-ceremony-major-races {
-        padding: 16px 0;
-        border-radius: 0;
-    }
-
-    .aat-ceremony-editorial-writeup,
-    .aat-ceremony-thesis {
-        padding: 16px 0;
-        border-radius: 0;
-    }
-
-    .aat-ceremony-guide-meta {
-        gap: 6px;
-    }
-
-    .aat-ceremony-guide-meta span {
-        min-height: 24px;
-        padding: 5px 8px;
-    }
-
-    .aat-ceremony-guide-actions {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .aat-ceremony-guide-actions .aat-hub-card-action {
-        justify-content: center;
-        width: 100%;
-    }
-
-    .aat-ceremony-guide-copy p:first-child::first-letter {
-        font-size: 2.65rem;
-    }
-
-    .aat-major-race-media {
-        width: min(148px, 100%);
-    }
-
-    .aat-major-race-title,
-    .aat-major-race-meta,
-    .aat-major-race-summary,
-    .aat-major-race-nominee-primary,
-    .aat-major-race-nominee-secondary {
-        max-width: 29ch;
-        overflow-wrap: anywhere;
-        text-wrap: auto;
-        white-space: normal;
-    }
-
-    .aat-ceremony-command-card,
-    .aat-ceremony-command-card.is-primary {
-        grid-row: auto;
-        min-height: 0;
-        padding: 16px 0;
+    .aat-ceremony-command-band {
+        gap: 0 16px;
     }
 
     .aat-ceremony-dossier-actions {
@@ -7014,100 +7005,291 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
         justify-content: center;
     }
 
-    .aat-ceremony-dossier .aat-ceremony-ballot-actions {
-        grid-column: auto;
+    .aat-major-race-feature,
+    .aat-major-race-card.is-best-picture .aat-major-race-feature {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .aat-ceremony-dossier .aat-ceremony-ballot-actions .aat-winner-circle-action,
-    .aat-ceremony-dossier .aat-ceremony-nominee-summary .aat-winner-circle-action {
-        width: auto;
-        min-height: 44px;
-        padding: 5px 9px;
-        font-size: .875rem;
+    .aat-major-race-media {
+        width: min(148px, 100%);
+    }
+
+    .aat-major-race-nominee-list,
+    .aat-major-race-card.is-best-picture .aat-major-race-nominee-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .aat-ceremony-ballot-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    .aat-ceremony-ballot-actions {
+        grid-column: auto;
     }
 }
 
-/* Title/person profile files: third Oscars route-family surface. */
+@media (prefers-reduced-motion: reduce) {
+    .aat-ceremony-neighbor-card,
+    .aat-ceremony-neighbor-index,
+    .aat-ceremony-neighbor-card strong,
+    .aat-ceremony-neighbor-index strong,
+    .aat-ceremony-dossier .aat-winner-circle-action,
+    .aat-hub-page .aat-filmography-poster-wrap,
+    .aat-hub-page .aat-hub-chip {
+        transition: none;
+    }
+}
+
+/* =========================================================================
+ * Title, person and company profiles.
+ *
+ * The identity area is the artwork beside the name: type and span under the
+ * title, one sentence on where the record stands, the facts band, and two or
+ * three actions. Then the latest result, the record by ceremony (each credit
+ * with its film), the nominated films and the Lunara reviews; the diagram and
+ * the category/ceremony link lists close the page.
+ *
+ * The Theme's Dossier Studio emitter owns the saved artwork fit, focal point,
+ * aspect and media width on .aat-entity-poster-wrap and its image. The rules
+ * here read the same custom properties as fallbacks, at low specificity and
+ * without !important, so the saved choice holds with or without the Theme and
+ * is never out-specified.
+ * ========================================================================= */
 .aat-profile-file {
     display: grid;
-    gap: clamp(22px, 3vw, 36px);
+    gap: var(--lunara-oscars-dossier-section-gap, clamp(28px, 4vw, 48px));
     min-width: 0;
     max-width: 100%;
 }
 
-.aat-profile-file .aat-entity-hero {
-    display: grid;
-    grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-    gap: clamp(20px, 3vw, 38px);
-    align-items: stretch;
-    margin: 0;
-    padding: 16px 0;
-    border: 0;
-    border-radius: 0;
-    background-color: transparent;
+/* Every section can shrink to the page; the Career Arc's wide stage scrolls inside its own frame. */
+.aat-profile-file > *,
+.aat-profile-file .aat-entity-hero > * {
+    min-width: 0;
+    max-width: 100%;
 }
 
-.aat-profile-file .aat-entity-hero::before {
-    inset: auto -8% -26% auto;
-    width: 420px;
-    height: 420px;
+.aat-profile-file .aat-breadcrumbs {
+    margin: 0;
+    color: rgba(255, 255, 255, .74);
+    opacity: 1;
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+.aat-profile-file .aat-breadcrumbs a {
+    color: var(--aat-gold-light);
+}
+
+.aat-profile-file .aat-breadcrumbs [aria-current] {
+    color: var(--aat-light-gray);
+    overflow-wrap: anywhere;
+}
+
+.aat-profile-file .aat-breadcrumbs .aat-sep {
+    margin: 0 .4em;
+    opacity: .6;
+}
+
+/* Identity area ---------------------------------------------------------- */
+.aat-profile-file .aat-entity-hero {
+    display: grid;
+    grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);
+    gap: clamp(20px, 3vw, 36px);
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+}
+
+.aat-profile-file .aat-entity-hero.is-meta-only,
+.aat-profile-file .aat-entity-hero.is-no-poster {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.aat-profile-file .aat-entity-poster-wrap,
+.aat-profile-file .aat-entity-poster-wrap.is-person,
+.aat-profile-file .aat-entity-poster-wrap.is-company {
+    position: relative;
+    width: 100%;
+    max-width: 210px;
+    aspect-ratio: var(--lunara-oscars-profile-media-aspect, 2 / 3);
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 4px;
+    background: transparent;
+}
+
+.aat-profile-file .aat-entity-poster-wrap img,
+.aat-profile-file .aat-entity-poster,
+.aat-profile-file .aat-entity-portrait {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    object-fit: var(--lunara-oscars-profile-media-fit, cover);
+    object-position: var(--lunara-oscars-image-focus, center center);
+    transform: none;
+    transition: none;
+}
+
+.aat-profile-file .aat-entity-poster-wrap .aat-entity-poster-fallback,
+.aat-profile-file .aat-entity-poster-wrap .aat-person-portrait-fallback {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+    padding: 16px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.aat-profile-file .aat-entity-poster-wrap .aat-fallback-kicker {
+    color: var(--aat-light-gray);
     opacity: .72;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+
+.aat-profile-file .aat-entity-poster-wrap .aat-fallback-title {
+    max-width: 100%;
+    color: var(--aat-white);
+    font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.aat-profile-file .aat-entity-poster-wrap .is-company-plate .aat-fallback-title {
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    line-height: 1;
+    color: var(--aat-gold-light);
+}
+
+.aat-profile-file .aat-entity-poster-wrap .aat-fallback-meta {
+    color: var(--aat-light-gray);
+    font-size: .9375rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
 .aat-profile-file .aat-entity-hero-copy {
     display: grid;
-    align-content: center;
-    gap: 14px;
+    align-content: start;
+    gap: 12px;
     min-width: 0;
 }
 
 .aat-profile-file .aat-entity-title {
+    margin: 0;
+    max-width: 100%;
     color: var(--aat-light-gray);
     font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.12;
+    line-height: 1.08;
     letter-spacing: normal;
-    text-transform: none;
     text-align: left;
-    max-width: 100%;
+    text-transform: none;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.aat-profile-file .aat-entity-subtitle {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.aat-profile-file .aat-entity-subtitle .aat-meta-sep {
+    margin: 0 .45em;
 }
 
 .aat-profile-file .aat-entity-summary,
 .aat-profile-file .aat-entity-overview {
+    margin: 0;
     max-width: 64ch;
+    color: var(--aat-light-gray);
+    opacity: 1;
+    font-size: 1.0625rem;
+    line-height: 1.6;
 }
 
-.aat-profile-command-band {
+.aat-profile-file .aat-entity-summary a,
+.aat-profile-file .aat-entity-meta-line a,
+.aat-profile-file .aat-entity-status-summary a {
+    color: var(--aat-gold-light);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-entity-summary a:hover,
+.aat-profile-file .aat-entity-meta-line a:hover,
+.aat-profile-file .aat-entity-status-summary a:hover {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+
+.aat-profile-file .aat-entity-meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 0;
+    margin: 0;
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.aat-profile-file .aat-entity-meta-line span + span::before {
+    content: "\2022";
+    margin: 0 .55em;
+    color: rgba(201, 169, 97, .7);
+}
+
+.aat-profile-file .aat-profile-command-band {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-    margin: 4px 0 2px;
+    gap: 0 20px;
+    margin: 4px 0 0;
     min-width: 0;
 }
 
-.aat-profile-command-card {
+.aat-profile-file .aat-profile-command-card {
     display: grid;
-    gap: 7px;
-    align-content: end;
+    align-content: start;
+    gap: 4px;
     min-width: 0;
-    min-height: 104px;
-    padding: 16px 0;
+    min-height: 0;
+    padding: 12px 0;
     border: 0;
     border-radius: 0;
-    background:
-        transparent;
+    background: transparent;
 }
 
-.aat-profile-command-card span {
-    color: var(--aat-gold-light);
+.aat-profile-file .aat-profile-command-card span {
+    color: var(--aat-light-gray);
+    opacity: .72;
     font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
     letter-spacing: normal;
     text-transform: none;
 }
 
-.aat-profile-command-card strong {
+.aat-profile-file .aat-profile-command-card strong {
     color: var(--aat-white);
-    font-size: clamp(1.15rem, 2vw, 1.85rem);
-    line-height: 1.05;
+    font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+    line-height: 1.15;
     overflow-wrap: anywhere;
 }
 
@@ -7115,119 +7297,1014 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 4px;
+    margin: 4px 0 0;
 }
 
 .aat-profile-file .aat-stats-bar.aat-entity-stats {
     display: none;
 }
 
+/* Latest result ---------------------------------------------------------- */
+.aat-profile-file .aat-entity-status-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
+    gap: 16px 28px;
+    align-items: start;
+    margin: 0;
+    padding: 20px 0 0;
+    min-height: 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.aat-profile-file .aat-entity-status-banner.is-winner {
+    border-color: rgba(201, 169, 97, .22);
+    background: transparent;
+}
+
+.aat-profile-file .aat-entity-status-banner.has-status-media {
+    grid-template-columns: 96px minmax(0, 1.5fr) minmax(220px, 1fr);
+}
+
+.aat-profile-file .aat-entity-status-media {
+    width: 96px;
+}
+
+.aat-profile-file .aat-entity-status-media a {
+    display: block;
+}
+
+.aat-profile-file .aat-entity-status-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 2px;
+}
+
+.aat-profile-file .aat-entity-status-copy {
+    min-width: 0;
+}
+
+.aat-profile-file .aat-entity-status-kicker {
+    margin: 0 0 6px;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-entity-status-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    line-height: 1.12;
+}
+
+.aat-profile-file .aat-entity-status-summary {
+    margin: 8px 0 0;
+    max-width: 64ch;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+
+.aat-profile-file .aat-entity-status-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.aat-profile-file .aat-entity-status-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid rgba(201, 169, 97, .24);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    transition: border-color .18s ease, color .18s ease;
+}
+
+.aat-profile-file .aat-entity-status-tag:hover,
+.aat-profile-file .aat-entity-status-tag:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+    transform: none;
+}
+
+/* Sections --------------------------------------------------------------- */
 .aat-profile-file .aat-entity-section,
 .aat-profile-file .aat-lunara-review-module {
-    margin-top: 0;
+    margin: 0;
 }
 
-.aat-profile-file .aat-crossroads-grid,
-.aat-profile-file .aat-filmography-grid {
-    gap: 14px;
+.aat-profile-file .aat-entity-section[id] {
+    scroll-margin-top: 96px;
 }
 
+.aat-profile-file .aat-section-head {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 16px;
+    padding: 0 0 12px;
+    border-bottom: 1px solid rgba(201, 169, 97, .2);
+}
+
+.aat-profile-file .aat-section-title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+}
+
+.aat-profile-file .aat-section-description {
+    margin: 0;
+    max-width: 72ch;
+    color: var(--aat-light-gray);
+    opacity: 1;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+
+.aat-profile-file .aat-entity-mode-link {
+    display: flex;
+    justify-content: flex-start;
+    margin: 6px 0 0;
+}
+
+.aat-profile-file .aat-hub-inline-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border: 0;
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-hub-inline-link:hover,
+.aat-profile-file .aat-hub-inline-link:focus-visible {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+
+/* Lunara review of this film ---------------------------------------------- */
+.aat-profile-file .aat-lunara-review-module {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+}
+
+.aat-profile-file .aat-lunara-review-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px 24px;
+    align-items: start;
+    padding: 20px 0 0;
+    border-top: 1px solid rgba(201, 169, 97, .22);
+}
+
+.aat-profile-file .aat-lunara-review-module.has-review-media .aat-lunara-review-inner {
+    grid-template-columns: 120px minmax(0, 1fr);
+}
+
+.aat-profile-file .aat-lunara-review-poster {
+    display: block;
+    width: 120px;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 2px;
+    box-shadow: none;
+}
+
+.aat-profile-file .aat-lunara-review-poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.aat-profile-file .aat-lunara-review-kicker {
+    margin: 0 0 6px;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-lunara-review-title {
+    margin: 0 0 8px;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.2;
+}
+
+.aat-profile-file .aat-lunara-review-title a {
+    padding: 0;
+    border: 0;
+    color: var(--aat-white);
+    text-decoration: none;
+}
+
+.aat-profile-file .aat-lunara-review-title a:hover,
+.aat-profile-file .aat-lunara-review-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-lunara-review-excerpt {
+    margin: 0 0 14px;
+    max-width: 64ch;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+
+.aat-profile-file .aat-lunara-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+}
+
+.aat-profile-file .aat-lunara-review-more {
+    margin-top: 12px;
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+/* Oscar history: the record, by ceremony ---------------------------------- */
 .aat-profile-file .aat-timeline-list {
-    gap: 14px;
+    display: grid;
+    gap: 8px;
 }
 
 .aat-profile-file .aat-timeline-card {
+    position: relative;
+    margin: 0;
+    padding: 12px 0 0;
+    border: 0;
     border-radius: 0;
-    padding: 16px 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
+}
+
+.aat-profile-file .aat-timeline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    margin: 0 0 4px;
+    padding: 0;
+    border: 0;
+}
+
+.aat-profile-file .aat-timeline-ceremony {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-timeline-ceremony a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.aat-profile-file .aat-timeline-ceremony a:hover,
+.aat-profile-file .aat-timeline-ceremony a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-timeline-year {
+    display: inline;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: 1rem;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-timeline-body {
+    display: grid;
+    gap: 0;
 }
 
 .aat-profile-file .aat-history-item {
+    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 12px;
+    gap: 6px 16px;
+    align-items: start;
+    margin: 0;
+    padding: 14px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
 }
 
+.aat-profile-file .aat-history-item.has-history-media {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+}
+
+.aat-profile-file .aat-history-item.is-winner {
+    border-color: rgba(201, 169, 97, .14);
+    background: transparent;
+}
+
+.aat-profile-file .aat-history-item::before {
+    content: none;
+}
+
+.aat-profile-file .aat-history-media {
+    width: 56px;
+}
+
+.aat-profile-file .aat-history-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border: 1px solid rgba(201, 169, 97, .24);
+    border-radius: 2px;
+}
+
+.aat-profile-file .aat-history-main {
+    min-width: 0;
+}
+
+.aat-profile-file .aat-history-category .aat-hub-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+}
+
+.aat-profile-file .aat-history-category .aat-category-pill {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-history-category > .aat-category-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--aat-light-gray);
+    text-decoration: none;
+}
+
+.aat-profile-file .aat-history-category .aat-hub-link:hover .aat-category-pill,
+.aat-profile-file .aat-history-category .aat-hub-link:focus-visible .aat-category-pill {
+    background: transparent;
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+
+.aat-profile-file .aat-history-detail {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+}
+
+.aat-profile-file .aat-history-line {
+    max-width: 100%;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.aat-profile-file .aat-history-line strong {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: inherit;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+
+.aat-profile-file .aat-history-line .aat-entity-link {
+    color: var(--aat-gold-light);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-history-line .aat-entity-link:hover {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+
+.aat-profile-file .aat-history-line-muted {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-style: normal;
+}
+
+.aat-profile-file .aat-history-status {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: auto;
+    padding-top: 10px;
+}
+
+.aat-profile-file .aat-winner-badge,
+.aat-profile-file .aat-nominee-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-winner-badge::before {
+    content: none;
+}
+
+.aat-profile-file .aat-nominee-badge {
+    border: 1px solid rgba(255, 255, 255, .18);
+    background: transparent;
+    color: var(--aat-light-gray);
+}
+
+.aat-profile-file .aat-no-results {
+    padding: 24px 0;
+    text-align: left;
+}
+
+/* Nominated films --------------------------------------------------------- */
+.aat-profile-file .aat-filmography-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 22px 16px;
+    align-items: start;
+}
+
+.aat-profile-file .aat-filmography-card {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+    align-content: start;
+    gap: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
+}
+
+.aat-profile-file .aat-filmography-card:hover,
+.aat-profile-file .aat-filmography-card:focus-within {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+.aat-profile-file .aat-filmography-link {
+    display: block;
+    height: auto;
+}
+
+.aat-profile-file .aat-filmography-poster-wrap {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .03);
+    box-shadow: none;
+}
+
+.aat-profile-file .aat-filmography-poster-wrap::after {
+    content: none;
+}
+
+.aat-profile-file .aat-filmography-link:hover .aat-filmography-poster-wrap,
+.aat-profile-file .aat-filmography-link:focus-visible .aat-filmography-poster-wrap {
+    border-color: var(--aat-gold);
+}
+
+.aat-profile-file .aat-filmography-poster-placeholder {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.aat-profile-file .aat-filmography-poster-placeholder span {
+    display: block;
+    color: var(--aat-light-gray);
+    font-size: .9375rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.aat-profile-file .aat-filmography-title {
+    margin: 0;
+    padding: 10px 0 2px;
+    color: var(--aat-white);
+    font-size: 1rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.aat-profile-file .aat-filmography-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.aat-profile-file .aat-filmography-title a:hover,
+.aat-profile-file .aat-filmography-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-filmography-meta {
+    margin: 0;
+    padding: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+
+.aat-profile-file .aat-filmography-trail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 0;
+    margin: 4px 0 0;
+    padding: 0;
+}
+
+.aat-profile-file .aat-filmography-trail span {
+    display: inline;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-filmography-trail span + span::before {
+    content: "\2022";
+    margin: 0 .5em;
+    color: rgba(201, 169, 97, .7);
+}
+
+.aat-profile-file .aat-entity-compact-notice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    margin: 20px 0 0;
+    padding: 14px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-winner-circle-action.is-kind-film-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 14px;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-size: .9375rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-decoration: none;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-winner-circle-action.is-kind-film-history:hover,
+.aat-profile-file .aat-winner-circle-action.is-kind-film-history:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+}
+
+/* On Lunara: reviews of these films ---------------------------------------- */
+.aat-profile-file .aat-related-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--lunara-oscars-related-review-min, 260px)), 1fr));
+    gap: 24px 20px;
+    align-items: start;
+}
+
+.aat-profile-file .aat-related-review-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
+}
+
+.aat-profile-file .aat-related-review-card.has-no-media {
+    min-height: 0;
+    border: 0;
+    background: transparent;
+}
+
+.aat-profile-file .aat-related-review-media {
+    display: block;
+    aspect-ratio: var(--lunara-oscars-related-review-media-aspect, 16 / 10);
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .03);
+}
+
+.aat-profile-file .aat-related-review-media::after {
+    content: none;
+}
+
+.aat-profile-file .aat-related-review-media:hover,
+.aat-profile-file .aat-related-review-media:focus-visible {
+    border-color: var(--aat-gold);
+}
+
+.aat-profile-file .aat-related-review-body {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-height: 0;
+    padding: 12px 0 0;
+}
+
+.aat-profile-file .aat-related-review-card.has-no-media .aat-related-review-body {
+    min-height: 0;
+    padding: 12px 0 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+}
+
+.aat-profile-file .aat-related-review-kicker {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-related-review-title {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.3;
+}
+
+.aat-profile-file .aat-related-review-title a {
+    color: var(--aat-white);
+    text-decoration: none;
+}
+
+.aat-profile-file .aat-related-review-title a:hover,
+.aat-profile-file .aat-related-review-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-related-review-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+
+.aat-profile-file .aat-related-review-meta a {
+    border: 0;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-related-review-meta a:hover {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+
+.aat-profile-file .aat-related-review-excerpt {
+    margin: 0;
+    min-height: 0;
+    max-width: 64ch;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+
+.aat-profile-file .aat-related-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+/* Ledger crossroads: the category and ceremony pages this profile is on --- */
+.aat-profile-file .aat-entity-crossroads {
+    display: grid;
+    gap: 0;
+    margin: 0;
+}
+
+.aat-profile-file .aat-crossroads-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px clamp(20px, 3vw, 40px);
+    align-items: start;
+}
+
+.aat-profile-file .aat-crossroads-card {
+    display: grid;
+    align-content: start;
+    gap: 0;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.aat-profile-file .aat-crossroads-card h3 {
+    margin: 0 0 6px;
+    color: var(--aat-white);
+    font-size: 1.125rem;
+    line-height: 1.25;
+}
+
+.aat-profile-file .aat-crossroads-list,
+.aat-profile-file .aat-editorial-ref-list {
+    display: grid;
+    gap: 0;
+    min-width: 0;
+}
+
+.aat-profile-file .aat-crossroad-pill,
+.aat-profile-file .aat-editorial-ref-card {
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    text-decoration: none;
+    transition: none;
+}
+
+.aat-profile-file .aat-crossroad-pill:hover,
+.aat-profile-file .aat-editorial-ref-card:hover {
+    background: transparent;
+    border-color: rgba(201, 169, 97, .14);
+    transform: none;
+}
+
+.aat-profile-file a.aat-crossroad-pill:hover .aat-crossroad-pill-title,
+.aat-profile-file a.aat-crossroad-pill:focus-visible .aat-crossroad-pill-title,
+.aat-profile-file a.aat-editorial-ref-card:hover strong,
+.aat-profile-file a.aat-editorial-ref-card:focus-visible strong {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.aat-profile-file .aat-crossroad-pill-title,
+.aat-profile-file .aat-editorial-ref-card strong {
+    color: var(--aat-white);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.aat-profile-file .aat-crossroad-pill-meta,
+.aat-profile-file .aat-editorial-ref-meta,
+.aat-profile-file .aat-editorial-ref-type {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.aat-profile-file .aat-editorial-ref-excerpt {
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Phones and narrow tablets ------------------------------------------------ */
 @media (max-width: 900px) {
     .aat-profile-file .aat-entity-hero {
         grid-template-columns: minmax(0, 1fr);
-    }
-
-    .aat-profile-file .aat-entity-poster-wrap {
-        max-width: 230px;
-    }
-
-    .aat-profile-command-band {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 620px) {
-    body .aat-container.aat-profile-file {
-        width: min(100%, calc(100vw - 24px));
-        max-width: calc(100vw - 24px);
-        margin-left: auto;
-        margin-right: auto;
-        overflow-x: hidden;
-    }
-
-    .aat-profile-file,
-    .aat-profile-file *,
-    .aat-profile-file .aat-entity-hero,
-    .aat-profile-command-band,
-    .aat-profile-command-card {
-        min-width: 0;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    .aat-profile-file .aat-entity-hero {
-        padding: 16px 0;
-        border-radius: 0;
+        gap: 20px;
     }
 
     .aat-profile-file .aat-entity-poster-wrap,
     .aat-profile-file .aat-entity-poster-wrap.is-person,
     .aat-profile-file .aat-entity-poster-wrap.is-company {
-        width: min(230px, 100%);
-        max-width: min(230px, 100%);
+        max-width: 180px;
         justify-self: start;
     }
 
-    .aat-profile-file .aat-entity-poster-wrap img,
-    .aat-profile-file .aat-entity-poster,
-    .aat-profile-file .aat-entity-portrait {
-        width: 100%;
-        height: auto;
-        max-height: none;
-        object-fit: contain;
+    .aat-profile-file .aat-profile-command-band {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .aat-profile-file .aat-entity-title {
-        font-size: clamp(2rem, 4vw, 3.5rem);
-        max-width: 100%;
-    }
-
-    .aat-profile-command-band {
+    .aat-profile-file .aat-entity-status-banner {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .aat-profile-command-card {
-        min-height: 0;
-        padding: 16px 0;
+    .aat-profile-file .aat-entity-status-banner.has-status-media {
+        grid-template-columns: 72px minmax(0, 1fr);
     }
 
-    .aat-profile-file .aat-entity-summary,
-    .aat-profile-file .aat-entity-overview,
-    .aat-profile-file .aat-section-description,
-    .aat-profile-file .aat-history-line {
-        max-width: 29ch;
-        overflow-wrap: anywhere;
-        text-wrap: auto;
-        white-space: normal;
+    .aat-profile-file .aat-entity-status-media {
+        width: 72px;
+    }
+
+    .aat-profile-file .aat-entity-status-banner.has-status-media .aat-entity-status-tags {
+        grid-column: 1 / -1;
+    }
+
+    .aat-profile-file .aat-crossroads-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .aat-profile-file .aat-crossroads-card-editorial {
+        grid-column: 1 / -1;
+    }
+
+    .aat-profile-file .aat-lunara-review-module.has-review-media .aat-lunara-review-inner {
+        grid-template-columns: 96px minmax(0, 1fr);
+    }
+
+    .aat-profile-file .aat-lunara-review-poster {
+        width: 96px;
+    }
+}
+
+@media (max-width: 720px) {
+    .aat-profile-file .aat-history-item {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .aat-profile-file .aat-history-item.has-history-media {
+        grid-template-columns: 56px minmax(0, 1fr);
+    }
+
+    .aat-profile-file .aat-history-item.has-history-media .aat-history-status {
+        grid-column: 2;
+    }
+
+    .aat-profile-file .aat-history-status {
+        justify-content: flex-start;
+        padding-top: 0;
+    }
+
+    .aat-profile-file .aat-history-status,
+    .aat-profile-file .aat-winner-badge,
+    .aat-profile-file .aat-nominee-badge {
+        width: auto;
+    }
+
+    .aat-profile-file .aat-crossroads-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .aat-profile-file .aat-crossroads-card-editorial {
+        grid-column: auto;
+    }
+
+    .aat-profile-file .aat-filmography-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 18px 12px;
+    }
+
+    .aat-profile-file .aat-related-reviews-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .aat-profile-file .aat-entity-meta-line {
+        display: flex;
+        gap: 6px 0;
+        margin: 0;
+        font-size: 1rem;
     }
 
     .aat-profile-file .aat-entity-actions {
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         width: 100%;
     }
 
@@ -7236,8 +8313,19 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
         justify-content: center;
     }
 
-    .aat-profile-file .aat-history-item {
-        grid-template-columns: minmax(0, 1fr);
+    .aat-profile-file .aat-entity-summary,
+    .aat-profile-file .aat-entity-overview,
+    .aat-profile-file .aat-section-description,
+    .aat-profile-file .aat-history-line {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+}
+
+@media (max-width: 480px) {
+    .aat-profile-file .aat-filmography-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -7288,18 +8376,56 @@ body.aat-shell-page .aat-ceremony-dossier .aat-ceremony-guide-actions .aat-hub-c
     overflow-wrap: break-word;
 }
 
-/* Static entity-page layout; keep presentation in the cacheable asset. */
-body .aat-container.aat-profile-file{display:grid!important;gap:clamp(22px,3vw,36px)!important;min-width:0!important;max-width:100%!important}
-        body .aat-container.aat-profile-file .aat-entity-hero{display:grid!important;grid-template-columns:minmax(220px,320px) minmax(0,1fr)!important;gap:clamp(20px,3vw,38px)!important;align-items:stretch!important;margin:0!important;padding:16px 0!important;border:0!important;border-radius:0!important;background-color:transparent!important}
-        body .aat-container.aat-profile-file .aat-entity-hero-copy{display:grid!important;align-content:center!important;gap:14px!important;min-width:0!important}
-        body .aat-container.aat-profile-file .aat-entity-title{color:var(--aat-light-gray)!important;font-size:clamp(2rem, 4vw, 3.5rem)!important;line-height:1.12!important;letter-spacing:normal!important;text-transform:none!important;text-align:left!important;max-width:100%!important}
-        body .aat-container.aat-profile-file .aat-entity-summary,body .aat-container.aat-profile-file .aat-entity-overview{max-width:64ch!important}
-        body .aat-container.aat-profile-file .aat-profile-command-band{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;margin:4px 0 2px!important;min-width:0!important}
-        body .aat-container.aat-profile-file .aat-profile-command-card{display:grid!important;gap:7px!important;align-content:end!important;min-width:0!important;min-height:104px!important;padding:16px 0!important;border:0!important;border-radius:0!important;background:transparent!important}
-        body .aat-container.aat-profile-file .aat-profile-command-card span{color:var(--aat-gold-light)!important;font-size:.875rem!important;letter-spacing:normal!important;text-transform:none!important}
-        body .aat-container.aat-profile-file .aat-profile-command-card strong{color:var(--aat-white)!important;font-size:clamp(1.15rem,2vw,1.85rem)!important;line-height:1.05!important;overflow-wrap:anywhere!important}
-        body .aat-container.aat-profile-file .aat-entity-actions{display:flex!important;flex-wrap:wrap!important;gap:10px!important;margin-top:4px!important}
-        body .aat-container.aat-profile-file .aat-stats-bar.aat-entity-stats{display:none!important}
-        body .aat-container.aat-profile-file .aat-entity-section,body .aat-container.aat-profile-file .aat-lunara-review-module{margin-top:0!important}
-        @media(max-width:900px){body .aat-container.aat-profile-file .aat-entity-hero{grid-template-columns:minmax(0,1fr)!important}body .aat-container.aat-profile-file .aat-entity-poster-wrap{max-width:230px!important}body .aat-container.aat-profile-file .aat-profile-command-band{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-        @media(max-width:620px){body .aat-container.aat-profile-file{width:min(100%,calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important;overflow-x:hidden!important}body .aat-container.aat-profile-file .aat-entity-hero{padding:16px 0!important;border-radius:0!important}body .aat-container.aat-profile-file .aat-entity-poster-wrap,body .aat-container.aat-profile-file .aat-entity-poster-wrap.is-person,body .aat-container.aat-profile-file .aat-entity-poster-wrap.is-company{width:min(230px,100%)!important;max-width:min(230px,100%)!important;justify-self:start!important}body .aat-container.aat-profile-file .aat-entity-poster-wrap img,body .aat-container.aat-profile-file .aat-entity-poster,body .aat-container.aat-profile-file .aat-entity-portrait{width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important}body .aat-container.aat-profile-file .aat-entity-title{font-size:clamp(2rem, 4vw, 3.5rem)!important;max-width:100%!important}body .aat-container.aat-profile-file .aat-profile-command-band{grid-template-columns:minmax(0,1fr)!important}body .aat-container.aat-profile-file .aat-profile-command-card{min-height:0!important;padding:16px 0!important}body .aat-container.aat-profile-file .aat-entity-summary,body .aat-container.aat-profile-file .aat-entity-overview,body .aat-container.aat-profile-file .aat-section-description,body .aat-container.aat-profile-file .aat-history-line{max-width:29ch!important;overflow-wrap:anywhere!important;text-wrap:auto!important;white-space:normal!important}body .aat-container.aat-profile-file .aat-entity-actions{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important}body .aat-container.aat-profile-file .aat-entity-actions .aat-btn{width:100%!important;justify-content:center!important}}
+/* Static profile layout; keep presentation in the cacheable asset.
+   These are the values the Theme's shell sheet (lunara-shell.css, body.aat-shell-page
+   rules with !important) would otherwise change: the hero grid, the facts band,
+   the hidden stats bar, and the row padding and gaps of the record. Written at
+   (0,3,x) with !important so stylesheet order cannot undo them; the Dossier
+   Studio emitter's artwork rules sit above this layer and are never touched. */
+body .aat-container.aat-profile-file{display:grid!important;gap:var(--lunara-oscars-dossier-section-gap,clamp(28px,4vw,48px))!important;min-width:0!important}
+body .aat-container.aat-profile-file>*{min-width:0!important;max-width:100%!important}
+body .aat-container.aat-profile-file .aat-entity-hero{display:grid!important;grid-template-columns:minmax(150px,210px) minmax(0,1fr)!important;gap:clamp(20px,3vw,36px)!important;align-items:start!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
+body .aat-container.aat-profile-file .aat-entity-hero.is-meta-only,body .aat-container.aat-profile-file .aat-entity-hero.is-no-poster{grid-template-columns:minmax(0,1fr)!important}
+body .aat-container.aat-profile-file .aat-entity-hero-copy{display:grid!important;align-content:start!important;gap:12px!important;min-width:0!important}
+body .aat-container.aat-profile-file .aat-entity-title{font-size:clamp(2rem, 4vw, 3.5rem)!important;line-height:1.08!important;letter-spacing:normal!important;text-transform:none!important;text-align:left!important;max-width:100%!important}
+body .aat-container.aat-profile-file .aat-entity-summary,body .aat-container.aat-profile-file .aat-entity-overview,body .aat-container.aat-profile-file .aat-section-description,body .aat-container.aat-profile-file .aat-history-line,body .aat-container.aat-profile-file .aat-entity-status-summary,body .aat-container.aat-profile-file .aat-lunara-review-excerpt,body .aat-container.aat-profile-file .aat-related-review-excerpt{font-size:1.0625rem!important;line-height:1.6!important}
+body .aat-container.aat-profile-file .aat-profile-command-band{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0 20px!important;margin:4px 0 0!important;min-width:0!important}
+body .aat-container.aat-profile-file .aat-profile-command-card{display:grid!important;gap:4px!important;align-content:start!important;min-width:0!important;min-height:0!important;padding:12px 0!important;border:0!important;border-radius:0!important;background:transparent!important}
+body .aat-container.aat-profile-file .aat-profile-command-card span{color:var(--aat-light-gray)!important;font-size:.875rem!important;line-height:1.4!important;letter-spacing:normal!important;text-transform:none!important}
+body .aat-container.aat-profile-file .aat-profile-command-card strong{color:var(--aat-white)!important;font-size:clamp(1.2rem,1.9vw,1.6rem)!important;line-height:1.15!important;overflow-wrap:anywhere!important}
+body .aat-container.aat-profile-file .aat-entity-actions{display:flex!important;flex-wrap:wrap!important;gap:10px!important;margin:4px 0 0!important}
+body .aat-container.aat-profile-file .aat-stats-bar.aat-entity-stats{display:none!important}
+body .aat-container.aat-profile-file .aat-entity-section,body .aat-container.aat-profile-file .aat-lunara-review-module{margin:0!important}
+body .aat-container.aat-profile-file .aat-entity-status-banner{padding:20px 0 0!important;border:0!important;border-top:1px solid rgba(201,169,97,.22)!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
+body .aat-container.aat-profile-file .aat-timeline-card{padding:12px 0 0!important;gap:0!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
+body .aat-container.aat-profile-file .aat-history-item{padding:14px 0!important;gap:6px 16px!important;border:0!important;border-top:1px solid rgba(201,169,97,.14)!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
+body .aat-container.aat-profile-file .aat-crossroads-list{gap:0!important}
+body .aat-container.aat-profile-file .aat-filmography-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;gap:22px 16px!important;align-items:start!important}
+body .aat-container.aat-profile-file .aat-related-reviews-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--lunara-oscars-related-review-min,260px)),1fr))!important;gap:24px 20px!important;align-items:start!important}
+body .aat-container.aat-profile-file .aat-filmography-card,body .aat-container.aat-profile-file .aat-related-review-card{min-height:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
+body .aat-container.aat-profile-file .aat-related-review-body{display:grid!important;align-content:start!important;gap:6px!important;padding:12px 0 0!important}
+/* The shell paints every .aat-btn gold-light; the solid gold primary keeps dark ink. */
+body .aat-container .aat-btn-primary,body .aat-container .aat-btn-primary:hover,body .aat-container .aat-btn-primary:focus-visible{color:var(--aat-black)!important}
+@media(max-width:900px){body .aat-container.aat-profile-file .aat-entity-hero{grid-template-columns:minmax(0,1fr)!important;gap:20px!important}body .aat-container.aat-profile-file .aat-entity-poster-wrap{max-width:180px!important;justify-self:start!important}body .aat-container.aat-profile-file .aat-profile-command-band{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:720px){body .aat-container.aat-profile-file .aat-filmography-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))!important;gap:18px 12px!important}body .aat-container.aat-profile-file .aat-related-reviews-grid{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:640px){body .aat-container.aat-profile-file{width:min(100%,calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important;overflow-x:clip!important}body .aat-container.aat-profile-file .aat-entity-actions{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important;width:100%!important}body .aat-container.aat-profile-file .aat-entity-actions .aat-btn{width:100%!important;justify-content:center!important}body .aat-container.aat-profile-file .aat-entity-summary,body .aat-container.aat-profile-file .aat-entity-overview,body .aat-container.aat-profile-file .aat-section-description,body .aat-container.aat-profile-file .aat-history-line{max-width:100%!important;overflow-wrap:anywhere!important;white-space:normal!important}}
+@media(max-width:480px){body .aat-container.aat-profile-file .aat-filmography-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* The landing's latest Winner Circle on phones: one column, no desktop floor. */
+@media (max-width: 720px) {
+    .aat-winner-circle-grid.is-hero-latest,
+    .aat-winner-circle-grid.is-marquee-latest {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .aat-winner-circle-card.is-hero-latest,
+    .aat-winner-circle-card.is-marquee-latest {
+        min-height: 0;
+        padding: 16px 0;
+    }
+
+    .aat-footer-mobile-hint {
+        display: inline;
+    }
+}

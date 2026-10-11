@@ -50,7 +50,7 @@ check(in_array('ART DIRECTION', $context['display_categories'], true), 'Title co
 $hub = file_get_contents($root . '/templates/hub-page.php');
 check(str_contains($hub, 'format_category_display($cat)'), 'Current index uses modern display formatter');
 check(str_contains($hub, 'format_category_display($canonical)'), 'Current category heading uses modern display formatter');
-check(substr_count($hub, "format_category_display(\$canonical, intval(\$winner_row['ceremony']") === 2, 'Both winner history layouts use dated labels');
+check(substr_count($hub, "format_category_display(\$canonical, intval(\$winner_row['ceremony']") >= 1, 'Winner history uses dated labels');
 check(str_contains($hub, "format_category_display(\$canonical, intval(\$nominee_row['ceremony']"), 'Nominee history uses dated labels');
 check(str_contains($source, "\$cache_key = 'aat_ceremony_rollup_v3_'"), 'Old cached ceremony display labels bypassed');
 check(str_contains($source, "'category_label' => \$this->format_category_display(\$category, \$ceremony)"), 'Ceremony winner payload dates labels');

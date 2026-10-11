@@ -117,22 +117,6 @@ $aat_get_curated_winner_visual = function($entry, $size = 'large') use ($aat_get
     );
 };
 
-$aat_get_card_backdrop_style = function($poster_url = '', $backdrop_url = '') use ($aat_instance) {
-    $poster_url = trim((string) $poster_url);
-    $backdrop_url = trim((string) $backdrop_url);
-    $image_url = $poster_url !== '' ? $poster_url : $backdrop_url;
-
-    if ($image_url === '') {
-        return '';
-    }
-    // 2.8.21: a wash this dark does not need the 768px poster; every card's background is eager.
-    if ($aat_instance && method_exists($aat_instance, 'get_card_backdrop_image_url')) {
-        $image_url = $aat_instance->get_card_backdrop_image_url($image_url);
-    }
-
-    return "background-image: linear-gradient(145deg, rgba(3,10,22,.54), rgba(3,10,22,.86) 40%, rgba(3,10,22,.96)), url('" . esc_url($image_url) . "'); background-size: cover; background-position: center;";
-};
-
 $aat_render_text_link = function($label, $url = '', $class = '') {
     $label = trim((string) $label);
     $url = trim((string) $url);
@@ -252,8 +236,6 @@ $aat_top_titles = method_exists($aat_instance, 'get_ceremony_title_highlights') 
 $aat_winner_rows = !empty($aat_rollup['winner_rows']) && is_array($aat_rollup['winner_rows']) ? array_slice($aat_rollup['winner_rows'], 0, 6) : array();
 $aat_table_view_url = add_query_arg('view', 'table');
 $aat_latest_ceremony_url = $aat_max_ceremony > 0 ? $aat_instance->get_ceremony_url($aat_max_ceremony) : '';
-$aat_best_picture_visual = !empty($aat_best_picture['film_id']) ? $aat_get_visual_package((string) $aat_best_picture['film_id'], 'large') : array();
-$aat_best_picture_backdrop_style = $aat_get_card_backdrop_style($aat_best_picture_visual['poster_url'] ?? '', $aat_best_picture_visual['backdrop_url'] ?? '');
 $aat_best_picture_url = !empty($aat_best_picture['film_id']) ? $aat_instance->get_entity_url((string) $aat_best_picture['film_id']) : '';
 $aat_table_latest_rows = array();
 if (!empty($aat_winner_rows)) {
@@ -300,7 +282,7 @@ if (!empty($aat_winner_rows)) {
             </div>
             <div class="aat-ledger-command-copy">
                 <h2><?php esc_html_e('The Lunara Oscar Ledger', 'academy-awards-table'); ?></h2>
-                <p class="aat-subtitle"><?php echo esc_html(sprintf(__('A fast gateway into %1$s records across %2$s ceremonies, built for browsing before the heavy table ever loads.', 'academy-awards-table'), number_format_i18n($aat_record_count), number_format_i18n($aat_ceremony_count))); ?></p>
+                <p class="aat-subtitle"><?php echo esc_html(sprintf(/* translators: 1: record count, 2: ceremony count */ __('%1$s nominations and winners across %2$s ceremonies, with a profile for every film, person and company.', 'academy-awards-table'), number_format_i18n($aat_record_count), number_format_i18n($aat_ceremony_count))); ?></p>
             </div>
             <nav class="aat-ledger-header-actions" aria-label="<?php echo esc_attr__('Oscar Ledger shortcuts', 'academy-awards-table'); ?>">
                 <a class="aat-ledger-header-action is-primary" href="<?php echo esc_url($aat_table_view_url); ?>">
@@ -323,22 +305,18 @@ if (!empty($aat_winner_rows)) {
             <article class="aat-hub-metric-card">
                 <span class="aat-hub-metric-label"><?php esc_html_e('Records', 'academy-awards-table'); ?></span>
                 <strong class="aat-hub-metric-value"><?php echo esc_html(number_format_i18n($aat_record_count)); ?></strong>
-                <p class="aat-hub-metric-copy"><?php esc_html_e('Nominee and winner rows structured for browsing, linking, and search.', 'academy-awards-table'); ?></p>
             </article>
             <article class="aat-hub-metric-card">
                 <span class="aat-hub-metric-label"><?php esc_html_e('Winners', 'academy-awards-table'); ?></span>
                 <strong class="aat-hub-metric-value"><?php echo esc_html(number_format_i18n($aat_winner_count)); ?></strong>
-                <p class="aat-hub-metric-copy"><?php esc_html_e('Every winner row preserved as part of the living ledger.', 'academy-awards-table'); ?></p>
             </article>
             <article class="aat-hub-metric-card">
                 <span class="aat-hub-metric-label"><?php esc_html_e('Categories', 'academy-awards-table'); ?></span>
                 <strong class="aat-hub-metric-value"><?php echo esc_html(number_format_i18n($aat_category_count)); ?></strong>
-                <p class="aat-hub-metric-copy"><?php esc_html_e('Normalized categories that connect films, people, companies, and ceremonies.', 'academy-awards-table'); ?></p>
             </article>
             <article class="aat-hub-metric-card">
                 <span class="aat-hub-metric-label"><?php esc_html_e('Span', 'academy-awards-table'); ?></span>
                 <strong class="aat-hub-metric-value"><?php echo $aat_span ? wp_kses_post($aat_span) : '&mdash;'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></strong>
-                <p class="aat-hub-metric-copy"><?php esc_html_e('A lightweight front door into the full archive.', 'academy-awards-table'); ?></p>
             </article>
         </div>
 
@@ -346,7 +324,6 @@ if (!empty($aat_winner_rows)) {
         <?php if (!empty($aat_rollup)) : ?>
             <section class="aat-hub-section aat-ceremony-marquee">
                 <div class="aat-ceremony-marquee-copy">
-                    <p class="aat-hub-kicker"><?php echo esc_html__('Latest Ceremony', 'academy-awards-table'); ?></p>
                     <h2>
                         <?php
                             echo esc_html(
@@ -364,20 +341,28 @@ if (!empty($aat_winner_rows)) {
                         <?php if (!empty($aat_rollup['most_wins']['film']) && !empty($aat_rollup['most_wins']['wins'])) : ?>
                             <?php
                             $aat_most_wins_url = !empty($aat_rollup['most_wins']['film_id']) ? $aat_instance->get_entity_url((string) $aat_rollup['most_wins']['film_id']) : '';
-                            echo wp_kses_post(sprintf(__('The biggest winner was %1$s with %2$s win%3$s.', 'academy-awards-table'), $aat_render_text_link((string) $aat_rollup['most_wins']['film'], $aat_most_wins_url, 'aat-hub-inline-link'), number_format_i18n(intval($aat_rollup['most_wins']['wins'])), intval($aat_rollup['most_wins']['wins']) === 1 ? '' : 's'));
+                            echo wp_kses_post(sprintf(
+                                /* translators: 1: most-winning title link, 2: win count phrase */
+                                __('The biggest winner was %1$s with %2$s.', 'academy-awards-table'),
+                                $aat_render_text_link((string) $aat_rollup['most_wins']['film'], $aat_most_wins_url, 'aat-hub-inline-link'),
+                                sprintf(_n('%s win', '%s wins', intval($aat_rollup['most_wins']['wins']), 'academy-awards-table'), number_format_i18n(intval($aat_rollup['most_wins']['wins'])))
+                            ));
                             ?>
                         <?php endif; ?>
                     </p>
                 </div>
                 <div class="aat-ceremony-marquee-stack">
-                    <a class="aat-hub-chip aat-hub-chip-rich<?php echo $aat_best_picture_backdrop_style !== '' ? ' aat-card-has-backdrop' : ''; ?>" href="<?php echo esc_url($aat_latest_ceremony_url); ?>"<?php if ($aat_best_picture_backdrop_style !== '') : ?> style="<?php echo esc_attr($aat_best_picture_backdrop_style); ?>"<?php endif; ?>>
+                    <a class="aat-hub-chip aat-hub-chip-rich" href="<?php echo esc_url($aat_latest_ceremony_url); ?>">
                         <strong><?php esc_html_e('Open Ceremony Page', 'academy-awards-table'); ?></strong>
                         <span><?php echo esc_html($aat_instance->get_ceremony_year($aat_max_ceremony)); ?></span>
                     </a>
-                    <a class="aat-hub-chip aat-hub-chip-rich" href="<?php echo esc_url($aat_table_view_url); ?>">
-                        <strong><?php esc_html_e('Launch Data Explorer', 'academy-awards-table'); ?></strong>
-                        <span><?php esc_html_e('Sort, search, and filter the raw ledger', 'academy-awards-table'); ?></span>
-                    </a>
+                    <?php if (!empty($aat_rollup['most_nominated']['film']) && !empty($aat_rollup['most_nominated']['nominations'])) : ?>
+                        <?php $aat_most_nominated_url = !empty($aat_rollup['most_nominated']['film_id']) ? $aat_instance->get_entity_url((string) $aat_rollup['most_nominated']['film_id']) : ''; ?>
+                        <a class="aat-hub-chip aat-hub-chip-rich" href="<?php echo esc_url($aat_most_nominated_url !== '' ? $aat_most_nominated_url : $aat_latest_ceremony_url); ?>">
+                            <strong><?php esc_html_e('Most nominated', 'academy-awards-table'); ?></strong>
+                            <span><?php echo esc_html($aat_rollup['most_nominated']['film']); ?><span class="aat-meta-sep" aria-hidden="true">&middot;</span><?php echo esc_html(sprintf(_n('%s nomination', '%s nominations', intval($aat_rollup['most_nominated']['nominations']), 'academy-awards-table'), number_format_i18n(intval($aat_rollup['most_nominated']['nominations'])))); ?></span>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </section>
         <?php endif; ?>
@@ -386,7 +371,7 @@ if (!empty($aat_winner_rows)) {
         <?php if (!empty($aat_top_titles)) : ?>
             <div class="aat-hub-section aat-ceremony-gallery-section">
                 <h2><?php esc_html_e('Poster Highlights', 'academy-awards-table'); ?></h2>
-                <p class="aat-hub-copy"><?php esc_html_e('Start with the films people actually recognize, then move into the deeper record from there.', 'academy-awards-table'); ?></p>
+                <p class="aat-hub-copy"><?php echo esc_html(sprintf(/* translators: 1: title count, 2: ceremony ordinal */ _n('%1$s title from the %2$s Academy Awards.', '%1$s titles from the %2$s Academy Awards.', count($aat_top_titles), 'academy-awards-table'), number_format_i18n(count($aat_top_titles)), $aat_instance->ordinal($aat_max_ceremony))); ?></p>
                 <div class="aat-filmography-grid aat-hub-film-grid">
                     <?php foreach ($aat_top_titles as $entry) :
                         $fid = strtolower(trim((string) ($entry['film_id'] ?? '')));
@@ -394,10 +379,9 @@ if (!empty($aat_winner_rows)) {
                         $visual = $aat_get_visual_package($fid, 'medium_large');
                         $film_label = !empty($entry['film']) ? (string) $entry['film'] : $aat_instance->lookup_title_label($fid);
                         $film_url = $aat_instance->get_entity_url($fid);
-                        $aat_title_backdrop_style = $aat_get_card_backdrop_style($visual['poster_url'] ?? '', $visual['backdrop_url'] ?? '');
                     ?>
-                        <article class="aat-filmography-card aat-hub-film-card<?php echo !empty($entry['winner']) ? ' is-winner' : ''; ?><?php echo $aat_title_backdrop_style !== '' ? ' aat-card-has-backdrop' : ''; ?>"<?php if ($aat_title_backdrop_style !== '') : ?> style="<?php echo esc_attr($aat_title_backdrop_style); ?>"<?php endif; ?>>
-                            <a class="aat-filmography-link" href="<?php echo esc_url($film_url ? $film_url : $aat_table_view_url); ?>">
+                        <article class="aat-filmography-card aat-hub-film-card<?php echo !empty($entry['winner']) ? ' is-winner' : ''; ?>">
+                            <a class="aat-filmography-link" href="<?php echo esc_url($film_url ? $film_url : $aat_table_view_url); ?>" aria-label="<?php echo esc_attr($film_label); ?>">
                                 <div class="aat-filmography-poster-wrap">
                                     <?php if (!empty($visual['poster_html'])) : ?>
                                         <?php echo $visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -410,9 +394,9 @@ if (!empty($aat_winner_rows)) {
                                     <?php endif; ?>
                                     <?php if (!empty($entry['winner'])) : ?><span class="aat-winner-badge aat-card-badge"><?php esc_html_e('Winner', 'academy-awards-table'); ?></span><?php endif; ?>
                                 </div>
-                                <h3 class="aat-filmography-title"><?php echo esc_html($film_label); ?></h3>
-                                <?php if (!empty($entry['year'])) : ?><p class="aat-filmography-meta"><?php echo esc_html($entry['year']); ?></p><?php endif; ?>
                             </a>
+                            <h3 class="aat-filmography-title"><?php echo wp_kses_post($aat_render_text_link($film_label, $film_url ? $film_url : $aat_table_view_url, 'aat-hub-inline-link aat-hub-inline-link-title')); ?></h3>
+                            <?php if (!empty($entry['year'])) : ?><p class="aat-filmography-meta"><?php echo esc_html($entry['year']); ?></p><?php endif; ?>
                         </article>
                     <?php endforeach; ?>
                 </div>
@@ -423,7 +407,7 @@ if (!empty($aat_winner_rows)) {
         <?php if (!empty($aat_table_latest_rows)) : ?>
             <div class="aat-hub-section aat-winner-circle-section is-hero-latest is-marquee-latest">
                 <h2><?php esc_html_e('Latest Winner Circle', 'academy-awards-table'); ?></h2>
-                <p class="aat-hub-copy"><?php esc_html_e('A quick mobile-friendly read of the latest top-line winners, without booting the full explorer.', 'academy-awards-table'); ?></p>
+                <p class="aat-hub-copy"><?php echo esc_html(sprintf(/* translators: %s: ceremony ordinal */ __('The top-line winners of the %s Academy Awards.', 'academy-awards-table'), $aat_instance->ordinal($aat_max_ceremony))); ?></p>
                 <div class="aat-winner-circle-grid is-hero-latest is-marquee-latest">
                     <?php foreach ($aat_table_latest_rows as $winner_entry) :
                         $primary_label = trim((string) ($winner_entry['primary_label'] ?? ($winner_entry['name'] ?? '')));
@@ -440,9 +424,12 @@ if (!empty($aat_winner_rows)) {
                         $secondary_label = implode(' · ', array_slice($secondary_bits, 0, 2));
                         $category_url = $winner_entry['category_url'] ?? $aat_instance->get_category_url($winner_entry['canonical_category'] ?? '');
                         $winner_visual = $aat_get_curated_winner_visual($winner_entry, 'large');
+                        $winner_media_is_poster = false;
                         if (empty($winner_visual) && !empty($winner_entry['film_id'])) {
                             $winner_visual = $aat_get_visual_package((string) $winner_entry['film_id'], 'medium_large');
+                            $winner_media_is_poster = !empty($winner_visual['poster_url']);
                         }
+                        $winner_media_class = 'aat-winner-circle-media' . ($winner_media_is_poster ? ' is-poster' : ' is-photo');
                         $winner_media_url = '';
                         if (!empty($winner_entry['primary_url'])) {
                             $winner_media_url = (string) $winner_entry['primary_url'];
@@ -462,11 +449,10 @@ if (!empty($aat_winner_rows)) {
                                 <?php else : ?>
                                     <span class="aat-winner-circle-category"><?php echo esc_html($winner_entry['category_label']); ?></span>
                                 <?php endif; ?>
-                                <span class="aat-winner-badge"><?php esc_html_e('Winner', 'academy-awards-table'); ?></span>
                             </div>
                             <?php if (!empty($winner_visual['poster_url'])) : ?>
                                 <?php if ($winner_media_url !== '') : ?>
-                                    <a class="aat-winner-circle-media" href="<?php echo esc_url($winner_media_url); ?>">
+                                    <a class="<?php echo esc_attr($winner_media_class); ?>" href="<?php echo esc_url($winner_media_url); ?>">
                                         <?php if (!empty($winner_visual['poster_html'])) : ?>
                                             <?php echo $winner_visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <?php else : ?>
@@ -474,7 +460,7 @@ if (!empty($aat_winner_rows)) {
                                         <?php endif; ?>
                                     </a>
                                 <?php else : ?>
-                                    <div class="aat-winner-circle-media">
+                                    <div class="<?php echo esc_attr($winner_media_class); ?>">
                                         <?php if (!empty($winner_visual['poster_html'])) : ?>
                                             <?php echo $winner_visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <?php else : ?>
@@ -517,32 +503,10 @@ if (!empty($aat_winner_rows)) {
             <p class="aat-footer-line">
                 <?php esc_html_e('Want the full sortable table?', 'academy-awards-table'); ?>
                 <a href="<?php echo esc_url($aat_table_view_url); ?>"><?php esc_html_e('Open Data Explorer', 'academy-awards-table'); ?></a>
-                <span class="aat-footer-sep">&bull;</span>
-                <?php esc_html_e('On phones, the poster-first view is now the default for speed and readability.', 'academy-awards-table'); ?>
             </p>
         </div>
         <?php $aat_landing_sections['landing-footer'] = ob_get_clean(); echo implode('', apply_filters('aat_landing_route_sections', $aat_landing_sections, $aat_landing_context)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sections are template-rendered markup captured above. ?>
     <?php else : ?>
-        <?php if ($layout === 'full') : ?>
-            <?php $poster_view_url = remove_query_arg('view'); ?>
-            <div class="aat-explorer-shell aat-explorer-callout<?php echo $aat_best_picture_backdrop_style !== '' ? ' aat-card-has-backdrop' : ''; ?>"<?php if ($aat_best_picture_backdrop_style !== '') : ?> style="<?php echo esc_attr($aat_best_picture_backdrop_style); ?>"<?php endif; ?>>
-                <div class="aat-explorer-copy">
-                    <h2><?php esc_html_e('Data Explorer', 'academy-awards-table'); ?></h2>
-                    <p class="aat-hub-copy"><?php esc_html_e('Use the full table when you want raw row-level research. For faster browsing and better mobile reading, switch back to the poster-first ledger view.', 'academy-awards-table'); ?></p>
-                    <?php if (!empty($aat_best_picture['film'])) : ?>
-                        <p class="aat-explorer-context"><?php echo wp_kses_post(sprintf(__('Current Best Picture anchor: %1$s from the %2$s ceremony.', 'academy-awards-table'), $aat_render_text_link((string) $aat_best_picture['film'], $aat_best_picture_url, 'aat-hub-inline-link'), $aat_render_text_link((string) $aat_instance->ordinal($aat_max_ceremony), $aat_latest_ceremony_url, 'aat-hub-inline-link'))); ?></p>
-                    <?php endif; ?>
-                </div>
-                <div class="aat-hub-actions aat-view-toggle">
-                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($poster_view_url); ?>"><?php esc_html_e('Poster View', 'academy-awards-table'); ?></a>
-                    <?php if ($aat_latest_ceremony_url) : ?>
-                        <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($aat_latest_ceremony_url); ?>"><?php esc_html_e('Latest Ceremony', 'academy-awards-table'); ?></a>
-                    <?php endif; ?>
-                    <span class="aat-btn aat-btn-primary is-active"><?php esc_html_e('Data Explorer', 'academy-awards-table'); ?></span>
-                </div>
-            </div>
-        <?php endif; ?>
-
         <?php if ($layout === 'full') : ?>
         <?php
             $aat_header_categories_url = method_exists($aat_instance, 'get_categories_index_url') ? $aat_instance->get_categories_index_url() : '';
@@ -578,21 +542,38 @@ if (!empty($aat_winner_rows)) {
             </nav>
         </div>
 
+        <?php if ($layout === 'full') : ?>
+            <?php $poster_view_url = remove_query_arg('view'); ?>
+            <div class="aat-explorer-shell aat-explorer-callout">
+                <div class="aat-explorer-copy">
+                    <h2><?php esc_html_e('Sortable ledger', 'academy-awards-table'); ?></h2>
+                    <p class="aat-hub-copy"><?php esc_html_e('Every nomination as a sortable, filterable table. The poster view is the faster read on a phone.', 'academy-awards-table'); ?></p>
+                </div>
+                <div class="aat-hub-actions aat-view-toggle">
+                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($poster_view_url); ?>"><?php esc_html_e('Poster View', 'academy-awards-table'); ?></a>
+                    <?php if ($aat_latest_ceremony_url) : ?>
+                        <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($aat_latest_ceremony_url); ?>"><?php esc_html_e('Latest Ceremony', 'academy-awards-table'); ?></a>
+                    <?php endif; ?>
+                    <span class="aat-btn aat-btn-primary is-active" aria-current="page"><span class="screen-reader-text"><?php esc_html_e('Current view: ', 'academy-awards-table'); ?></span><?php esc_html_e('Data Explorer', 'academy-awards-table'); ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="aat-stats-bar">
             <div class="aat-stat">
-                <span class="aat-stat-number" id="aat-stat-total">&mdash;</span>
+                <span class="aat-stat-number" id="aat-stat-total"><?php echo esc_html(number_format_i18n($aat_record_count)); ?></span>
                 <span class="aat-stat-label"><?php esc_html_e('Total Nominations', 'academy-awards-table'); ?></span>
             </div>
             <div class="aat-stat">
-                <span class="aat-stat-number" id="aat-stat-winners">&mdash;</span>
+                <span class="aat-stat-number" id="aat-stat-winners"><?php echo esc_html(number_format_i18n($aat_winner_count)); ?></span>
                 <span class="aat-stat-label"><?php esc_html_e('Winners', 'academy-awards-table'); ?></span>
             </div>
             <div class="aat-stat">
-                <span class="aat-stat-number" id="aat-stat-categories">&mdash;</span>
+                <span class="aat-stat-number" id="aat-stat-categories"><?php echo esc_html(number_format_i18n($aat_category_count)); ?></span>
                 <span class="aat-stat-label"><?php esc_html_e('Categories', 'academy-awards-table'); ?></span>
             </div>
             <div class="aat-stat">
-                <span class="aat-stat-number" id="aat-stat-ceremonies">&mdash;</span>
+                <span class="aat-stat-number" id="aat-stat-ceremonies"><?php echo esc_html(number_format_i18n($aat_ceremony_count)); ?></span>
                 <span class="aat-stat-label"><?php esc_html_e('Ceremonies', 'academy-awards-table'); ?></span>
             </div>
         </div>
@@ -602,7 +583,7 @@ if (!empty($aat_winner_rows)) {
         </div>
 
         <div class="aat-hub-metric-grid aat-explorer-signal-grid">
-            <article class="aat-hub-metric-card<?php echo $aat_best_picture_backdrop_style !== '' ? ' aat-card-has-backdrop' : ''; ?>"<?php if ($aat_best_picture_backdrop_style !== '') : ?> style="<?php echo esc_attr($aat_best_picture_backdrop_style); ?>"<?php endif; ?>>
+            <article class="aat-hub-metric-card">
                 <span class="aat-hub-metric-label"><?php esc_html_e('Latest Best Picture', 'academy-awards-table'); ?></span>
                 <strong class="aat-hub-metric-value">
                     <?php if (!empty($aat_best_picture['film'])) : ?>
@@ -611,24 +592,24 @@ if (!empty($aat_winner_rows)) {
                         <?php echo esc_html__('Updating', 'academy-awards-table'); ?>
                     <?php endif; ?>
                 </strong>
-                <p class="aat-hub-metric-copy"><?php esc_html_e('Jump from the raw ledger back into the film profile that currently anchors the Oscar conversation.', 'academy-awards-table'); ?></p>
+                <?php if ($aat_latest_ceremony_url) : ?>
+                    <p class="aat-hub-metric-copy"><a class="aat-hub-inline-link" href="<?php echo esc_url($aat_latest_ceremony_url); ?>"><?php echo esc_html(sprintf(/* translators: %s: ceremony ordinal */ __('%s Academy Awards', 'academy-awards-table'), $aat_instance->ordinal($aat_max_ceremony))); ?></a></p>
+                <?php endif; ?>
             </article>
-            <article class="aat-hub-metric-card">
-                <span class="aat-hub-metric-label"><?php esc_html_e('Latest Ceremony', 'academy-awards-table'); ?></span>
-                <strong class="aat-hub-metric-value">
-                    <?php if ($aat_latest_ceremony_url) : ?>
-                        <a class="aat-hub-inline-link" href="<?php echo esc_url($aat_latest_ceremony_url); ?>"><?php echo esc_html($aat_instance->ordinal($aat_max_ceremony)); ?></a>
-                    <?php else : ?>
-                        <?php echo esc_html($aat_instance->ordinal($aat_max_ceremony)); ?>
-                    <?php endif; ?>
-                </strong>
-                <p class="aat-hub-metric-copy"><?php echo esc_html(sprintf(__('Browse the %s ceremony page if you want the richer card system instead of the raw explorer.', 'academy-awards-table'), $aat_instance->get_ceremony_year($aat_max_ceremony))); ?></p>
-            </article>
-            <article class="aat-hub-metric-card">
-                <span class="aat-hub-metric-label"><?php esc_html_e('Linked Winner Circle', 'academy-awards-table'); ?></span>
-                <strong class="aat-hub-metric-value"><?php echo esc_html(number_format_i18n(count($aat_table_latest_rows))); ?></strong>
-                <p class="aat-hub-metric-copy"><?php esc_html_e('The latest winner surfaces now connect category, person, and film routes before you ever touch the table.', 'academy-awards-table'); ?></p>
-            </article>
+            <?php if (!empty($aat_rollup['most_wins']['film']) && !empty($aat_rollup['most_wins']['wins'])) : ?>
+                <article class="aat-hub-metric-card">
+                    <span class="aat-hub-metric-label"><?php esc_html_e('Most wins', 'academy-awards-table'); ?></span>
+                    <strong class="aat-hub-metric-value"><?php echo wp_kses_post($aat_render_text_link((string) $aat_rollup['most_wins']['film'], !empty($aat_rollup['most_wins']['film_id']) ? $aat_instance->get_entity_url((string) $aat_rollup['most_wins']['film_id']) : '', 'aat-hub-inline-link')); ?></strong>
+                    <p class="aat-hub-metric-copy"><?php echo esc_html(sprintf(_n('%s win', '%s wins', intval($aat_rollup['most_wins']['wins']), 'academy-awards-table'), number_format_i18n(intval($aat_rollup['most_wins']['wins'])))); ?></p>
+                </article>
+            <?php endif; ?>
+            <?php if (!empty($aat_rollup['most_nominated']['film']) && !empty($aat_rollup['most_nominated']['nominations'])) : ?>
+                <article class="aat-hub-metric-card">
+                    <span class="aat-hub-metric-label"><?php esc_html_e('Most nominated', 'academy-awards-table'); ?></span>
+                    <strong class="aat-hub-metric-value"><?php echo wp_kses_post($aat_render_text_link((string) $aat_rollup['most_nominated']['film'], !empty($aat_rollup['most_nominated']['film_id']) ? $aat_instance->get_entity_url((string) $aat_rollup['most_nominated']['film_id']) : '', 'aat-hub-inline-link')); ?></strong>
+                    <p class="aat-hub-metric-copy"><?php echo esc_html(sprintf(_n('%s nomination', '%s nominations', intval($aat_rollup['most_nominated']['nominations']), 'academy-awards-table'), number_format_i18n(intval($aat_rollup['most_nominated']['nominations'])))); ?></p>
+                </article>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
 
@@ -681,6 +662,11 @@ if (!empty($aat_winner_rows)) {
                 <div class="aat-loading-spinner"></div>
                 <span class="aat-loading-text"><?php esc_html_e('Loading Academy Awards data...', 'academy-awards-table'); ?></span>
             </div>
+            <?php // Without JavaScript the table cannot load; the Explorer route serves the same records as plain pages. ?>
+            <noscript>
+                <style>.aat-loading { display: none; }</style>
+                <p class="aat-footer-line"><a href="<?php echo esc_url(class_exists('AAT_Explorer') ? AAT_Explorer::base_url() : $aat_instance->get_entity_base_url() . 'explore/'); ?>"><?php esc_html_e('Open the Oscar Ledger Explorer', 'academy-awards-table'); ?></a> <?php esc_html_e('to browse every nomination without JavaScript.', 'academy-awards-table'); ?></p>
+            </noscript>
         </div>
 
         <div class="aat-footer">
@@ -690,7 +676,7 @@ if (!empty($aat_winner_rows)) {
                 <?php esc_html_e('Structured, normalized, and maintained by Lunara Film (Dalton Johnson).', 'academy-awards-table'); ?>
             </p>
             <p class="aat-footer-line">
-                <span class="aat-footer-sep"><?php echo esc_html(number_format_i18n($aat_ceremony_count)); ?> ceremonies<?php if ($aat_span) : ?> (<?php echo wp_kses_post($aat_span); ?>)<?php endif; ?></span>
+                <span class="aat-footer-count"><?php echo esc_html(sprintf(_n('%s ceremony', '%s ceremonies', $aat_ceremony_count, 'academy-awards-table'), number_format_i18n($aat_ceremony_count))); ?><?php if ($aat_span) : ?> (<?php echo wp_kses_post($aat_span); ?>)<?php endif; ?></span>
                 <span class="aat-footer-sep">&bull;</span>
                 <?php esc_html_e('Click nominees and films to open Lunara profiles; IMDb links are provided for verification.', 'academy-awards-table'); ?>
                 <span class="aat-footer-mobile-hint"><?php esc_html_e('On mobile, tap the + icon to view full details.', 'academy-awards-table'); ?></span>
