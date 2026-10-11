@@ -6,7 +6,6 @@
  */
 $root = dirname(__DIR__);
 $plugin = file_get_contents($root . '/academy-awards-table.php');
-$api = file_get_contents($root . '/includes/class-aat-read-api.php');
 $entity = file_get_contents($root . '/templates/entity-page.php');
 $hub = file_get_contents($root . '/templates/hub-page.php');
 $fail = array();
@@ -28,8 +27,23 @@ $fc = substr($hub, strpos($hub, '$aat_build_hub_review_cards = function'), 6000)
 $check(strpos($fc, 'array_slice($cards, 0, $limit)') < strpos($fc, 'get_title_visual_package'), 'Review-card images are built after the cut to the limit.');
 
 // Read-API answers survive deploys that do not change their shape.
-$check(strpos($api, 'const RESPONSE_SCHEMA = 1;') !== false && strpos($api, 'array(self::RESPONSE_SCHEMA, self::stamp(), $labels, $parts)') !== false, 'The read-API cache key uses RESPONSE_SCHEMA, not AAT_VERSION.');
-$check(strpos($api, "\$data['plugin_version'] = AAT_VERSION;") !== false, '/status always reports the running plugin version.');
+$probe = function ($build) use ($root) {
+    $process = proc_open(array(PHP_BINARY, $root . '/tests/read-api-cache-build-fixture.php', $build), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    if (!is_resource($process)) { throw new RuntimeException('Could not start the API cache fixture.'); }
+    fclose($pipes[0]);
+    $output = stream_get_contents($pipes[1]); fclose($pipes[1]);
+    $error = stream_get_contents($pipes[2]); fclose($pipes[2]);
+    if (proc_close($process) !== 0) { throw new RuntimeException('API cache fixture failed: ' . $error); }
+    $data = json_decode($output, true);
+    if (!is_array($data)) { throw new RuntimeException('API cache fixture returned invalid JSON.'); }
+    return $data;
+};
+$before = $probe('fixture-before-deploy');
+$after = $probe('fixture-after-deploy');
+$check($before['key'] !== '' && $before['key'] === $after['key'], 'Unchanged API answers keep the same cache key across different running builds.');
+$check($before['schema_in_key'] && $after['schema_in_key'], 'The API response schema participates in the actual cache-key serialization.');
+$check($before['data']['plugin_version'] === 'fixture-before-deploy' && $after['data']['plugin_version'] === 'fixture-after-deploy', '/status replaces a cached old build with the running plugin version.');
+$check($before['data']['dataset']['nominations'] === 123 && $after['data']['dataset']['nominations'] === 123, 'Version reporting preserves the cached dataset without a rebuild.');
 
 if ($fail) { fwrite(STDERR, implode("\n", $fail) . "\n"); exit(1); }
 echo "Speed pass two contract OK.\n";

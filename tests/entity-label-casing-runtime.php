@@ -91,7 +91,40 @@ foreach ($cases as $shouted => $expected) {
 $check(strpos($source, "\$label !== '' && \$this->prefer_entity_label(\$entities[\$entity_id]['label'], \$label)") !== false && strpos($source, "\$this->prefer_entity_label(\$entity_stats[\$entity_id]['label'], trim((string) \$label))") !== false, 'The rebuild applies the preference to entities and their stats.');
 $check(strpos($source, "\$entity_row['entity_type'] === 'name' && \$this->is_shouted_label(") !== false, 'Only people are title-cased.');
 $check(strpos($source, "\$this->get_label_rules_state() . '|' . \$entity . ':' . \$id") !== false, 'The display-name cache key follows the applied label rules.');
-$check(strpos(file_get_contents($root . '/includes/class-aat-read-api.php'), "array(self::RESPONSE_SCHEMA, self::stamp(), \$labels, \$parts)") !== false, 'The API cache key follows the applied label rules.');
+// Exercise the real cache rather than pinning the order/count of its key inputs.
+define('ABSPATH', __DIR__ . '/');
+$GLOBALS['label_api_fixture'] = array('labels' => 'before-repair', 'stamp' => 'fixture-data', 'revision' => 'fixture-revision', 'cache' => array());
+function get_option($key, $default = false) { return $key === 'aat_explorer_snapshot_revision' ? $GLOBALS['label_api_fixture']['revision'] : $default; }
+function wp_json_encode($value) { return json_encode($value); }
+function is_wp_error($value) { return false; }
+function get_transient($key) { return $GLOBALS['label_api_fixture']['cache']['transient:' . $key] ?? false; }
+function set_transient($key, $value, $ttl) { $GLOBALS['label_api_fixture']['cache']['transient:' . $key] = $value; }
+function wp_cache_get($key, $group) { return $GLOBALS['label_api_fixture']['cache'][$group . ':' . $key] ?? false; }
+function wp_cache_set($key, $value, $group, $ttl) { $GLOBALS['label_api_fixture']['cache'][$group . ':' . $key] = $value; }
+class Academy_Awards_Table {
+    public static function get_instance() { return new self(); }
+    public function get_label_rules_state() { return $GLOBALS['label_api_fixture']['labels']; }
+    public function get_dataset_stamp() { return $GLOBALS['label_api_fixture']['stamp']; }
+}
+require $root . '/includes/class-aat-read-api.php';
+$cached = new ReflectionMethod('AAT_Read_API', 'cached');
+$cached->setAccessible(true);
+foreach (array(false, true) as $persistent) {
+    $GLOBALS['label_api_fixture'] = array('labels' => 'before-repair', 'stamp' => 'fixture-data', 'revision' => 'fixture-revision', 'cache' => array());
+    $builds = 0;
+    $name = 'FARCIOT EDOUART';
+    $build = function () use (&$builds, &$name) { $builds++; return $name; };
+    $read = function () use ($cached, $persistent, $build) { return $cached->invoke(null, array('entity', 'fixture-id'), $persistent, $build); };
+    $check($read() === $name && $read() === $name && $builds === 1, 'Unchanged label rules reuse the cached answer.');
+    $GLOBALS['label_api_fixture']['labels'] = 'after-repair';
+    $name = 'Farciot Edouart';
+    $check($read() === $name && $builds === 2, 'Applied label repairs invalidate API names without changing the dataset stamp.');
+    $check($read() === $name && $builds === 2, 'Repaired names remain cacheable.');
+    $GLOBALS['label_api_fixture']['revision'] = 'later-manual-rebuild';
+    $check($read() === $name && $builds === 3, 'A manual revision independently retires repaired API answers.');
+    $GLOBALS['label_api_fixture']['stamp'] = 'later-dataset';
+    $check($read() === $name && $builds === 4, 'A later dataset independently retires repaired API answers.');
+}
 
 // Tables built under older rules get one background, in-place repair that
 // never truncates: it updates only shouted names, then records the rules.
