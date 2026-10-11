@@ -2109,10 +2109,7 @@ get_header();
                                     <?php endif; ?>
                                 </p>
                                 <div class="aat-related-review-actions">
-                                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($card['review_url']); ?>"><?php echo esc_html__('Read Review', 'academy-awards-table'); ?></a>
-                                    <?php if (!empty($card['film_url'])) : ?>
-                                        <a class="aat-btn aat-btn-primary" href="<?php echo esc_url($card['film_url']); ?>"><?php echo esc_html__('Title Profile', 'academy-awards-table'); ?></a>
-                                    <?php endif; ?>
+                                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($card['review_url']); ?>"><?php echo esc_html__('Read the review', 'academy-awards-table'); ?></a>
                                 </div>
                             </div>
                         </article>
@@ -2948,10 +2945,7 @@ get_header();
                                     <?php endif; ?>
                                 </p>
                                 <div class="aat-related-review-actions">
-                                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($card['review_url']); ?>"><?php echo esc_html__('Read Review', 'academy-awards-table'); ?></a>
-                                    <?php if (!empty($card['film_url'])) : ?>
-                                        <a class="aat-btn aat-btn-primary" href="<?php echo esc_url($card['film_url']); ?>"><?php echo esc_html__('Title Profile', 'academy-awards-table'); ?></a>
-                                    <?php endif; ?>
+                                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($card['review_url']); ?>"><?php echo esc_html__('Read the review', 'academy-awards-table'); ?></a>
                                 </div>
                             </div>
                         </article>
