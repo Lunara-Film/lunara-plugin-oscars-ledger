@@ -662,10 +662,46 @@ if (!empty($aat_winner_rows)) {
                 <div class="aat-loading-spinner"></div>
                 <span class="aat-loading-text"><?php esc_html_e('Loading Academy Awards data...', 'academy-awards-table'); ?></span>
             </div>
-            <?php // Without JavaScript the table cannot load; the Explorer route serves the same records as plain pages. ?>
+            <?php
+            // Keep the table's explicit scope when its JavaScript is unavailable.
+            // Explorer accepts one ceremony per URL, so a year shared by several
+            // ceremonies gets one scoped link for each rather than a broader list.
+            $aat_noscript_filters = array(
+                'category' => sanitize_title((string) ($atts['category'] ?? '')),
+                'class' => sanitize_text_field((string) ($atts['class'] ?? '')),
+                'winner' => in_array($atts['winners_only'] ?? false, array(true, 1, '1', 'true'), true),
+            );
+            $aat_noscript_ceremony = max(0, intval($atts['ceremony'] ?? 0));
+            $aat_noscript_year = trim((string) ($atts['year'] ?? ''));
+            $aat_noscript_ceremonies = array($aat_noscript_ceremony);
+            if ($aat_noscript_year !== '') {
+                if ($aat_noscript_ceremony > 0) {
+                    $aat_noscript_ceremonies = (string) $aat_instance->get_ceremony_year($aat_noscript_ceremony) === $aat_noscript_year ? array($aat_noscript_ceremony) : array();
+                } else {
+                    $aat_noscript_ceremonies = array_values(array_unique(array_filter(array_map('intval', (array) $wpdb->get_col($wpdb->prepare(
+                        "SELECT DISTINCT ceremony FROM $aat_table WHERE year = %s ORDER BY ceremony ASC",
+                        $aat_noscript_year
+                    ))), function($value) { return $value > 0; })));
+                }
+            }
+            ?>
             <noscript>
                 <style>.aat-loading { display: none; }</style>
-                <p class="aat-footer-line"><a href="<?php echo esc_url(class_exists('AAT_Explorer') ? AAT_Explorer::base_url() : $aat_instance->get_entity_base_url() . 'explore/'); ?>"><?php esc_html_e('Open the Oscar Ledger Explorer', 'academy-awards-table'); ?></a> <?php esc_html_e('to browse every nomination without JavaScript.', 'academy-awards-table'); ?></p>
+                <?php foreach ($aat_noscript_ceremonies as $aat_noscript_ceremony) : ?>
+                    <?php
+                    $aat_noscript_state = array_merge($aat_noscript_filters, array('ceremony' => $aat_noscript_ceremony));
+                    $aat_noscript_url = class_exists('AAT_Explorer')
+                        ? AAT_Explorer::url($aat_noscript_state)
+                        : add_query_arg(array_filter($aat_noscript_state), $aat_instance->get_entity_base_url() . 'explore/');
+                    $aat_noscript_label = count($aat_noscript_ceremonies) > 1
+                        ? sprintf(__('Open the %s Academy Awards in the Explorer', 'academy-awards-table'), $aat_instance->ordinal($aat_noscript_ceremony))
+                        : __('Open the Oscar Ledger Explorer', 'academy-awards-table');
+                    ?>
+                    <p class="aat-footer-line"><a href="<?php echo esc_url($aat_noscript_url); ?>"><?php echo esc_html($aat_noscript_label); ?></a> <?php esc_html_e('to browse these records without JavaScript.', 'academy-awards-table'); ?></p>
+                <?php endforeach; ?>
+                <?php if (empty($aat_noscript_ceremonies)) : ?>
+                    <p class="aat-footer-line"><?php esc_html_e('No matching ceremony is available for the selected year.', 'academy-awards-table'); ?></p>
+                <?php endif; ?>
             </noscript>
         </div>
 

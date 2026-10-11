@@ -7060,7 +7060,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     display: grid;
     gap: var(--lunara-oscars-dossier-section-gap, clamp(28px, 4vw, 48px));
     min-width: 0;
-    max-width: 100%;
 }
 
 /* Every section can shrink to the page; the Career Arc's wide stage scrolls inside its own frame. */
@@ -8343,7 +8342,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 @media (max-width:540px) {
  body.aat-shell-page .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap,
  body.aat-shell-page .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap.is-person,
- body.aat-shell-page .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap.is-company {width:min(100%,45vw,180px)!important;max-width:min(100%,45vw,180px)!important;flex-basis:auto!important;height:auto!important;justify-self:start!important}
+ body.aat-shell-page .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap.is-company {width:min(100%,45vw,180px);max-width:min(100%,45vw,180px);flex-basis:auto;height:auto;justify-self:start}
 }
 
 /* Rounded-corner fit. A framed box with overflow:hidden trims anything that
@@ -8375,41 +8374,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-winner-circle-meta {
     overflow-wrap: break-word;
 }
-
-/* Static profile layout; keep presentation in the cacheable asset.
-   These are the values the Theme's shell sheet (lunara-shell.css, body.aat-shell-page
-   rules with !important) would otherwise change: the hero grid, the facts band,
-   the hidden stats bar, and the row padding and gaps of the record. Written at
-   (0,3,x) with !important so stylesheet order cannot undo them; the Dossier
-   Studio emitter's artwork rules sit above this layer and are never touched. */
-body .aat-container.aat-profile-file{display:grid!important;gap:var(--lunara-oscars-dossier-section-gap,clamp(28px,4vw,48px))!important;min-width:0!important}
-body .aat-container.aat-profile-file>*{min-width:0!important;max-width:100%!important}
-body .aat-container.aat-profile-file .aat-entity-hero{display:grid!important;grid-template-columns:minmax(150px,210px) minmax(0,1fr)!important;gap:clamp(20px,3vw,36px)!important;align-items:start!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
-body .aat-container.aat-profile-file .aat-entity-hero.is-meta-only,body .aat-container.aat-profile-file .aat-entity-hero.is-no-poster{grid-template-columns:minmax(0,1fr)!important}
-body .aat-container.aat-profile-file .aat-entity-hero-copy{display:grid!important;align-content:start!important;gap:12px!important;min-width:0!important}
-body .aat-container.aat-profile-file .aat-entity-title{font-size:clamp(2rem, 4vw, 3.5rem)!important;line-height:1.08!important;letter-spacing:normal!important;text-transform:none!important;text-align:left!important;max-width:100%!important}
-body .aat-container.aat-profile-file .aat-entity-summary,body .aat-container.aat-profile-file .aat-entity-overview,body .aat-container.aat-profile-file .aat-section-description,body .aat-container.aat-profile-file .aat-history-line,body .aat-container.aat-profile-file .aat-entity-status-summary,body .aat-container.aat-profile-file .aat-lunara-review-excerpt,body .aat-container.aat-profile-file .aat-related-review-excerpt{font-size:1.0625rem!important;line-height:1.6!important}
-body .aat-container.aat-profile-file .aat-profile-command-band{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0 20px!important;margin:4px 0 0!important;min-width:0!important}
-body .aat-container.aat-profile-file .aat-profile-command-card{display:grid!important;gap:4px!important;align-content:start!important;min-width:0!important;min-height:0!important;padding:12px 0!important;border:0!important;border-radius:0!important;background:transparent!important}
-body .aat-container.aat-profile-file .aat-profile-command-card span{color:var(--aat-light-gray)!important;font-size:.875rem!important;line-height:1.4!important;letter-spacing:normal!important;text-transform:none!important}
-body .aat-container.aat-profile-file .aat-profile-command-card strong{color:var(--aat-white)!important;font-size:clamp(1.2rem,1.9vw,1.6rem)!important;line-height:1.15!important;overflow-wrap:anywhere!important}
-body .aat-container.aat-profile-file .aat-entity-actions{display:flex!important;flex-wrap:wrap!important;gap:10px!important;margin:4px 0 0!important}
-body .aat-container.aat-profile-file .aat-stats-bar.aat-entity-stats{display:none!important}
-body .aat-container.aat-profile-file .aat-entity-section,body .aat-container.aat-profile-file .aat-lunara-review-module{margin:0!important}
-body .aat-container.aat-profile-file .aat-entity-status-banner{padding:20px 0 0!important;border:0!important;border-top:1px solid rgba(201,169,97,.22)!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
-body .aat-container.aat-profile-file .aat-timeline-card{padding:12px 0 0!important;gap:0!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
-body .aat-container.aat-profile-file .aat-history-item{padding:14px 0!important;gap:6px 16px!important;border:0!important;border-top:1px solid rgba(201,169,97,.14)!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
-body .aat-container.aat-profile-file .aat-crossroads-list{gap:0!important}
-body .aat-container.aat-profile-file .aat-filmography-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;gap:22px 16px!important;align-items:start!important}
-body .aat-container.aat-profile-file .aat-related-reviews-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--lunara-oscars-related-review-min,260px)),1fr))!important;gap:24px 20px!important;align-items:start!important}
-body .aat-container.aat-profile-file .aat-filmography-card,body .aat-container.aat-profile-file .aat-related-review-card{min-height:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
-body .aat-container.aat-profile-file .aat-related-review-body{display:grid!important;align-content:start!important;gap:6px!important;padding:12px 0 0!important}
-/* The shell paints every .aat-btn gold-light; the solid gold primary keeps dark ink. */
-body .aat-container .aat-btn-primary,body .aat-container .aat-btn-primary:hover,body .aat-container .aat-btn-primary:focus-visible{color:var(--aat-black)!important}
-@media(max-width:900px){body .aat-container.aat-profile-file .aat-entity-hero{grid-template-columns:minmax(0,1fr)!important;gap:20px!important}body .aat-container.aat-profile-file .aat-entity-poster-wrap{max-width:180px!important;justify-self:start!important}body .aat-container.aat-profile-file .aat-profile-command-band{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:720px){body .aat-container.aat-profile-file .aat-filmography-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))!important;gap:18px 12px!important}body .aat-container.aat-profile-file .aat-related-reviews-grid{grid-template-columns:minmax(0,1fr)!important}}
-@media(max-width:640px){body .aat-container.aat-profile-file{width:min(100%,calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important;overflow-x:clip!important}body .aat-container.aat-profile-file .aat-entity-actions{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important;width:100%!important}body .aat-container.aat-profile-file .aat-entity-actions .aat-btn{width:100%!important;justify-content:center!important}body .aat-container.aat-profile-file .aat-entity-summary,body .aat-container.aat-profile-file .aat-entity-overview,body .aat-container.aat-profile-file .aat-section-description,body .aat-container.aat-profile-file .aat-history-line{max-width:100%!important;overflow-wrap:anywhere!important;white-space:normal!important}}
-@media(max-width:480px){body .aat-container.aat-profile-file .aat-filmography-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 
 /* The landing's latest Winner Circle on phones: one column, no desktop floor. */
 @media (max-width: 720px) {

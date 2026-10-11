@@ -1114,7 +1114,6 @@ get_header();
                 }
             }
             $grouped = $aat_index_grouped_ordered;
-            $aat_index_latest_year = $max_ceremony > 0 ? intval($aat->get_ceremony_year($max_ceremony)) : 0;
             $aat_index_person_classes = array('Acting', 'Directing', 'Writing');
 
             // One batched query maps every canonical category to its most
@@ -1194,12 +1193,8 @@ get_header();
                         $first_year = (string) ($facts['first_year'] ?? '');
                         $last_year = (string) ($facts['last_year'] ?? '');
                         if ($first_year !== '' && $last_year !== '') {
-                            if ($aat_index_latest_year > 0 && intval($last_year) > 0 && intval($last_year) < $aat_index_latest_year) {
-                                $index_facts[] = sprintf(/* translators: 1: first year, 2: last year */ __('Awarded %1$s to %2$s', 'academy-awards-table'), $first_year, $last_year);
-                                $index_facts[] = __('No longer awarded', 'academy-awards-table');
-                            } else {
-                                $index_facts[] = sprintf(/* translators: 1: first year, 2: last year */ __('Awarded since %1$s', 'academy-awards-table'), $first_year, $last_year);
-                            }
+                            // A gap in the dataset does not establish that an award has been retired.
+                            $index_facts[] = sprintf(/* translators: 1: first recorded year, 2: last recorded year */ __('Recorded %1$s to %2$s', 'academy-awards-table'), $first_year, $last_year);
                         }
                         if (intval($facts['ceremonies'] ?? 0) > 0) {
                             $index_facts[] = sprintf(_n('%s ceremony', '%s ceremonies', intval($facts['ceremonies']), 'academy-awards-table'), number_format_i18n(intval($facts['ceremonies'])));

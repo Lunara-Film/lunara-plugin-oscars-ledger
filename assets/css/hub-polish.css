@@ -1,7 +1,7 @@
 /* Static hub-page layout; keep presentation in the cacheable asset. */
 /* Index pass: poster-led cards for the ceremonies and categories indexes
                (shares the ceremony-dossier grammar). */
-            body.aat-shell-page .aat-container .aat-hub-page-index-grid,body .aat-container .aat-hub-page-index-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))!important;gap:0 clamp(16px,2vw,26px)!important;margin-top:0!important}
+            body.aat-shell-page .aat-container .aat-hub-page-index-grid,body .aat-container .aat-hub-page-index-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:0 clamp(16px,2vw,26px);margin-top:0!important}
             body .aat-container .aat-hub-page-index-grid .aat-hub-card{padding:14px 0!important}
             body .aat-container .aat-hub-page-index-grid .aat-hub-card.has-index-poster{display:grid!important;grid-template-columns:84px minmax(0,1fr)!important;column-gap:16px!important;align-items:start!important;padding:14px 0!important}
             body .aat-container .aat-hub-card{transition:border-color .25s ease!important}

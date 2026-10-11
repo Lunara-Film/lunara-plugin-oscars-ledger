@@ -71,6 +71,7 @@ function esc_html__($value, $domain = '') { return esc_html($value); }
 function esc_attr__($value, $domain = '') { return esc_attr($value); }
 function esc_html_e($value, $domain = '') { echo esc_html($value); }
 function esc_attr_e($value, $domain = '') { echo esc_attr($value); }
+function _e($value, $domain = '') { echo $value; }
 function _n($one, $many, $count, $domain = '') { return (int) $count === 1 ? $one : $many; }
 function wp_kses_post($value) { return $value; }
 function wp_parse_args($args, $defaults) { return array_merge($defaults, $args); }
@@ -93,7 +94,8 @@ function get_query_var($key) { return $GLOBALS['query'][$key] ?? ''; }
 function get_theme_mod($key, $default = false) { return $default; }
 function add_query_arg(...$args) {
     if (is_array($args[0])) { return $args[1] . '?' . http_build_query($args[0]); }
-    return $args[2] . (strpos($args[2], '?') === false ? '?' : '&') . rawurlencode($args[0]) . '=' . rawurlencode($args[1]);
+    $url = $args[2] ?? home_url('/oscars/');
+    return $url . (strpos($url, '?') === false ? '?' : '&') . rawurlencode($args[0]) . '=' . rawurlencode($args[1]);
 }
 function remove_query_arg($key, $url = '') { return $url !== '' ? preg_replace('/\?.*/', '', $url) : home_url('/'); }
 function get_header() { echo '<main id="main">'; }
@@ -133,6 +135,28 @@ function get_the_post_thumbnail($id, $size = 'post-thumbnail', $attrs = array())
 
 class Ledger_Routes_WPDB {
     public $prefix = 'wp_';
+    public function get_var($sql) {
+        $values = array(
+            'SELECT COUNT(DISTINCT ceremony) FROM wp_academy_awards' => 98,
+            'SELECT MIN(ceremony) FROM wp_academy_awards' => 1,
+            'SELECT MAX(ceremony) FROM wp_academy_awards' => 98,
+            'SELECT COUNT(*) FROM wp_academy_awards' => 12480,
+            'SELECT COUNT(*) FROM wp_academy_awards WHERE winner = 1' => 2914,
+            "SELECT COUNT(DISTINCT canonical_category) FROM wp_academy_awards WHERE canonical_category != ''" => count($GLOBALS['ledger']['category_classes']),
+        );
+        if (!array_key_exists($sql, $values)) { throw new RuntimeException('Unexpected scalar query: ' . $sql); }
+        return $values[$sql];
+    }
+    public function prepare($sql, $value) {
+        if ($sql !== 'SELECT DISTINCT ceremony FROM wp_academy_awards WHERE year = %s ORDER BY ceremony ASC') {
+            throw new RuntimeException('Unexpected prepared query: ' . $sql);
+        }
+        return array('sql' => $sql, 'year' => $value);
+    }
+    public function get_col($prepared) {
+        if (!is_array($prepared) || !isset($prepared['year'])) { throw new RuntimeException('Year query must be prepared'); }
+        return array('2025' => array('98'), '1930' => array('3', '4'), 'unknown' => array())[$prepared['year']] ?? array();
+    }
     public function get_results($sql, $output = ARRAY_A) {
         $ledger = $GLOBALS['ledger'];
         if (strpos($sql, 'GROUP BY ceremony, film, film_id') !== false) { return $ledger['index_top_titles']; }
@@ -447,6 +471,20 @@ foreach ($ledger['category_classes'] as $category => $class) {
     $ledger['index_latest_winners'][] = array('canonical_category' => $category, 'year' => $latest['year'], 'film' => $latest['film'], 'film_id' => $latest['film_id'], 'name' => $latest['name']);
     $slot++;
 }
+if ($route === 'categories' && $variant === 'past-spans') {
+    foreach ($ledger['index_categories'] as &$category_record) {
+        if ($category_record['canonical_category'] === 'BEST PICTURE') {
+            $category_record['first_year'] = '1927/28';
+            $category_record['last_year'] = '2024';
+            $category_record['ceremonies'] = '97';
+        } elseif ($category_record['canonical_category'] === 'HONORARY AWARD') {
+            $category_record['first_year'] = '1927/28';
+            $category_record['last_year'] = '2022';
+            $category_record['ceremonies'] = '83';
+        }
+    }
+    unset($category_record);
+}
 $ledger['slug_map'] = array();
 foreach (array_keys($ledger['category_classes']) as $category) { $ledger['slug_map'][sanitize_title($category)] = $category; }
 
@@ -504,7 +542,7 @@ $source = file_get_contents($root . '/academy-awards-table.php');
 $methods = '';
 foreach (array(
     'ordinal', 'format_category_display', 'format_pipe_list', 'humanize_pipe_list', 'resolve_category_slug',
-    'get_category_url', 'get_ceremony_url', 'get_ceremonies_index_url', 'get_categories_index_url', 'get_entity_base_url', 'get_entity_base_slug',
+    'get_category_url', 'get_ceremony_url', 'get_ceremonies_index_url', 'get_categories_index_url', 'get_about_url', 'get_entity_base_url', 'get_entity_base_slug',
     'get_entity_url', 'build_entity_url_from_id', 'build_imdb_url', 'infer_entity_type_from_id',
     'is_title_entity_id', 'is_imdb_name_entity_id', 'is_local_name_entity_id', 'is_name_entity_id', 'is_company_entity_id',
     'get_entity_rows', 'get_card_backdrop_image_url', 'get_title_visual_package', 'get_person_visual_package',
@@ -705,13 +743,19 @@ switch ($route) {
         $GLOBALS['query'] = array('aat_entity' => 'company', 'aat_entity_id' => 'co0000501');
         $template = 'entity-page.php';
         break;
+    case 'table':
+        $GLOBALS['query'] = array();
+        $GLOBALS['table_atts'] = array_merge(array('layout' => 'embedded'), (array) json_decode(base64_decode($variant), true));
+        require $root . '/includes/class-aat-explorer.php';
+        $template = 'table-display.php';
+        break;
     default:
         fwrite(STDERR, "Usage: php tests/fixtures/ledger-routes.php <ceremonies|categories|about|ceremony|category|title|name|company|explorer> [variant] [full]\n");
         exit(2);
 }
 require $root . '/includes/class-aat-ledger-motion.php';
 $before = $GLOBALS['cache'];
-function ledger_render($template) { include $template; }
+function ledger_render($template) { $atts = $GLOBALS['table_atts'] ?? array(); include $template; }
 ledger_render($root . '/templates/' . $template);
 if ($before !== $GLOBALS['cache']) { throw new RuntimeException('Rendering changed the warm cache'); }
 if (empty($GLOBALS['rendered_sections']) && in_array($route, array('ceremony', 'category', 'title', 'name', 'company'), true)) { throw new RuntimeException('The route section composer did not run'); }
