@@ -104,9 +104,8 @@ foreach (array('prediction','lock','watch','longshot') as $t) {
 
             <?php if (empty($tier_groups)) : ?>
                 <div class="aat-no-results">
-                    <div class="aat-no-results-icon">🎬</div>
                     <h3><?php echo esc_html__('No picks yet', 'academy-awards-table'); ?></h3>
-                    <p><?php echo esc_html__('Add picks in the WordPress admin: Academy Awards → Awards Tracker.', 'academy-awards-table'); ?></p>
+                    <p><?php echo esc_html__('Predictions will appear here as the season develops.', 'academy-awards-table'); ?></p>
                 </div>
             <?php else : ?>
                 <?php foreach ($tier_groups as $cat => $list) :

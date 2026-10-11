@@ -351,7 +351,6 @@ final class AAT_Explorer {
 <div id="lle" class="lle" data-lle-root data-lle-base="<?php echo esc_url(self::base_url()); ?>" data-lle-search="<?php echo esc_url($search_url); ?>">
     <section class="lle-hero" aria-labelledby="lle-title">
         <div class="lle-hero__inner">
-            <p class="lle-kicker">Lunara · The Oscar Ledger</p>
             <h1 id="lle-title" class="lle-title">Oscar Ledger Explorer</h1>
             <p class="lle-dek">Every nomination and every win, from the 1st Academy Awards to the <?php echo esc_html(self::plugin()->ordinal((int) ($dataset['ceremonies'] ?? 98))); ?>, checked against the Academy&rsquo;s own records.</p>
             <form class="lle-search" role="search" action="<?php echo esc_url(self::base_url()); ?>" method="get" data-lle-search-form>

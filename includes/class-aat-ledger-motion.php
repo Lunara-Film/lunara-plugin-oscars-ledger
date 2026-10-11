@@ -274,8 +274,7 @@ class AAT_Ledger_Motion {
 			)
 		) . '</title>';
 		$svg .= '<defs><clipPath id="' . esc_attr( $uid ) . '-clip"><circle cx="' . $cx . '" cy="' . $cy . '" r="' . $r0 . '"/></clipPath>';
-		$svg .= '<radialGradient id="' . esc_attr( $uid ) . '-glow"><stop offset="0" stop-color="#e0c481" stop-opacity="0.35"/><stop offset="1" stop-color="#e0c481" stop-opacity="0"/></radialGradient></defs>';
-		$svg .= '<circle class="aat-motion-aura" cx="' . $cx . '" cy="' . $cy . '" r="' . ( $r2 + 20 ) . '" fill="url(#' . esc_attr( $uid ) . '-glow)"/>';
+		$svg .= '</defs>';
 		$svg .= '<circle class="aat-motion-orbit" cx="' . $cx . '" cy="' . $cy . '" r="' . $rn . '" pathLength="1"/>';
 		$svg .= '<circle class="aat-motion-ring" cx="' . $cx . '" cy="' . $cy . '" r="' . $r1 . '" pathLength="1"/>';
 
@@ -291,9 +290,6 @@ class AAT_Ledger_Motion {
 			$svg .= '<g class="aat-motion-spoke ' . $state . '" style="' . esc_attr( $style ) . '">' . $link;
 			$svg .= '<title>' . esc_html( $rec['label'] . ( $rec['won'] ? ' — ' . __( 'won', 'academy-awards-table' ) : ' — ' . __( 'nominated', 'academy-awards-table' ) ) ) . '</title>';
 			$svg .= '<line class="aat-motion-line" x1="' . self::n( $cx + $cos * $r1 ) . '" y1="' . self::n( $cy + $sin * $r1 ) . '" x2="' . self::n( $cx + $cos * $r2 ) . '" y2="' . self::n( $cy + $sin * $r2 ) . '" pathLength="1"/>';
-			if ( $rec['won'] ) {
-				$svg .= '<circle class="aat-motion-pulse" cx="' . self::n( $cx + $cos * $rn ) . '" cy="' . self::n( $cy + $sin * $rn ) . '" r="9"/>';
-			}
 			if ( $link ) {
 				$svg .= '<circle class="aat-motion-hit" cx="' . self::n( $cx + $cos * $rn ) . '" cy="' . self::n( $cy + $sin * $rn ) . '" r="18"/>';
 			}
@@ -446,9 +442,6 @@ class AAT_Ledger_Motion {
 				$tip   = trim( $rec['year_label'] . ' · ' . $rec['label'] . ( '' !== $rec['film'] ? ' · ' . $rec['film'] : '' ) . ' — ' . ( $rec['won'] ? __( 'won', 'academy-awards-table' ) : __( 'nominated', 'academy-awards-table' ) ) );
 				$link  = self::link_open( $rec, self::spoke_name( $rec, true ), true );
 				$svg  .= '<g class="aat-motion-spoke ' . $state . '" style="' . esc_attr( $style ) . '">' . $link . '<title>' . esc_html( $tip ) . '</title>';
-				if ( $rec['won'] ) {
-					$svg .= '<circle class="aat-motion-pulse" cx="' . self::n( $x ) . '" cy="' . $y . '" r="9"/>';
-				}
 				if ( $link ) {
 					$svg .= '<circle class="aat-motion-hit" cx="' . self::n( $x ) . '" cy="' . $y . '" r="13"/>';
 				}

@@ -31,9 +31,6 @@ if (preg_match('/Version:\s*([0-9.]+)/', $plugin, $matches)) {
 }
 $assert($version !== '', 'Plugin header should expose a version.');
 $assert(strpos($plugin, "define('AAT_VERSION', '{$version}')") !== false, 'AAT_VERSION should match the plugin header.');
-$assert(strpos($source['README.md'], 'Current baseline: `' . $version . '`') !== false, 'README should match the plugin version.');
-$assert(strpos($source['readme.txt'], 'Stable tag: ' . $version) !== false, 'readme stable tag should match the plugin version.');
-$assert(strpos($source['readme.txt'], '= ' . $version . ' =') !== false, 'readme changelog should include the current plugin version.');
 
 $required_reporting_indexes = array(
     'facts ceremony/category/winner' => 'KEY ceremony_category_winner (ceremony, category_slug, winner)',

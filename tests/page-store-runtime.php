@@ -117,8 +117,7 @@ AAT_Page_Store::$test_status = 200;
 $store->invoke(null, $req, $html);
 $rows = base64_encode(serialize($GLOBALS['wpdb']->rows));
 $run = function ($uri, $rows_b64) {
-    $env = 'AAT_STORE_CHILD=1 AAT_STORE_URI=' . escapeshellarg($uri) . ' AAT_STORE_ROWS=' . escapeshellarg($rows_b64) . ' AAT_TEST_STAMP=new-stamp AAT_TEST_GEN=1';
-    return (string) shell_exec($env . ' ' . escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(__FILE__) . ' 2>&1');
+    return ps_run_child(__FILE__, array('AAT_STORE_CHILD' => '1', 'AAT_STORE_URI' => $uri, 'AAT_STORE_ROWS' => $rows_b64, 'AAT_TEST_STAMP' => 'new-stamp', 'AAT_TEST_GEN' => '1'));
 };
 $out = $run('/oscars/title/tt0120338/', $rows);
 if ($out !== $html) { fwrite(STDERR, substr($out, 0, 400)); } ps_assert($out === $html, 'A stored page is served whole, and the request stops there.');

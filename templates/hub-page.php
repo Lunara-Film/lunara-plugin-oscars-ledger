@@ -918,43 +918,6 @@ get_header();
         <?php endif; ?>
     </p>
 
-    <?php if (in_array($hub, array('ceremonies', 'categories'), true)) : ?>
-        <style>
-            /* Index premium pass: poster-led cards + motion for the ceremonies
-               and categories indexes (shares the ceremony-dossier grammar). */
-            body .aat-container .aat-hub-page-index-grid .aat-hub-card.has-index-poster{display:grid!important;grid-template-columns:84px minmax(0,1fr)!important;column-gap:14px!important;align-items:center!important;padding:13px 16px!important}
-            body .aat-container .aat-hub-card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease!important}
-            body .aat-container .aat-hub-card:hover{border-color:rgba(225,197,126,.5)!important;box-shadow:0 14px 32px rgba(0,0,0,.32)!important;transform:translateY(-3px)!important}
-            body .aat-container .aat-index-poster{grid-column:1!important;grid-row:1/span 6!important;aspect-ratio:2/3!important;border:1px solid rgba(201,169,97,.28)!important;border-radius:8px!important;overflow:hidden!important;width:100%!important}
-            body .aat-container .aat-index-poster img{border:0!important;border-radius:0!important;box-shadow:none!important;display:block!important;height:100%!important;max-width:none!important;object-fit:cover!important;transition:transform .6s cubic-bezier(.2,.7,.2,1)!important;width:100%!important}
-            body .aat-container .aat-hub-card:hover .aat-index-poster img{transform:scale(1.07)!important}
-            body .aat-container .aat-hub-page-index-grid .aat-hub-card.has-index-poster > :not(.aat-index-poster){grid-column:2!important;min-width:0!important}
-            body .aat-container .aat-index-winnerline{margin:2px 0 0!important;color:var(--aat-gold-light,#eadbb3)!important;font-size:.74rem!important;letter-spacing:.06em!important}
-            @media(prefers-reduced-motion:no-preference){
-                .aat-idx-js .aat-hub-page-index-grid .aat-hub-card{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.2,1)}
-                .aat-idx-js .aat-hub-page-index-grid .aat-hub-card.aat-inview{opacity:1;transform:none}
-            }
-        </style>
-        <script>
-        /* Index card reveal: the hiding class root (.aat-idx-js) is only ever
-           added here, so JS-off and reduced-motion readers see every card. */
-        (function(){
-            if(!('IntersectionObserver' in window))return;
-            if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-            function init(){
-                var cards=document.querySelectorAll('.aat-hub-page-index-grid .aat-hub-card');
-                if(!cards.length)return;
-                document.documentElement.classList.add('aat-idx-js');
-                var io=new IntersectionObserver(function(es){
-                    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('aat-inview');io.unobserve(e.target);}});
-                },{threshold:.05,rootMargin:'0px 0px -30px 0px'});
-                cards.forEach(function(c,i){c.style.transitionDelay=Math.min(i%12*35,380)+'ms';io.observe(c);});
-            }
-            if(document.readyState!=='loading'){init();}else{document.addEventListener('DOMContentLoaded',init);}
-        })();
-        </script>
-    <?php endif; ?>
-
     <?php
         // Resolve a small index poster for a tt ID — local library first,
         // cached TMDB URL second, never a remote lookup during render.
@@ -1035,9 +998,9 @@ get_header();
                     <?php if ($index_poster !== '') : ?>
                         <div class="aat-index-poster" aria-hidden="true"><?php echo $index_poster; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
                     <?php endif; ?>
-                    <h3 class="aat-hub-card-title">
+                    <h2 class="aat-hub-card-title">
                         <?php echo $aat_render_hub_text_link($aat->ordinal($c) . ' ' . __('Academy Awards', 'academy-awards-table'), $url, 'aat-hub-card-link aat-hub-inline-link-title'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    </h3>
+                    </h2>
                     <p class="aat-hub-card-meta"><?php echo $aat_render_hub_text_link($year_label, $url, 'aat-hub-inline-link'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
                     <?php if (!empty($bp['film'])) : ?>
                         <p class="aat-index-winnerline"><?php echo esc_html(sprintf(/* translators: %s: Best Picture winner title */ __('Best Picture: %s', 'academy-awards-table'), $bp['film'])); ?></p>
@@ -1145,7 +1108,7 @@ get_header();
                             <?php if ($index_poster !== '') : ?>
                                 <div class="aat-index-poster" aria-hidden="true"><?php echo $index_poster; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
                             <?php endif; ?>
-                            <h3 class="aat-hub-card-title"><?php echo $aat_render_hub_text_link($label, $url, 'aat-hub-card-link aat-hub-inline-link-title'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h3>
+                            <h2 class="aat-hub-card-title"><?php echo $aat_render_hub_text_link($label, $url, 'aat-hub-card-link aat-hub-inline-link-title'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h2>
                             <p class="aat-hub-card-meta"><?php echo esc_html($cat); ?></p>
                             <?php if ($latest_line !== '') : ?>
                                 <p class="aat-index-winnerline"><?php echo esc_html(sprintf(/* translators: %s: most recent winner */ __('Latest: %s', 'academy-awards-table'), $latest_line)); ?></p>
@@ -1467,7 +1430,6 @@ get_header();
                     </div>
                     <?php endif; ?>
                     <div class="aat-ceremony-dossier-copy">
-                        <p class="aat-hub-kicker"><?php echo esc_html__('Oscar Ledger Year Dossier', 'academy-awards-table'); ?></p>
                         <h1 class="aat-hub-title"><?php echo esc_html($ceremony_dossier_label); ?></h1>
                         <p class="aat-hub-subtitle">
                             <?php echo esc_html(sprintf(
@@ -1542,7 +1504,6 @@ get_header();
         <?php if ($ceremony_editorial_body !== '') : ?>
             <section class="aat-hub-section aat-ceremony-editorial-writeup" aria-label="<?php echo esc_attr__('Ceremony editorial guide', 'academy-awards-table'); ?>">
                 <div class="aat-ceremony-editorial-heading">
-                    <p class="aat-hub-kicker aat-ceremony-guide-kicker"><?php echo esc_html__('Ceremony Guide', 'academy-awards-table'); ?></p>
                     <span class="aat-ceremony-guide-file"><?php echo esc_html__('Guide File', 'academy-awards-table'); ?></span>
                     <h2><?php echo esc_html($ceremony_editorial_headline !== '' ? $ceremony_editorial_headline : (string) ($ceremony_editorial_writeup['ceremony_label'] ?? $ceremony_dossier_label)); ?></h2>
                     <div class="aat-ceremony-guide-meta" aria-label="<?php echo esc_attr__('Ceremony guide metadata', 'academy-awards-table'); ?>">
@@ -1567,7 +1528,6 @@ get_header();
         <?php if (!empty($ceremony_major_briefing_cards)) : ?>
             <section class="aat-hub-section aat-ceremony-thesis" aria-label="<?php echo esc_attr__('Ceremony thesis and major race briefing', 'academy-awards-table'); ?>">
                 <div class="aat-ceremony-thesis-copy">
-                    <p class="aat-hub-kicker"><?php echo esc_html__('Annual Thesis', 'academy-awards-table'); ?></p>
                     <h2><?php echo esc_html($ceremony_thesis_headline); ?></h2>
                     <p class="aat-hub-copy"><?php echo esc_html($ceremony_thesis_copy); ?></p>
                     <div class="aat-ceremony-thesis-stats" aria-label="<?php echo esc_attr__('Major race status', 'academy-awards-table'); ?>">
@@ -1855,7 +1815,6 @@ get_header();
             <section class="aat-hub-section aat-ceremony-major-races" aria-label="<?php echo esc_attr__('Major Oscar races', 'academy-awards-table'); ?>">
                 <div class="aat-section-head">
                     <div>
-                        <p class="aat-hub-kicker"><?php echo esc_html__('Major Races', 'academy-awards-table'); ?></p>
                         <h2 class="aat-section-title"><?php echo esc_html__('The Four Races That Shape the Night', 'academy-awards-table'); ?></h2>
                         <p class="aat-section-description"><?php echo esc_html__('A fast editorial scan of Picture, Director, Actor, and Actress before the full ceremony ledger opens out below.', 'academy-awards-table'); ?></p>
                     </div>
@@ -2035,7 +1994,6 @@ get_header();
                         <section class="aat-ceremony-ballot-group" id="ceremony-category-<?php echo esc_attr(sanitize_title($group_category)); ?>">
                             <header class="aat-ceremony-ballot-group-head">
                                 <div>
-                                    <p class="aat-hub-kicker"><?php echo esc_html__('Category', 'academy-awards-table'); ?></p>
                                     <h3>
                                         <?php echo $aat_render_hub_text_link($group_label, $group_url, 'aat-hub-inline-link aat-hub-inline-link-title'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     </h3>
@@ -2351,7 +2309,6 @@ get_header();
         <div class="aat-hub-section aat-explorer-callout">
             <div class="aat-explorer-shell">
                 <div class="aat-explorer-copy">
-                    <p class="aat-hub-kicker"><?php echo esc_html__('Research Mode', 'academy-awards-table'); ?></p>
                     <h2><?php echo esc_html__('Keep the ceremony page visual first. Open the raw table only when the research asks for it.', 'academy-awards-table'); ?></h2>
                     <p class="aat-hub-copy"><?php echo esc_html__('Poster view is the default Lunara surface. Data Explorer stays here for sortable rows, filters, and deep record-level digging when you actually need the raw ledger.', 'academy-awards-table'); ?></p>
                 </div>
@@ -2542,40 +2499,9 @@ get_header();
         <div class="aat-category-dossier aat-inner-route-system<?php echo $is_premium_category_dossier ? ' aat-premium-category-dossier ' . esc_attr((string) $premium_category_profile['class']) : ' aat-generic-category-dossier'; ?>">
 <?php // Route section composer (2.7.82): every top-level category section is captured into $aat_sections and re-emitted through aat_hub_route_sections. Default output is byte-identical; the filter is inert until a consumer hooks it. ?>
 <?php $aat_sections = array(); $aat_route_context = $aat->get_route_context(); ob_start(); ?>
-        <style>
-            /* Category dossier: latest-winner hero poster + reveal motion
-               (shared by premium and generic category files). */
-            body .aat-container .aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster{display:grid!important;grid-template-columns:minmax(0,1fr) 88px!important;column-gap:14px!important;align-content:center!important;align-items:center!important}
-            body .aat-container .aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster > span,body .aat-container .aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster > strong{grid-column:1!important;min-width:0!important}
-            body .aat-container .aat-category-dossier .aat-category-hero-poster{grid-column:2!important;grid-row:1/span 2!important;width:88px!important;aspect-ratio:2/3!important;border:1px solid rgba(201,169,97,.3)!important;border-radius:10px!important;overflow:hidden!important;box-shadow:0 14px 30px rgba(0,0,0,.4)!important}
-            body .aat-container .aat-category-dossier .aat-category-hero-poster img{border:0!important;border-radius:0!important;box-shadow:none!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;transition:transform .6s cubic-bezier(.2,.7,.2,1)!important}
-            body .aat-container .aat-category-dossier .aat-dossier-command-card.is-latest:hover .aat-category-hero-poster img{transform:scale(1.06)!important}
-            @media(max-width:620px){body .aat-container .aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster{grid-template-columns:minmax(0,1fr) 72px!important}}
-            @media(prefers-reduced-motion:no-preference){body .aat-container .aat-category-dossier .aat-dossier-reveal{opacity:0;transform:translateY(18px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1)}body .aat-container .aat-category-dossier .aat-dossier-reveal.aat-inview{opacity:1;transform:none}}
-        </style>
-        <?php if ($is_premium_category_dossier) : ?>
-            <style>
-                body .aat-container .aat-premium-category-dossier{min-width:0!important;max-width:100%!important;overflow:hidden!important}
-                body .aat-container .aat-premium-category-dossier .aat-dossier-hero{display:grid!important;grid-template-columns:minmax(0,1.22fr) minmax(280px,.78fr)!important;gap:clamp(18px,3vw,34px)!important;align-items:stretch!important;min-width:0!important;max-width:100%!important;overflow:hidden!important}
-                body .aat-container .aat-premium-category-dossier .aat-dossier-hero .aat-hub-title{color:var(--aat-white)!important;font-size:clamp(2.55rem,5.4vw,5.25rem)!important;line-height:.98!important;max-width:9.4ch!important;text-align:left!important;text-transform:none!important}
-                body .aat-container .aat-premium-category-dossier .aat-dossier-hero-copy,body .aat-container .aat-premium-category-dossier .aat-hub-subtitle{min-width:0!important;max-width:100%!important}
-                body .aat-container .aat-premium-category-dossier .aat-dossier-command-band{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-self:center!important;min-width:0!important}
-                body .aat-container .aat-premium-category-dossier .aat-dossier-command-card{display:grid!important;align-content:end!important;gap:8px!important;min-height:118px!important;padding:18px!important;border:1px solid rgba(201,169,97,.2)!important;border-radius:12px!important;background:linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.018)),rgba(6,15,26,.7)!important}
-                body .aat-container .aat-premium-category-dossier .aat-dossier-command-card.is-latest{grid-column:1/-1!important;min-height:148px!important}
-                body .aat-container .aat-premium-category-dossier .aat-era-chapter-visual{display:grid!important;grid-template-columns:minmax(96px,148px) minmax(0,1fr)!important;gap:18px!important;margin:0 0 18px!important;padding:14px!important}
-                body .aat-container .aat-premium-category-dossier .aat-era-chapter-media{display:block!important;min-height:188px!important;max-width:148px!important;aspect-ratio:2/3!important}
-                body .aat-container .aat-premium-category-dossier .aat-ledger-card{display:grid!important;grid-template-columns:minmax(136px,.26fr) minmax(0,1fr)!important;gap:16px!important}
-                body .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-history-actions{display:flex!important;flex-wrap:wrap!important;gap:6px!important;margin-top:8px!important;padding-top:8px!important}
-                body .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-winner-circle-action{width:auto!important;min-height:44px!important;padding:6px 10px!important;flex:0 1 auto!important}
-                @media(max-width:900px){body .aat-container .aat-premium-category-dossier .aat-dossier-hero{grid-template-columns:minmax(0,1fr)!important}body .aat-container .aat-premium-category-dossier .aat-ledger-card{grid-template-columns:minmax(110px,.3fr) minmax(0,1fr)!important}}
-                @media(max-width:620px){body .aat-container .aat-category-dossier.aat-premium-category-dossier{width:min(100%,calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important;overflow-x:hidden!important}body .aat-container .aat-premium-category-dossier .aat-dossier-command-band,body .aat-container .aat-premium-category-dossier .aat-era-chapter-visual,body .aat-container .aat-premium-category-dossier .aat-ledger-card{grid-template-columns:minmax(0,1fr)!important}body .aat-container .aat-premium-category-dossier .aat-dossier-hero{width:100%!important;padding:16px!important}body .aat-container .aat-premium-category-dossier .aat-dossier-hero .aat-hub-subtitle{max-width:29ch!important;white-space:normal!important;overflow-wrap:anywhere!important;text-wrap:auto!important}body .aat-container .aat-premium-category-dossier .aat-dossier-command-card,body .aat-container .aat-premium-category-dossier .aat-dossier-command-card.is-latest{min-height:0!important;padding:15px!important}body .aat-container .aat-premium-category-dossier .aat-dossier-actions{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important}body .aat-container .aat-premium-category-dossier .aat-dossier-actions .aat-btn{width:100%!important;min-width:0!important;max-width:100%!important;justify-content:center!important}body .aat-container .aat-premium-category-dossier .aat-era-chapter-media{min-height:0!important;max-width:158px!important;aspect-ratio:2/3!important}body .aat-container .aat-premium-category-dossier .aat-era-chapter-copy h4,body .aat-container .aat-premium-category-dossier .aat-era-chapter-copy p{max-width:29ch!important;white-space:normal!important;overflow-wrap:anywhere!important;text-wrap:auto!important}body .aat-container .aat-premium-category-dossier .aat-ledger-card{padding:12px!important;gap:10px!important}body .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-ceremony-meta{display:grid!important;justify-content:start!important;gap:4px!important}body .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-history-title,body .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-history-meta,body .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-category-history-detail{max-width:29ch!important;white-space:normal!important;overflow-wrap:anywhere!important;text-wrap:auto!important}body .aat-container .aat-premium-category-dossier .aat-ledger-card .aat-winner-circle-action{min-height:44px!important;padding:5px 9px!important;font-size:.63rem!important}}
-                @media(max-width:620px){body .aat-container .aat-premium-category-dossier .aat-section-title{max-width:100%!important;font-size:clamp(1.46rem,8vw,1.92rem)!important;line-height:1.12!important;white-space:normal!important;overflow-wrap:anywhere!important;text-wrap:auto!important}body .aat-container .aat-premium-category-dossier .aat-hub-spotlight-card{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;min-height:0!important;padding:12px!important;gap:12px!important}body .aat-container .aat-premium-category-dossier .aat-hub-spotlight-media-link,body .aat-container .aat-premium-category-dossier .aat-hub-spotlight-media{display:block!important;width:min(100%,148px)!important;max-width:148px!important;min-height:0!important;aspect-ratio:2/3!important}body .aat-container .aat-premium-category-dossier .aat-hub-spotlight-body,body .aat-container .aat-premium-category-dossier .aat-hub-spotlight-title,body .aat-container .aat-premium-category-dossier .aat-hub-spotlight-meta,body .aat-container .aat-premium-category-dossier .aat-hub-chip-stack,body .aat-container .aat-premium-category-dossier .aat-hub-chip{min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;text-wrap:auto!important}body .aat-container .aat-premium-category-dossier .aat-hub-chip,body .aat-container .aat-premium-category-dossier .aat-winner-circle-action{justify-content:center!important;text-align:center!important;white-space:normal!important}}
-            </style>
-        <?php endif; ?>
         <?php if ($is_premium_category_dossier) : ?>
             <section class="aat-dossier-hero">
                 <div class="aat-dossier-hero-copy">
-                    <p class="aat-hub-kicker"><?php echo esc_html((string) $premium_category_profile['kicker']); ?></p>
                     <h1 class="aat-hub-title"><?php echo esc_html((string) $premium_category_profile['title']); ?></h1>
                     <p class="aat-hub-subtitle"><?php echo esc_html((string) $premium_category_profile['subtitle']); ?></p>
                 </div>
@@ -2612,7 +2538,6 @@ get_header();
         <?php else : ?>
             <section class="aat-dossier-hero aat-generic-category-hero">
                 <div class="aat-dossier-hero-copy">
-                    <p class="aat-hub-kicker"><?php echo esc_html__('Oscar Category File', 'academy-awards-table'); ?></p>
                     <h1 class="aat-hub-title"><?php echo esc_html($category_heading_label); ?></h1>
                     <p class="aat-hub-subtitle"><?php echo esc_html(sprintf(
                         /* translators: %s: Oscar category display label. */
@@ -2769,7 +2694,6 @@ get_header();
         <?php if (!empty($category_decade_buckets)) : ?>
             <div class="aat-hub-section aat-category-history<?php echo $is_premium_category_dossier ? ' aat-era-browser' : ''; ?>">
                 <div class="aat-section-head">
-                    <p class="aat-hub-kicker"><?php echo esc_html($is_premium_category_dossier ? (string) $premium_category_profile['history_kicker'] : __('Category Ledger', 'academy-awards-table')); ?></p>
                     <h2 class="aat-section-title"><?php echo esc_html($is_premium_category_dossier ? (string) $premium_category_profile['history_title'] : __('Category History', 'academy-awards-table')); ?></h2>
                     <p class="aat-section-description"><?php echo esc_html(sprintf(
                         /* translators: 1: ceremony count, 2: winner count, 3: nominee count */
@@ -3183,7 +3107,6 @@ get_header();
         <div class="aat-hub-section aat-explorer-callout">
             <div class="aat-explorer-shell">
                 <div class="aat-explorer-copy">
-                    <p class="aat-hub-kicker"><?php echo esc_html__('Research Mode', 'academy-awards-table'); ?></p>
                     <h2><?php echo esc_html__('Lead with posters and winners. Open the raw table only when the category work turns forensic.', 'academy-awards-table'); ?></h2>
                     <p class="aat-hub-copy"><?php echo esc_html__('This keeps category pages fast, visual, and browseable while preserving the sortable dataset as an optional research surface.', 'academy-awards-table'); ?></p>
                 </div>
@@ -3193,30 +3116,6 @@ get_header();
                 </div>
             </div>
         </div>
-
-        <script>
-        /* Category dossier reveal-on-scroll. Sections stay fully visible
-           without JS or under reduced motion; the hiding class is only
-           added here, right before the observer starts watching. */
-        (function () {
-            if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                return;
-            }
-            var blocks = document.querySelectorAll('.aat-category-dossier > section, .aat-category-dossier > nav, .aat-category-dossier > div.aat-hub-section');
-            var io = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('aat-inview');
-                        io.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0, rootMargin: '0px 0px -60px 0px' });
-            blocks.forEach(function (block) {
-                block.classList.add('aat-dossier-reveal');
-                io.observe(block);
-            });
-        })();
-        </script>
 <?php $aat_sections['explorer-callout'] = ob_get_clean(); ob_start(); ?>
 
         <?php if ($table_view_requested) : ?>

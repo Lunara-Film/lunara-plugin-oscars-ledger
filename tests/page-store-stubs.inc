@@ -1,4 +1,16 @@
 <?php
+// Array commands and an explicit environment work in both Windows and POSIX CI.
+function ps_run_child($file, $environment) {
+    $pipes = array();
+    $process = proc_open(array(PHP_BINARY, $file), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), $environment));
+    if (!is_resource($process)) { throw new RuntimeException('Could not launch page-store child.'); }
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    $code = proc_close($process);
+    if ($code !== 0) { throw new RuntimeException('Page-store child failed: ' . $error); }
+    return $output . $error;
+}
 // Shared WordPress stubs for tests/page-store-runtime.php.
 define('ABSPATH', __DIR__ . '/');
 define('WP_CONTENT_DIR', __DIR__ . '/no-content');

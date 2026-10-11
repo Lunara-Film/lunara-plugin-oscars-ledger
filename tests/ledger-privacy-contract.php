@@ -77,7 +77,7 @@ function privacy_matches_any(string $relpath, array $globs): bool
 function privacy_list_files(string $root): array
 {
     if (file_exists($root . '/.git')) {
-        $cmd = 'git -C ' . escapeshellarg($root) . ' ls-files -z --cached --others --exclude-standard 2>/dev/null';
+        $cmd = 'git -C ' . escapeshellarg($root) . ' ls-files -z --cached --others --exclude-standard 2>' . (PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null');
         $out = shell_exec($cmd);
         if (is_string($out) && $out !== '') {
             $files = array();
@@ -102,7 +102,7 @@ function privacy_list_files(string $root): array
     );
     foreach ($iterator as $file) {
         if ($file->isFile()) {
-            $files[] = substr($file->getPathname(), strlen($root) + 1);
+            $files[] = str_replace('\\', '/', substr($file->getPathname(), strlen($root) + 1));
         }
     }
     sort($files, SORT_STRING);

@@ -397,8 +397,7 @@ $store->invoke(null, $ereq, $ehtml);
 $rows = $wpdb->rows;
 $rows[$ereq['key']]['stored_at'] = time() - 7 * 3600;
 $run = function ($rows, $warmer) {
-    $env = 'AAT_STORE_CHILD=1 AAT_TEST_WARMER=' . $warmer . ' AAT_STORE_URI=' . escapeshellarg('/film/sister/') . ' AAT_STORE_ROWS=' . escapeshellarg(base64_encode(serialize($rows)));
-    return (string) shell_exec($env . ' ' . escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(__FILE__) . ' 2>&1');
+    return ps_run_child(__FILE__, array('AAT_STORE_CHILD' => '1', 'AAT_TEST_WARMER' => $warmer, 'AAT_STORE_URI' => '/film/sister/', 'AAT_STORE_ROWS' => base64_encode(serialize($rows))));
 };
 pw_assert($run($rows, 'off') === 'FELL-THROUGH', 'A 7 hour old editorial row is not served without the warmer.');
 pw_assert($run($rows, 'on') === $ehtml, 'A 7 hour old editorial row is served while the warmer keeps pages fresh.');
