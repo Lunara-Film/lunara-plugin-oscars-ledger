@@ -100,6 +100,8 @@ class Academy_Awards_Table {
     // 2.8.21: srcset widths added between WordPress's 200w and 683w, as image-CDN
     // resizes of the original, so a 96px card at 3x (288px) can pick 320w, not 683w.
     const POSTER_SRCSET_WIDTHS = array(320, 400, 480, 600);
+    // 2.8.21: width of the poster painted behind a card's dark wash (see get_card_backdrop_image_url).
+    const CARD_BACKDROP_WIDTH = 400;
 
     private static $instance = null;
 
@@ -15218,6 +15220,47 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
         }
         ksort($sources);
         return $sources;
+    }
+
+    /**
+     * 2.8.21: the image a card paints behind its dark wash, at a width that
+     * wash can use. Hub pages set each card's background to the poster at the
+     * size the <img> was requested in (768px on a ceremony page: 41 cards, all
+     * eager, because CSS backgrounds are not lazy), under a 54-96% navy
+     * gradient where resolution is invisible. A CDN or TMDB URL comes back at
+     * CARD_BACKDROP_WIDTH; anything else is returned unchanged.
+     */
+    public function get_card_backdrop_image_url($url, $width = self::CARD_BACKDROP_WIDTH) {
+        $url   = trim((string) $url);
+        $width = max(100, (int) $width);
+        if ($url === '') {
+            return '';
+        }
+        if (preg_match('#^(https?://i\d\.wp\.com/[^?]+)#i', $url, $m)) {
+            return $m[1] . '?w=' . $width . '&ssl=1';
+        }
+        if (preg_match('#^https?://image\.tmdb\.org/t/p/(?:w\d+|original)(/.+)$#i', $url, $m)) {
+            $tmdb = 342;
+            foreach (array(185, 342, 500, 780) as $step) {
+                if ($step >= $width) {
+                    $tmdb = $step;
+                    break;
+                }
+            }
+            return 'https://image.tmdb.org/t/p/w' . $tmdb . $m[1];
+        }
+        $upload = function_exists('wp_get_upload_dir') ? wp_get_upload_dir() : array();
+        $base   = trim((string) ($upload['baseurl'] ?? ''));
+        if ($base !== '' && strpos($url, $base) === 0) {
+            $plain = strtok($url, '?');
+            if (class_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core') && method_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url')) {
+                return (string) call_user_func(array('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url'), $plain, array('w' => $width));
+            }
+            if (function_exists('jetpack_photon_url')) {
+                return (string) jetpack_photon_url($plain, array('w' => $width));
+            }
+        }
+        return $url;
     }
 
     private function get_omdb_audit_local_poster_summary($tt) {

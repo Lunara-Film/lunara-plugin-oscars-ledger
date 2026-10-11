@@ -91,8 +91,8 @@ function wp_get_attachment_image($aid, $size = 'thumbnail', $icon = false, $attr
     return $html . ' />';
 }
 
-$members = const_source($source, 'POSTER_SIZES_DEFAULT') . const_source($source, 'POSTER_SRCSET_WIDTHS')
-    . method_source($source, 'get_poster_img_html_for_title') . method_source($source, 'add_poster_srcset_widths');
+$members = const_source($source, 'POSTER_SIZES_DEFAULT') . const_source($source, 'POSTER_SRCSET_WIDTHS') . const_source($source, 'CARD_BACKDROP_WIDTH')
+    . method_source($source, 'get_poster_img_html_for_title') . method_source($source, 'add_poster_srcset_widths') . method_source($source, 'get_card_backdrop_image_url');
 eval('class PosterRuntime {' . $members . '
 public function get_poster_attachment_id_for_title($tt) { return $tt === "tt0000001" ? 41 : 0; }
 public function lookup_title_label($tt) { return "Example Film"; }
@@ -147,5 +147,20 @@ $hub = file_get_contents($root . '/templates/hub-page.php');
 check(preg_match('/\$aat->get_title_visual_package\(\s*\$dossier_bp_ids\[0\],\s*\'medium_large\',\s*false,\s*array\((?:(?!\)\s*\);).)*?\'sizes\'\s*=>\s*\'[^\']*px\'/s', $hub) === 1, 'The ceremony dossier poster (eager, the LCP image on ceremony pages) passes its rendered widths as sizes.');
 $tracker = file_get_contents($root . '/templates/tracker-v2.php');
 check(preg_match('/get_poster_img_html_for_title\(\$eid,\s*array\(72,\s*108\),\s*array\([^)]*\'sizes\'\s*=>\s*\'72px\'/', $tracker) === 1, 'The tracker\'s 72px poster says 72px.');
+
+// ---- 6. Card backdrops: the poster behind a card's wash is fetched at CARD_BACKDROP_WIDTH ------------
+// Hub pages paint the poster as each card's CSS background (eager, 41 cards on a ceremony page) at the <img>'s size.
+check(PosterRuntime::CARD_BACKDROP_WIDTH >= 320 && PosterRuntime::CARD_BACKDROP_WIDTH <= 500, 'The card backdrop width is a phone-sized poster, not the 768px the <img> was requested in.');
+$w = PosterRuntime::CARD_BACKDROP_WIDTH;
+check($plugin->get_card_backdrop_image_url('https://i0.wp.com/example.test/wp-content/uploads/2026/03/tt0000001-poster.jpg?fit=768%2C1152&quality=82&ssl=1') === 'https://i0.wp.com/example.test/wp-content/uploads/2026/03/tt0000001-poster.jpg?w=' . $w . '&ssl=1', 'A CDN poster URL is re-asked for at the backdrop width, its fit= dropped.');
+check($plugin->get_card_backdrop_image_url('https://image.tmdb.org/t/p/w780/abc.jpg') === 'https://image.tmdb.org/t/p/w500/abc.jpg', 'A TMDB poster steps down to the smallest TMDB size at or above the backdrop width (got ' . $plugin->get_card_backdrop_image_url('https://image.tmdb.org/t/p/w780/abc.jpg') . ').');
+check($plugin->get_card_backdrop_image_url('https://image.tmdb.org/t/p/original/abc.jpg', 300) === 'https://image.tmdb.org/t/p/w342/abc.jpg', 'A TMDB original steps down the same way.');
+check($plugin->get_card_backdrop_image_url('https://example.test/wp-content/uploads/2026/03/tt0000001-poster-768x1152.jpg') === 'https://i0.wp.com/example.test/wp-content/uploads/2026/03/tt0000001-poster-768x1152.jpg?w=' . $w, 'A plain upload URL goes through the CDN at the backdrop width.');
+check($plugin->get_card_backdrop_image_url('https://elsewhere.test/poster.jpg') === 'https://elsewhere.test/poster.jpg', 'A URL from anywhere else is left alone.');
+check($plugin->get_card_backdrop_image_url('') === '', 'An empty URL stays empty.');
+foreach (array('templates/hub-page.php', 'templates/table-display.php') as $template) {
+    $src = file_get_contents($root . '/' . $template);
+    check(preg_match('/\$aat_get_card_backdrop_style = function\([^)]*\) use \(\$(aat|aat_instance)\) \{(?:(?!\};).)*?->get_card_backdrop_image_url\(\$image_url\)/s', $src) === 1, $template . ': the card backdrop closure resizes its image through get_card_backdrop_image_url().');
+}
 
 echo "poster-img-sizes-runtime: $checks checks passed.\n";

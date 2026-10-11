@@ -117,13 +117,17 @@ $aat_get_curated_winner_visual = function($entry, $size = 'large') use ($aat_get
     );
 };
 
-$aat_get_card_backdrop_style = function($poster_url = '', $backdrop_url = '') {
+$aat_get_card_backdrop_style = function($poster_url = '', $backdrop_url = '') use ($aat_instance) {
     $poster_url = trim((string) $poster_url);
     $backdrop_url = trim((string) $backdrop_url);
     $image_url = $poster_url !== '' ? $poster_url : $backdrop_url;
 
     if ($image_url === '') {
         return '';
+    }
+    // 2.8.21: a wash this dark does not need the 768px poster; every card's background is eager.
+    if ($aat_instance && method_exists($aat_instance, 'get_card_backdrop_image_url')) {
+        $image_url = $aat_instance->get_card_backdrop_image_url($image_url);
     }
 
     return "background-image: linear-gradient(145deg, rgba(3,10,22,.54), rgba(3,10,22,.86) 40%, rgba(3,10,22,.96)), url('" . esc_url($image_url) . "'); background-size: cover; background-position: center;";
