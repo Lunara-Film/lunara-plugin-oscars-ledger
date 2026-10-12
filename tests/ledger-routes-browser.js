@@ -24,9 +24,12 @@ const routes = [
   ['category', 'premium'], ['category', 'premium', 'full'], ['category', 'generic'], ['category', 'generic', 'full'],
   ['title', 'poster'], ['title', 'noposter'], ['name', 'portrait'], ['name', 'noportrait'], ['company'], ['explorer'],
 ];
-const pages = routes.map(args => ({ name: args.join('-'), route: args[0], variant: args[1] || '', html: php(args) }));
+const only = process.argv.find(value => value.startsWith('--only='))?.slice(7);
+const selectedRoutes = only ? routes.filter(args => args[0] === only) : routes;
+if (!selectedRoutes.length) throw new Error(`Unknown route: ${only}`);
+const pages = selectedRoutes.map(args => ({ name: args.join('-'), route: args[0], variant: args[1] || '', html: php(args) }));
 
-const controls = 'a.aat-btn, a.aat-hub-card-action, a.aat-winner-circle-action, a.aat-decade-pill, a.aat-hub-chip, a.aat-hub-chip-rich, .aat-nominee-trail-summary, .aat-tracker-tab, .lle-select, .lle-search__go, .lle-pager a, .lle-group__explore';
+const controls = 'a.aat-btn, a.aat-hub-card-action, a.aat-winner-circle-action, a.aat-decade-pill, a.aat-hub-chip, a.aat-hub-chip-rich, .aat-nominee-trail-summary, .aat-tracker-tab, .lle-select, .lle-search__go, .lle-apply, .lle-pager a, .lle-group__explore';
 const reading = '.aat-hub-subtitle, .aat-hub-copy, .aat-section-description, .aat-entity-overview, .aat-category-history-meta, .aat-category-history-detail, .aat-nominee-trail-item, .aat-history-line, .aat-ceremony-editorial-body p, .lle-row__sub, .lle-dek';
 const metadata = '.aat-hub-card-type, .aat-hub-card-meta, .aat-stat-label, .aat-dossier-command-card > span, .aat-ceremony-command-card > span, .aat-profile-command-card > span, .aat-major-race-nominee-secondary, .aat-timeline-meta, .aat-category-ceremony-year, .lle-field__label, .lle-status';
 const surfaces = '.aat-hub-card, .aat-dossier-hero, .aat-dossier-command-card, .aat-ceremony-dossier-hero, .aat-ceremony-command-card, .aat-major-race-card, .aat-entity-hero, .aat-profile-command-card, .aat-timeline-card, .aat-history-item, .lle-hero, .lle-debrief';
@@ -104,6 +107,11 @@ function measure({ controls, reading, metadata, surfaces, records }) {
     }
     for (const row of rows) if (Math.abs((row.left + row.right - box.left - box.right) / 2) > 1) bad.push(['balanced gallery row', `${label(gallery)} at ${row.y}: ${row.left}..${row.right} in ${box.left}..${box.right}`]);
   }
+  for (const action of document.querySelectorAll('.lle-apply')) {
+    if (!visible(action)) continue;
+    const box = action.getBoundingClientRect();
+    if (Math.abs(box.x + box.width / 2 - innerWidth / 2) > 1) bad.push(['centered no-script action', `${label(action)} spans ${box.x}..${box.right} in ${innerWidth}px`]);
+  }
   return bad;
 }
 
@@ -129,7 +137,7 @@ function measure({ controls, reading, metadata, surfaces, records }) {
       for (const page of pages) {
         const tab = await open(context, page);
         const bad = await tab.evaluate(measure, { controls, reading, metadata, surfaces, records: expectedRecords(page.html) });
-        const groups = ['overflow', 'h1 fit', 'touch target', 'reading copy', 'metadata', 'ornament', 'hidden surface', 'animation', 'staged entrance', 'record completeness', 'centered identity', 'balanced gallery row'];
+        const groups = ['overflow', 'h1 fit', 'touch target', 'reading copy', 'metadata', 'ornament', 'hidden surface', 'animation', 'staged entrance', 'record completeness', 'centered identity', 'balanced gallery row', 'centered no-script action'];
         for (const group of groups) {
           const misses = bad.filter(([name]) => name === group);
           check(page.name, width, group, misses.length === 0, misses.map(([, detail]) => detail));

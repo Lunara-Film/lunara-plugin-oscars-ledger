@@ -468,7 +468,10 @@
 }
 
 .lle-apply {
-    margin-top: 12px;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 12px auto 0;
     height: 44px;
     padding: 0 18px;
     border: 0;
