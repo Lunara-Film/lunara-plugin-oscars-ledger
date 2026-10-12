@@ -86,6 +86,24 @@ function measure({ controls, reading, metadata, surfaces, records }) {
     const present = all.filter(el => el.closest('details') || (el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden')).length;
     if (all.length !== expected || present !== expected) bad.push(['record completeness', `.${cls}: ${expected} in the PHP output, ${all.length} in the DOM, ${present} present`]);
   }
+  // The identity uses the viewport axis; incomplete gallery rows use their
+  // container axis. Record prose below the headings deliberately remains left aligned.
+  for (const el of document.querySelectorAll('.aat-profile-file .aat-entity-title,.aat-dossier-hero .aat-hub-title,.aat-ceremony-dossier-hero .aat-hub-title,.lle-title')) {
+    const box = el.getBoundingClientRect();
+    if (Math.abs(box.x + box.width / 2 - innerWidth / 2) > 1 || getComputedStyle(el).textAlign !== 'center') bad.push(['centered identity', label(el)]);
+  }
+  for (const gallery of document.querySelectorAll('.aat-hub-page-index-grid,.aat-winner-circle-grid,.aat-filmography-grid,.aat-related-reviews-grid,.aat-major-race-grid')) {
+    const box = gallery.getBoundingClientRect();
+    const rows = [];
+    for (const child of gallery.children) {
+      if (!visible(child)) continue;
+      const r = child.getBoundingClientRect();
+      let row = rows.find(value => Math.abs(value.y - r.y) < 2);
+      if (!row) { row = {y:r.y,left:r.left,right:r.right}; rows.push(row); }
+      row.left = Math.min(row.left, r.left); row.right = Math.max(row.right, r.right);
+    }
+    for (const row of rows) if (Math.abs((row.left + row.right - box.left - box.right) / 2) > 1) bad.push(['balanced gallery row', `${label(gallery)} at ${row.y}: ${row.left}..${row.right} in ${box.left}..${box.right}`]);
+  }
   return bad;
 }
 
@@ -111,7 +129,7 @@ function measure({ controls, reading, metadata, surfaces, records }) {
       for (const page of pages) {
         const tab = await open(context, page);
         const bad = await tab.evaluate(measure, { controls, reading, metadata, surfaces, records: expectedRecords(page.html) });
-        const groups = ['overflow', 'h1 fit', 'touch target', 'reading copy', 'metadata', 'ornament', 'hidden surface', 'animation', 'staged entrance', 'record completeness'];
+        const groups = ['overflow', 'h1 fit', 'touch target', 'reading copy', 'metadata', 'ornament', 'hidden surface', 'animation', 'staged entrance', 'record completeness', 'centered identity', 'balanced gallery row'];
         for (const group of groups) {
           const misses = bad.filter(([name]) => name === group);
           check(page.name, width, group, misses.length === 0, misses.map(([, detail]) => detail));

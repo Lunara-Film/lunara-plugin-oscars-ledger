@@ -1,9 +1,9 @@
 /*
  * Oscar Ledger Explorer (/oscars/explore/).
  * Mobile-first. Colours and type come from the theme's Lunara tokens, with
- * fallbacks so the page holds up on its own. One left-set editorial column
+ * fallbacks so the page holds up on its own. One centered editorial column
  * (--lle-measure) carries the hero, the filter bar, the results and the
- * footer, so every band shares the same left edge.
+ * footer, so every band has equal outer gutters.
  */
 
 .lle {
@@ -78,7 +78,7 @@
     color: var(--lle-muted);
 }
 
-/* Hero: typographic, no image, left-set on the shared column. */
+/* Hero: typographic, centered on the shared column. */
 
 .lle-hero {
     position: relative;
@@ -89,7 +89,7 @@
     background:
         transparent;
     isolation: isolate;
-    text-align: left;
+    text-align: center;
 }
 
 .lle-hero__inner {
@@ -110,7 +110,7 @@
 
 .lle-dek {
     max-width: 52ch;
-    margin: 14px 0 0;
+    margin: 14px auto 0;
     font-size: clamp(1rem, 0.96rem + 0.3vw, 1.15rem);
     line-height: 1.55;
     color: var(--lle-muted);
@@ -120,7 +120,7 @@
 /* Search: the first thing a visitor can use. */
 
 .lle-search {
-    margin: clamp(22px, 4vw, 32px) 0 0;
+    margin: clamp(22px, 4vw, 32px) auto 0;
     max-width: 680px;
     text-align: left;
 }
@@ -244,6 +244,7 @@
    The hero isolates its own stacking, so the hero itself has to rise. */
 .lle.is-suggesting .lle-hero {
     z-index: 45;
+    text-align: center;
 }
 
 .lle-suggest__item {
@@ -399,6 +400,7 @@
     gap: 12px;
     overflow-x: visible;
     padding: 0;
+    justify-content: center;
 }
 
 .lle-field {
@@ -559,6 +561,8 @@
     background:
         transparent;
     border-bottom: 1px solid var(--lle-line);
+    justify-items: center;
+    text-align: center;
 }
 
 .lle-debrief__media {
@@ -599,6 +603,7 @@
     margin: 14px 0 0;
     padding: 0;
     list-style: none;
+    justify-content: center;
 }
 
 .lle-debrief__cats a {
@@ -630,6 +635,7 @@
     flex-wrap: wrap;
     gap: 6px 22px;
     margin: 12px 0 0;
+    justify-content: center;
 }
 
 .lle-debrief__links a {
@@ -1121,12 +1127,14 @@ a.lle-media:hover {
     }
 
     .lle-debrief {
-        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-columns: 1fr;
         align-items: start;
         gap: 24px;
         padding: 6px 0 28px;
         border-bottom: 1px solid var(--lle-line);
-    }
+        justify-items: center;
+    text-align: center;
+}
 
     .lle-debrief__media {
         width: 128px;
