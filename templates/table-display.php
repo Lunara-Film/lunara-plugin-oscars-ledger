@@ -299,7 +299,6 @@ if (!empty($aat_winner_rows)) {
                 />
             </div>
             <div class="aat-ledger-command-copy">
-                <p class="aat-hub-kicker"><?php esc_html_e('The Living Archive', 'academy-awards-table'); ?></p>
                 <h2><?php esc_html_e('The Lunara Oscar Ledger', 'academy-awards-table'); ?></h2>
                 <p class="aat-subtitle"><?php echo esc_html(sprintf(__('A fast gateway into %1$s records across %2$s ceremonies, built for browsing before the heavy table ever loads.', 'academy-awards-table'), number_format_i18n($aat_record_count), number_format_i18n($aat_ceremony_count))); ?></p>
             </div>
@@ -528,7 +527,6 @@ if (!empty($aat_winner_rows)) {
             <?php $poster_view_url = remove_query_arg('view'); ?>
             <div class="aat-explorer-shell aat-explorer-callout<?php echo $aat_best_picture_backdrop_style !== '' ? ' aat-card-has-backdrop' : ''; ?>"<?php if ($aat_best_picture_backdrop_style !== '') : ?> style="<?php echo esc_attr($aat_best_picture_backdrop_style); ?>"<?php endif; ?>>
                 <div class="aat-explorer-copy">
-                    <p class="aat-hub-kicker"><?php esc_html_e('Research Mode', 'academy-awards-table'); ?></p>
                     <h2><?php esc_html_e('Data Explorer', 'academy-awards-table'); ?></h2>
                     <p class="aat-hub-copy"><?php esc_html_e('Use the full table when you want raw row-level research. For faster browsing and better mobile reading, switch back to the poster-first ledger view.', 'academy-awards-table'); ?></p>
                     <?php if (!empty($aat_best_picture['film'])) : ?>
@@ -557,7 +555,6 @@ if (!empty($aat_winner_rows)) {
                 loading="lazy"
             />
             <div class="aat-ledger-command-copy">
-                <p class="aat-hub-kicker"><?php esc_html_e('Full Archive', 'academy-awards-table'); ?></p>
                 <h2><?php esc_html_e('The Lunara Oscar Ledger', 'academy-awards-table'); ?></h2>
                 <p class="aat-subtitle"><?php echo wp_kses_post(sprintf('Every nominee & winner in our dataset (%s)', $aat_span ? $aat_span : 'through 2024')); ?></p>
             </div>

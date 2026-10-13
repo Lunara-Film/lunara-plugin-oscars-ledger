@@ -68,7 +68,7 @@ $film_rows = array(
 $ring = AAT_Ledger_Motion::render( 'title', $film_rows, array( 'label' => 'Titanic <b>', 'image_url' => 'https://example.test/p.jpg', 'format_category' => $fmt ) );
 lm_assert( false !== strpos( $ring, 'aat-ledger-motion--ring' ) && false !== strpos( $ring, 'data-aat-motion' ), 'A film with four nominations gets the ring.' );
 lm_assert( 4 === substr_count( $ring, 'class="aat-motion-spoke ' ), 'One spoke per nomination.' );
-lm_assert( 3 === substr_count( $ring, 'class="aat-motion-spoke is-win"' ) && 3 === substr_count( $ring, 'aat-motion-pulse' ), 'Each win is marked and pulses.' );
+lm_assert( 3 === substr_count( $ring, 'class="aat-motion-spoke is-win"' ) && 0 === substr_count( $ring, 'aat-motion-pulse' ) && false === strpos( $ring, '<radialGradient' ), 'Every win remains marked without a decorative pulse or ambient glow.' );
 preg_match_all( '/<tspan[^>]*>([^<]+)<\/tspan>/', $ring, $labels );
 lm_assert( 'Best Picture' === $labels[1][0], 'Best Picture leads at twelve o\'clock.' );
 lm_assert( false !== strpos( $ring, '--w:0' ) && false !== strpos( $ring, '--w:2' ) && false === strpos( $ring, '--w:3' ), 'Wins are numbered in ring order for ignition.' );
@@ -128,17 +128,5 @@ lm_assert( false !== strpos( $linked_arc, 'data-aat-cap-meta="1982 · Sophie&#03
 $partial = AAT_Ledger_Motion::render( 'title', $film_rows, array( 'label' => 'T', 'format_category' => $fmt, 'race_url' => static function ( $c, $cat ) { return 'SOUND' === $cat ? '' : 'https://example.test/x'; } ) );
 lm_assert( 3 === substr_count( $partial, '<a class="aat-motion-link"' ) && false !== strpos( $partial, 'role="img"' ) && false !== strpos( $partial, 'aat-motion-record' ), 'A spoke without a race stays plain, and the list stays.' );
 
-// ---- Template and assets -------------------------------------------------------------
-$template = file_get_contents( AAT_PLUGIN_DIR . 'templates/entity-page.php' );
-lm_assert( false !== strpos( $template, "\$aat_sections['ledger-motion'] = ob_get_clean()" ), 'The entity template captures the motion section.' );
-lm_assert( false !== strpos( $template, "'race_url' => function" ) && false !== strpos( $template, "add_query_arg('ledger', 'full', \$url) . '#ceremony-category-' . sanitize_title(" ), 'The template links spokes to the ceremony ballot\'s category anchors.' );
-lm_assert( strpos( $template, "\$aat_sections['stats-bar']" ) < strpos( $template, "\$aat_sections['ledger-motion']" ) && strpos( $template, "\$aat_sections['ledger-motion']" ) < strpos( $template, "\$aat_sections['crossroads']" ), 'It sits between the stats bar and the crossroads.' );
-$css = file_get_contents( AAT_PLUGIN_DIR . 'assets/css/ledger-motion.css' );
-lm_assert( 1 === preg_match( '/@media \(max-width: 640px\)[^}]*\{[^@]*\.aat-ledger-motion--ring \.aat-motion-svg \{ width: 180%; max-width: none; margin: -11% 0 -13% -40%; \}/s', $css ), 'On phones the ring is enlarged and centred, and escapes the theme\'s svg max-width.' );
-lm_assert( false !== strpos( $css, 'prefers-reduced-motion: reduce' ) && false !== strpos( $css, '.aat-motion-record' ), 'Styles honour reduced motion and hide the record visually.' );
-$js = file_get_contents( AAT_PLUGIN_DIR . 'assets/js/ledger-motion.js' );
-lm_assert( false !== strpos( $js, "'(max-width: 640px)'" ) && false !== strpos( $js, 'event.preventDefault()' ) && false !== strpos( $js, "data-aat-cap" ) && false !== strpos( $js, 'Array.prototype.forEach.call( sections, caption )' ), 'On phones the first tap names a dot in a caption; captions are set up even under reduced motion.' );
-lm_assert( false !== strpos( $css, '.aat-motion-caption { display: none; }' ) && false !== strpos( $css, '.aat-motion-aura,' ), 'The caption shows only on phones, and decoration ignores taps.' );
-lm_assert( false !== strpos( $js, "prefers-reduced-motion: reduce" ) && false !== strpos( $js, 'IntersectionObserver' ), 'The script stands down under reduced motion and plays on view.' );
-
+// Presentation is measured in editorial-surfaces-browser.js against these real renderers.
 echo "Ledger Motion runtime passed: {$checks} checks.\n";

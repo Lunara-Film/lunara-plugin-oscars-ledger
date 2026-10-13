@@ -16,13 +16,15 @@
     --lle-radius: var(--lunara-surface-radius, 12px);
     --lle-display: var(--lunara-font-display, "Tiempos Headline", Georgia, "Times New Roman", serif);
     --lle-body: var(--lunara-font-body, "Tiempos Text", Georgia, "Times New Roman", serif);
-    --lle-label: "Bebas Neue", "Oswald", Impact, "Arial Narrow", sans-serif;
+    --lle-label: var(--lunara-font-label, sans-serif);
     --lle-ease: var(--lunara-ease-cine, cubic-bezier(0.2, 0.8, 0.2, 1));
     --lle-gutter: clamp(16px, 4vw, 40px);
     color: var(--lle-text);
     font-family: var(--lle-body);
-    overflow-x: clip;
+    overflow-x: visible;
     background: var(--lle-ground);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .lle *,
@@ -64,8 +66,8 @@
     margin: 0 0 10px;
     font-family: var(--lle-label);
     font-size: 0.95rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-gold);
 }
 
@@ -73,36 +75,14 @@
 
 .lle-hero {
     position: relative;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     padding: clamp(40px, 9vw, 104px) var(--lle-gutter) clamp(28px, 6vw, 64px);
     background:
-        radial-gradient(120% 90% at 50% -10%, rgba(201, 169, 97, 0.24) 0%, rgba(201, 169, 97, 0.06) 38%, transparent 62%),
-        linear-gradient(180deg, var(--lle-ground) 0%, var(--lle-deep) 100%);
+        transparent;
     isolation: isolate;
-    text-align: center;
-}
-
-.lle-hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: 0.07;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.lle-hero::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 6px;
-    background: repeating-linear-gradient(90deg, rgba(201, 169, 97, 0.45) 0 10px, transparent 10px 22px);
-    opacity: 0.55;
+    text-align: left;
 }
 
 .lle-hero__inner {
@@ -116,7 +96,7 @@
     font-weight: 400;
     font-size: clamp(2.3rem, 1.4rem + 4.6vw, 4.8rem);
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: normal;
     color: var(--lle-text);
     text-wrap: balance;
 }
@@ -145,15 +125,15 @@
     align-items: center;
     min-height: 58px;
     border: 1px solid rgba(201, 169, 97, 0.5);
-    border-radius: 999px;
+    border-radius: 2px;
     background: rgba(6, 13, 21, 0.78);
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: none;
     transition: border-color 0.2s var(--lle-ease), box-shadow 0.2s var(--lle-ease);
 }
 
 .lle-combobox:focus-within {
     border-color: var(--lle-gold);
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45), 0 0 0 4px rgba(201, 169, 97, 0.18);
+    box-shadow: 0 0 0 2px var(--lle-gold);
 }
 
 .lle-search__icon {
@@ -176,7 +156,7 @@
 }
 
 .lle-search__input::placeholder {
-    color: rgba(168, 168, 184, 0.8);
+    color: rgba(168,168,184,0.8);
 }
 
 .lle-search__input:focus {
@@ -203,8 +183,8 @@
 .lle .lle-search__go,
 .lle .lle-apply {
     font-family: var(--lle-label) !important;
-    letter-spacing: 0.12em !important;
-    text-transform: uppercase !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
     line-height: 1 !important;
 }
 
@@ -218,13 +198,13 @@
     margin-right: 7px;
     padding: 0 20px;
     border: 0;
-    border-radius: 999px;
+    border-radius: 2px;
     background: var(--lle-gold);
     color: var(--lle-deep);
     font-family: var(--lle-label);
     font-size: 1.05rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
     cursor: pointer;
 }
 
@@ -244,9 +224,9 @@
     padding: 6px;
     list-style: none;
     border: 1px solid var(--lle-line);
-    border-radius: 18px;
+    border-radius: 2px;
     background: #08111b !important;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    box-shadow: none;
 }
 
 .lle-suggest[hidden] {
@@ -265,7 +245,7 @@
     align-items: center;
     gap: 10px;
     padding: 8px 12px;
-    border-radius: 12px;
+    border-radius: 2px;
     cursor: pointer;
 }
 
@@ -282,7 +262,7 @@
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, 0.22);
     border-radius: 4px;
-    background: linear-gradient(180deg, #13243a, #07101a);
+    background: transparent;
 }
 
 .lle-suggest__thumb img {
@@ -295,28 +275,29 @@
 
 .lle-suggest__thumb.is-plate {
     font-family: var(--lle-display);
-    font-size: 0.78rem;
+    font-size: .875rem;
     color: var(--lle-gold-light);
 }
 
 .lle-suggest__kind {
     font-family: var(--lle-label);
-    font-size: 0.8rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-gold);
 }
 
 .lle-suggest__name {
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
     color: var(--lle-text);
+    overflow-wrap: anywhere;
 }
 
 .lle-suggest__meta {
-    font-size: 0.85rem;
+    font-size: .875rem;
     color: var(--lle-muted);
     white-space: nowrap;
 }
@@ -338,9 +319,9 @@
     display: grid;
     gap: 2px;
     font-family: var(--lle-label) !important;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-muted);
 }
 
@@ -349,7 +330,7 @@
     font-size: clamp(1.55rem, 1.1rem + 1.8vw, 2.25rem);
     font-weight: 400;
     line-height: 1;
-    letter-spacing: 0;
+    letter-spacing: normal;
     text-transform: none;
     color: var(--lle-gold-light);
 }
@@ -368,7 +349,7 @@
 .lle-try a {
     padding: 6px 12px;
     border: 1px solid var(--lle-line);
-    border-radius: 999px;
+    border-radius: 2px;
     text-decoration: none;
     color: var(--lle-text);
     font-size: 0.88rem;
@@ -384,13 +365,13 @@
     position: sticky;
     top: var(--wp-admin--admin-bar--height, 0px);
     z-index: 30;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     border-bottom: 1px solid var(--lle-line);
-    background: rgba(8, 17, 27, 0.94);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--lle-ground);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .lle-filters {
@@ -401,11 +382,13 @@
 
 .lle-filters__row {
     display: flex;
-    gap: 8px;
-    overflow-x: auto;
+    gap: 12px;
+    overflow-x: visible;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
+    flex-wrap: wrap;
+    padding: 4px;
 }
 
 .lle-filters__row::-webkit-scrollbar {
@@ -413,33 +396,35 @@
 }
 
 .lle-field {
-    flex: none;
+    flex: 1 1 150px;
     display: grid;
     gap: 2px;
     scroll-snap-align: start;
+    min-width: 0;
 }
 
 .lle-field__label {
     padding-left: 12px;
     font-family: var(--lle-label);
-    font-size: 0.72rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-gold);
 }
 
 .lle-select {
-    max-width: 62vw;
-    height: 40px;
+    max-width: 100%;
+    height: 44px;
     padding: 0 34px 0 12px;
     border: 1px solid var(--lle-line);
-    border-radius: 10px;
+    border-radius: 2px;
     background: var(--lle-ground-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23c9a961' d='M1.4 0 6 4.6 10.6 0 12 1.4l-6 6-6-6z'/%3E%3C/svg%3E") no-repeat right 12px center;
     color: var(--lle-text);
     font-family: var(--lle-body);
     font-size: 0.95rem;
     appearance: none;
     cursor: pointer;
+    width: 100%;
 }
 
 .lle-toggle {
@@ -448,10 +433,10 @@
     align-items: center;
     gap: 8px;
     align-self: end;
-    height: 40px;
+    height: 44px;
     padding: 0 14px;
     border: 1px solid var(--lle-line);
-    border-radius: 10px;
+    border-radius: 2px;
     background: var(--lle-ground-2);
     font-size: 0.95rem;
     white-space: nowrap;
@@ -470,12 +455,12 @@
     height: 40px;
     padding: 0 18px;
     border: 0;
-    border-radius: 10px;
+    border-radius: 2px;
     background: var(--lle-gold);
     color: var(--lle-deep);
     font-family: var(--lle-label);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 /* Body */
@@ -489,7 +474,7 @@
 .lle-notice {
     margin: 0 0 12px;
     padding: 10px 14px;
-    border-left: 3px solid var(--lle-gold);
+    border-left: 0;
     background: rgba(201, 169, 97, 0.08);
     color: var(--lle-text);
 }
@@ -508,28 +493,28 @@
     gap: 6px;
     padding: 6px 6px 6px 12px;
     border: 1px solid var(--lle-gold);
-    border-radius: 999px;
+    border-radius: 2px;
     background: rgba(201, 169, 97, 0.1);
 }
 
 .lle-chip__kind {
     font-family: var(--lle-label);
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-gold);
 }
 
 .lle-chip__x {
     display: inline-grid;
     place-items: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    border-radius: 2px;
     text-decoration: none;
     color: var(--lle-text) !important;
     font-size: 1.1rem;
-    line-height: 1;
+    line-height: 1.4;
 }
 
 .lle-chip__x:hover {
@@ -547,12 +532,12 @@
     grid-template-columns: 1fr;
     gap: 16px;
     margin: 0 0 22px;
-    padding: clamp(18px, 4vw, 28px);
-    border: 1px solid var(--lle-line);
-    border-radius: var(--lle-radius);
+    padding: 24px 0;
+    border: 0;
+    border-radius: 0;
     background:
-        radial-gradient(100% 120% at 0% 0%, rgba(201, 169, 97, 0.12), transparent 55%),
-        var(--lle-ground-2);
+        transparent;
+    border-bottom: 1px solid var(--lle-line);
 }
 
 .lle-debrief__media {
@@ -597,7 +582,7 @@
     display: inline-block;
     padding: 6px 12px;
     border: 1px solid var(--lle-line);
-    border-radius: 999px;
+    border-radius: 2px;
     color: var(--lle-text);
     text-decoration: none;
     font-size: 0.88rem;
@@ -625,8 +610,8 @@
     margin: 0 0 8px;
     font-family: var(--lle-label);
     font-size: 0.95rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-muted);
 }
 
@@ -664,8 +649,8 @@
 .lle-ceremony__title span {
     font-family: var(--lle-label);
     font-size: 0.95rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-gold);
 }
 
@@ -687,10 +672,10 @@
 
 .lle-category span {
     font-family: var(--lle-label);
-    font-size: 0.78rem;
+    font-size: .875rem;
     font-weight: 400;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-muted);
 }
 
@@ -707,8 +692,8 @@
     margin: 0 0 3px;
     font-family: var(--lle-label);
     font-size: 0.9rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-muted);
 }
 
@@ -756,9 +741,9 @@
 .lle-record summary {
     display: inline-block;
     font-family: var(--lle-label);
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-gold);
     cursor: pointer;
     list-style: none;
@@ -782,17 +767,17 @@
     gap: 2px 14px;
     margin: 8px 0 4px;
     padding: 12px 14px;
-    border: 1px solid rgba(201, 169, 97, 0.16);
-    border-radius: 10px;
-    background: rgba(6, 13, 21, 0.55);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     font-size: 0.92rem;
 }
 
 .lle-record dt {
     font-family: var(--lle-label);
-    font-size: 0.74rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--lle-gold);
 }
 
@@ -815,9 +800,8 @@
     border: 1px solid rgba(201, 169, 97, 0.2);
     border-radius: 6px;
     background:
-        radial-gradient(120% 80% at 50% 0%, rgba(201, 169, 97, 0.16), transparent 62%),
-        linear-gradient(180deg, #13243a 0%, #07101a 100%);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.32);
+        transparent;
+    box-shadow: none;
     text-decoration: none !important;
 }
 
@@ -839,7 +823,7 @@
 .lle-media__mark {
     font-family: var(--lle-display);
     font-size: 1.05rem;
-    letter-spacing: 0.04em;
+    letter-spacing: normal;
     line-height: 1;
     color: var(--lle-gold-light);
     opacity: 0.88;
@@ -883,7 +867,7 @@ a.lle-media:hover {
     min-width: 2.2ch;
     font-family: var(--lle-label);
     font-size: 1.2rem;
-    letter-spacing: 0.06em;
+    letter-spacing: normal;
     text-align: right;
     color: var(--lle-gold);
 }
@@ -911,11 +895,11 @@ a.lle-media:hover {
     flex: none;
     padding: 7px 12px;
     border: 1px solid var(--lle-line);
-    border-radius: 999px;
+    border-radius: 2px;
     font-family: var(--lle-label);
-    font-size: 0.85rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
     text-decoration: none;
 }
 
@@ -950,7 +934,7 @@ a.lle-media:hover {
 .lle-pager a {
     padding: 8px 14px;
     border: 1px solid var(--lle-line);
-    border-radius: 999px;
+    border-radius: 2px;
     text-decoration: none;
 }
 
@@ -964,7 +948,7 @@ a.lle-media:hover {
     margin: 12px auto 0;
     padding: 18px var(--lle-gutter) 40px;
     color: var(--lle-muted);
-    font-size: 0.85rem;
+    font-size: .875rem;
     line-height: 1.55;
 }
 
@@ -987,16 +971,20 @@ a.lle-media:hover {
 
     .lle-suggest__kind {
         grid-area: kind;
-        font-size: 0.72rem;
+        font-size: .875rem;
     }
 
     .lle-suggest__name {
         grid-area: name;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        overflow-wrap: anywhere;
     }
 
     .lle-suggest__meta {
         grid-area: meta;
-        font-size: 0.8rem;
+        font-size: .875rem;
     }
 }
 
@@ -1019,6 +1007,8 @@ a.lle-media:hover {
     .lle-debrief {
         grid-template-columns: auto minmax(0, 1fr);
         align-items: start;
+        padding: 24px 0;
+        border-bottom: 1px solid var(--lle-line);
     }
 
     .lle-debrief__media {
@@ -1034,10 +1024,15 @@ a.lle-media:hover {
     .lle-filters__row {
         flex-wrap: wrap;
         overflow: visible;
+        overflow-x: visible;
+        gap: 12px;
+        padding: 4px;
     }
 
     .lle-select {
-        max-width: 200px;
+        max-width: 100%;
+        width: 100%;
+        height: 44px;
     }
 }
 
@@ -1055,3 +1050,9 @@ body.aat-shell-page.aat-shell-explorer .site-main {
         transition: none !important;
     }
 }
+
+/* A gold action always pairs with dark ink, including inherited theme link states. */
+
+.lle .lle-search__go,.lle .lle-apply{color:var(--lle-deep)!important;background:var(--lle-gold);min-height:44px}
+
+.lle .lle-search__go:hover,.lle .lle-apply:hover{color:var(--lle-deep)!important;background:var(--lle-gold-light)}

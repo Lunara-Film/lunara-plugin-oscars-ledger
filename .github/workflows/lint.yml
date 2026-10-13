@@ -11,6 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Browser runtime
+        run: npx playwright-core install --with-deps chromium
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -20,6 +30,9 @@ jobs:
           set -e
           for test in tests/*.php; do
             case "$test" in
+              *-fixture.php|*-cases.php)
+                continue
+                ;;
               tests/source-data-validation-contract.php)
                 echo "Skipping local provenance contract: $test"
                 continue
@@ -34,6 +47,9 @@ jobs:
           find . -name '*.php' -not -path './vendor/*' -not -path './node_modules/*' -print0 \
             | xargs -0 -n1 php -l > /dev/null
           echo "PHP clean"
+
+      - name: Public Ledger presentation behavior
+        run: npm run test:editorial
 
       - name: JS syntax
         run: |

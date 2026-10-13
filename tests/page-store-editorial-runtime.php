@@ -127,8 +127,7 @@ $oreq = ps_request('/oscars/ceremony/70/');
 $store->invoke(null, $oreq, $html);
 $erows = base64_encode(serialize($GLOBALS['wpdb']->rows));
 $erun = function ($uri, $rows_b64, $scope = 'site') {
-    $env = 'AAT_STORE_CHILD=1 AAT_STORE_URI=' . escapeshellarg($uri) . ' AAT_STORE_ROWS=' . escapeshellarg($rows_b64) . ' AAT_TEST_SCOPE=' . $scope;
-    return (string) shell_exec($env . ' ' . escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(__FILE__) . ' 2>&1');
+    return ps_run_child(__FILE__, array('AAT_STORE_CHILD' => '1', 'AAT_STORE_URI' => $uri, 'AAT_STORE_ROWS' => $rows_b64, 'AAT_TEST_SCOPE' => $scope));
 };
 ps_assert($erun('/film/sister/', $erows) === $ehtml, 'A stored editorial page is served whole.');
 ps_assert($erun('/film/sister/', $erows, 'oscars') === 'FELL-THROUGH', 'With the scope back at Oscars only, the same row is not served.');

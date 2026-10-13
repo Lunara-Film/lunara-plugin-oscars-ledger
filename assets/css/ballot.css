@@ -8,10 +8,10 @@
 
 .aat-ballot__kicker {
     color: var(--lunara-gold-light, #edd296);
-    font-size: 12px;
-    letter-spacing: 0;
+    font-size: 14px;
+    letter-spacing: normal;
     margin: 0 0 8px;
-    text-transform: uppercase;
+    text-transform: none;
 }
 
 .aat-ballot__header h2 {
@@ -31,8 +31,8 @@
 }
 
 .aat-ballot__category {
-    border: 1px solid var(--lunara-border, rgba(211, 170, 87, .24));
-    background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012));
+    border: 0;
+    background: transparent;
     padding: 18px;
 }
 
@@ -63,14 +63,14 @@
 
 .aat-ballot__choice-copy span {
     color: var(--lunara-text-muted, #b8b0a2);
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .aat-ballot__choice-copy em {
     color: var(--lunara-gold-light, #edd296);
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
-    text-transform: uppercase;
+    text-transform: none;
 }
 
 .aat-ballot__choice-actions {

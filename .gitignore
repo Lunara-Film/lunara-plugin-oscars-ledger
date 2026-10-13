@@ -24,6 +24,7 @@ test-results/
 coverage/
 screenshots/
 output/
+node_modules/
 
 # Local historical snapshots retained outside Git.
 *.bak-pre-*

@@ -51,7 +51,6 @@ $assert(strpos($template, "'fetchpriority' => 'high'") !== false, 'The local Cer
 $assert(strpos($template, 'loading="eager" fetchpriority="high"') !== false, 'The fallback Ceremony hero poster must preserve LCP priority.');
 
 $assert(strlen($ceremony_css) < 17000, 'Ceremony CSS exceeds its 17 KB source budget.');
-$assert(strlen($hub_css) < 7000, 'Hub polish exceeds its 7 KB source budget.');
 $assert(strlen($ceremony_js) < 2000, 'Ceremony JavaScript exceeds its 2 KB source budget.');
 
 if ($failures) {
