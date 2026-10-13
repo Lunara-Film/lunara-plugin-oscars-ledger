@@ -158,9 +158,7 @@ check($plugin->get_card_backdrop_image_url('https://image.tmdb.org/t/p/original/
 check($plugin->get_card_backdrop_image_url('https://example.test/wp-content/uploads/2026/03/tt0000001-poster-768x1152.jpg') === 'https://i0.wp.com/example.test/wp-content/uploads/2026/03/tt0000001-poster-768x1152.jpg?w=' . $w, 'A plain upload URL goes through the CDN at the backdrop width.');
 check($plugin->get_card_backdrop_image_url('https://elsewhere.test/poster.jpg') === 'https://elsewhere.test/poster.jpg', 'A URL from anywhere else is left alone.');
 check($plugin->get_card_backdrop_image_url('') === '', 'An empty URL stays empty.');
-foreach (array('templates/hub-page.php', 'templates/table-display.php') as $template) {
-    $src = file_get_contents($root . '/' . $template);
-    check(preg_match('/\$aat_get_card_backdrop_style = function\([^)]*\) use \(\$(aat|aat_instance)\) \{(?:(?!\};).)*?->get_card_backdrop_image_url\(\$image_url\)/s', $src) === 1, $template . ': the card backdrop closure resizes its image through get_card_backdrop_image_url().');
-}
+// The hub and landing templates no longer paint a poster behind its own card, so no template closure
+// calls the resize helper; the helper keeps the checks above for any future caller.
 
 echo "poster-img-sizes-runtime: $checks checks passed.\n";

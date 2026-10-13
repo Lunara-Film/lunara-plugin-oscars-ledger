@@ -19,6 +19,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once __DIR__ . '/class-aat-explorer-store.php';
+
 final class AAT_Explorer {
 
     const QUERY_VAR = 'aat_explore';
@@ -27,8 +29,10 @@ final class AAT_Explorer {
 
     private static $state = null;
     private static $page = null;
+    private static $page_generation = null;
 
     public static function init() {
+        AAT_Explorer_Store::init();
         add_action('init', array(__CLASS__, 'register_rewrite'), 9);
         add_action('init', array(__CLASS__, 'ensure_rewrite'), 20);
         add_filter('query_vars', array(__CLASS__, 'query_vars'));
@@ -94,11 +98,7 @@ final class AAT_Explorer {
             header('Content-Type: application/json; charset=' . get_option('blog_charset'));
             header('Cache-Control: public, max-age=300');
             header('X-Robots-Tag: noindex');
-            echo wp_json_encode(array(
-                'url' => $page['url'],
-                'title' => self::document_title(''),
-                'regions' => $page['regions'],
-            ));
+            echo wp_json_encode(self::fragment_data());
             exit;
         }
     }
@@ -276,7 +276,9 @@ final class AAT_Explorer {
         if (self::$page !== null) {
             return self::$page;
         }
+        self::$page_generation = AAT_Explorer_Store::eligible() ? AAT_Explorer_Store::generation() : '';
         $state = self::state();
+        $cacheable = $state['q'] === '';
         $notices = array();
 
         // Free text from the no-JS form: take the best match, as the typeahead would.
@@ -298,6 +300,7 @@ final class AAT_Explorer {
         $status = self::api('/status');
         $facets = self::api('/facets', $filters);
         if (is_wp_error($facets)) {
+            $cacheable = false;
             $notices[] = 'Those filters could not be combined, so they were cleared.';
             $state = array_merge($state, array('ceremony' => 0, 'decade' => 0, 'class' => '', 'category' => '', 'winner' => false, 'entity' => array(), 'pg' => 1));
             self::$state = $state;
@@ -308,6 +311,7 @@ final class AAT_Explorer {
         $entities = array();
         foreach ($state['entity'] as $id) {
             $entity = self::api('/entities/' . $id);
+            if (!is_array($entity)) { $cacheable = false; }
             $entities[$id] = is_array($entity) ? $entity : array('id' => $id, 'name' => strtoupper($id), 'missing' => true);
         }
 
@@ -317,12 +321,15 @@ final class AAT_Explorer {
             $list = self::api('/nominations', $filters + array('sort' => $state['sort'], 'page' => $state['pg'], 'per_page' => self::PER_PAGE));
         }
         if (is_wp_error($list)) {
+            $cacheable = false;
             $list = array('total' => 0, 'items' => array(), 'page' => 1, 'pages' => 1);
             $notices[] = 'The ledger could not be read just now. Please try again.';
         }
 
         $heading = self::heading($state, $entities);
+        $debrief = count($entities) === 1 ? self::render_debrief(reset($entities), $state) : '';
         self::$page = array(
+            'cacheable' => $cacheable && is_array($status) && !empty($status['dataset']['nominations']),
             'state' => $state,
             'url' => self::url($state, array('pg' => $state['pg'])),
             'heading' => $heading,
@@ -330,13 +337,24 @@ final class AAT_Explorer {
             'regions' => array(
                 'filters' => self::render_filters($state, is_array($facets) ? $facets : array()),
                 'chips' => self::render_chips($state, $entities, $notices),
-                'debrief' => count($entities) === 1 ? self::render_debrief(reset($entities), $state) : '',
-                'status' => self::render_status($state, $list),
+                'debrief' => $debrief,
+                'status' => self::render_status($state, $list, $heading, $debrief !== ''),
                 'results' => $state['by'] !== '' ? self::render_groups($state, $list) : self::render_nominations($state, $list),
                 'pager' => self::render_pager($state, $list),
             ),
         );
         return self::$page;
+    }
+
+    /** The identical transport contract for full pages and enhanced navigation. */
+    public static function fragment_data() {
+        $page = self::page();
+        $payload = array('url' => $page['url'], 'title' => self::document_title(''), 'regions' => $page['regions']);
+        $static = AAT_Explorer_Store::publish($payload, (string) self::$page_generation, !empty($page['cacheable']));
+        if ($static !== '') { $payload['snapshot_url'] = $static; }
+        $descriptor = AAT_Explorer_Store::descriptor((string) self::$page_generation);
+        if ($descriptor) { $payload['snapshot_manifest'] = $descriptor; }
+        return $payload;
     }
 
     /** The whole page body; the template wraps it in the theme's header and footer. */
@@ -345,10 +363,12 @@ final class AAT_Explorer {
         $state = $page['state'];
         $dataset = (array) ($page['status']['dataset'] ?? array());
         $search_url = rest_url(AAT_Read_API::NS . '/search');
+        $fragment = self::fragment_data();
+        $snapshot = $fragment['snapshot_manifest'] ?? array();
 
         ob_start();
         ?>
-<div id="lle" class="lle" data-lle-root data-lle-base="<?php echo esc_url(self::base_url()); ?>" data-lle-search="<?php echo esc_url($search_url); ?>">
+<div id="lle" class="lle" data-lle-root data-lle-base="<?php echo esc_url(self::base_url()); ?>" data-lle-search="<?php echo esc_url($search_url); ?>" data-lle-snapshot="<?php echo esc_attr(wp_json_encode($snapshot)); ?>">
     <section class="lle-hero" aria-labelledby="lle-title">
         <div class="lle-hero__inner">
             <h1 id="lle-title" class="lle-title">Oscar Ledger Explorer</h1>
@@ -489,7 +509,6 @@ final class AAT_Explorer {
         $html = '<aside class="lle-debrief" aria-label="' . esc_attr('About ' . $entity['name']) . '">';
         $html .= '<div class="lle-debrief__media">' . $media . '</div>';
         $html .= '<div class="lle-debrief__body">';
-        $html .= '<p class="lle-kicker">' . esc_html(self::kind_label($entity['kind'] ?? '')) . ' · Debrief</p>';
         $html .= '<h2 class="lle-debrief__name">' . esc_html($entity['name']) . '</h2>';
         $html .= '<p class="lle-debrief__stats"><strong>' . esc_html(number_format_i18n((int) $entity['nominations'])) . '</strong> ' . esc_html(_n('nomination', 'nominations', (int) $entity['nominations'])) . ' · <strong>'
             . esc_html(number_format_i18n((int) $entity['wins'])) . '</strong> ' . esc_html(_n('win', 'wins', (int) $entity['wins'])) . ' · <strong>'
@@ -510,7 +529,12 @@ final class AAT_Explorer {
         return $html;
     }
 
-    private static function render_status($state, $list) {
+    /**
+     * The counts line, led by one heading naming the active filter set when
+     * there is one and no Debrief already names it. The heading is the same
+     * phrase the document title carries, so the page says what the list is.
+     */
+    private static function render_status($state, $list, $heading = '', $has_debrief = false) {
         $total = (int) ($list['total'] ?? 0);
         $page = (int) ($list['page'] ?? 1);
         $first = $total ? ($page - 1) * self::PER_PAGE + 1 : 0;
@@ -524,13 +548,20 @@ final class AAT_Explorer {
                 ? sprintf('%s–%s of %s %s · %s %s', number_format_i18n($first), number_format_i18n($last), number_format_i18n($total), _n('nomination', 'nominations', $total), number_format_i18n($wins), _n('win', 'wins', $wins))
                 : 'No nominations match these filters.';
         }
-        return '<p id="lle-status" class="lle-status" role="status" aria-live="polite">' . esc_html($text) . '</p>';
+        $context = '';
+        if (!$has_debrief) {
+            $label = (string) $heading !== '' ? (string) $heading : ($state['by'] !== '' ? (string) (self::VIEWS[$state['by']] ?? '') : '');
+            if ($label !== '') {
+                $context = '<h2 class="lle-context">' . esc_html($label) . '</h2>';
+            }
+        }
+        return $context . '<p id="lle-status" class="lle-status" role="status" aria-live="polite">' . esc_html($text) . '</p>';
     }
 
     private static function render_nominations($state, $list) {
         $items = (array) ($list['items'] ?? array());
         if (empty($items)) {
-            return '<div class="lle-empty"><p>No records match these filters.</p><p><a rel="nofollow" data-lle-nav href="' . esc_url(self::base_url()) . '">Start over</a></p></div>';
+            return '<div class="lle-empty"><p><a rel="nofollow" data-lle-nav href="' . esc_url(self::base_url()) . '">Start over</a> or change a filter above.</p></div>';
         }
         $html = '';
         $current_ceremony = null;
@@ -602,7 +633,7 @@ final class AAT_Explorer {
             $facts['Citation'] = esc_html($record['citation']);
         }
         $facts['Record'] = esc_html('#' . $record['id'] . ' · ' . $record['ceremony_label'] . ' ceremony · films of ' . $record['year_label']);
-        $html .= '<details class="lle-record"><summary>Record</summary><dl>';
+        $html .= '<details class="lle-record"><summary>Full record</summary><dl>';
         foreach ($facts as $term => $value) {
             $html .= '<dt>' . esc_html($term) . '</dt><dd>' . $value . '</dd>';
         }
@@ -643,7 +674,7 @@ final class AAT_Explorer {
     private static function render_groups($state, $list) {
         $items = (array) ($list['items'] ?? array());
         if (empty($items)) {
-            return '<div class="lle-empty"><p>Nothing matches these filters.</p><p><a rel="nofollow" data-lle-nav href="' . esc_url(self::base_url()) . '">Start over</a></p></div>';
+            return '<div class="lle-empty"><p><a rel="nofollow" data-lle-nav href="' . esc_url(self::base_url()) . '">Start over</a> or change a filter above.</p></div>';
         }
         $rank = ((int) ($list['page'] ?? 1) - 1) * self::PER_PAGE;
         $html = '<ol class="lle-groups lle-groups--' . esc_attr($state['by']) . '" start="' . ($rank + 1) . '">';
@@ -749,10 +780,26 @@ final class AAT_Explorer {
         if ($pages <= 1) {
             return '';
         }
+        // First and Last join Previous and Next so a long list (hundreds of
+        // pages) can be entered from either end; every link keeps the pg param.
+        $start = '';
+        if ($page > 2) {
+            $start .= '<a rel="nofollow" data-lle-nav href="' . esc_url(self::url($state, array('pg' => 1))) . '">First</a>';
+        }
+        if ($page > 1) {
+            $start .= '<a rel="nofollow prev" data-lle-nav href="' . esc_url(self::url($state, array('pg' => $page - 1))) . '">← Previous</a>';
+        }
+        $end = '';
+        if ($page < $pages) {
+            $end .= '<a rel="nofollow next" data-lle-nav href="' . esc_url(self::url($state, array('pg' => $page + 1))) . '">Next →</a>';
+        }
+        if ($page < $pages - 1) {
+            $end .= '<a rel="nofollow" data-lle-nav href="' . esc_url(self::url($state, array('pg' => $pages))) . '">Last</a>';
+        }
         $html = '<nav class="lle-pager" aria-label="Pages">';
-        $html .= $page > 1 ? '<a rel="nofollow prev" data-lle-nav href="' . esc_url(self::url($state, array('pg' => $page - 1))) . '">← Previous</a>' : '<span aria-hidden="true"></span>';
+        $html .= '<span class="lle-pager__side">' . $start . '</span>';
         $html .= '<span class="lle-pager__at">Page ' . esc_html(number_format_i18n($page)) . ' of ' . esc_html(number_format_i18n($pages)) . '</span>';
-        $html .= $page < $pages ? '<a rel="nofollow next" data-lle-nav href="' . esc_url(self::url($state, array('pg' => $page + 1))) . '">Next →</a>' : '<span aria-hidden="true"></span>';
+        $html .= '<span class="lle-pager__side">' . $end . '</span>';
         return $html . '</nav>';
     }
 

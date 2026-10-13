@@ -113,6 +113,9 @@ final class AAT_Read_API {
         });
         if (is_array($data)) {
             $data['plugin_version'] = AAT_VERSION; // Always the running version, never a cached one.
+            if (class_exists('AAT_Explorer_Store')) {
+                $data['explorer_snapshots'] = AAT_Explorer_Store::report();
+            }
             if (class_exists('AAT_Page_Store')) {
                 $data['page_store'] = AAT_Page_Store::report(); // 2.8.15: warm progress, live.
             }
@@ -914,7 +917,9 @@ final class AAT_Read_API {
         // key, so answers cached before a name repair never outlive it.
         $plugin = self::plugin();
         $labels = method_exists($plugin, 'get_label_rules_state') ? $plugin->get_label_rules_state() : '';
-        $key = 'aat_api_' . md5(wp_json_encode(array(self::RESPONSE_SCHEMA, self::stamp(), $labels, $parts)));
+        // Manual repairs/rebuilds can change facts without a bundled-import stamp.
+        $revision = get_option('aat_explorer_snapshot_revision', '');
+        $key = 'aat_api_' . md5(wp_json_encode(array(self::RESPONSE_SCHEMA, self::stamp(), $labels, $revision, $parts)));
         $hit = $persistent ? get_transient($key) : wp_cache_get($key, self::CACHE_GROUP);
         if ($hit !== false) {
             return $hit;

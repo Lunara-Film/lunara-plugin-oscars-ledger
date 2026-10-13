@@ -13,7 +13,7 @@ const captures=path.resolve(process.argv[2]||path.join(root,'../_carousel-artifa
   let hub=fs.readFileSync(path.join(root,'assets/css/hub-polish.css'),'utf8');
   if(process.env.AAT_DOSSIER_MUTATION==='actions')hub=hub.replace(/min-height: ?44px ?!important/g,'min-height:28px!important');
   if(process.env.AAT_DOSSIER_MUTATION==='metrics')hub=hub.replace('grid-template-columns: repeat(2, minmax(0, 1fr)) !important','grid-template-columns: minmax(0, 1fr) !important');
-  if(process.env.AAT_DOSSIER_MUTATION==='title')entity=entity.replace('max-width:100%!important;font-size:clamp(2rem,7vw,3rem)!important','max-width:10ch!important;font-size:clamp(2rem,12vw,3rem)!important');
+  if(process.env.AAT_DOSSIER_MUTATION==='title')entity=entity.replace('max-width:100%!important;font-size:clamp(2rem, 4vw, 3.5rem)!important','max-width:10ch!important;font-size:clamp(2rem, 12vw, 3.5rem)!important');
   // These assets load in the head; body template styles remain after them.
   html=html.replace('</head>','<style>/* Mobile profile hierarchy'+entity+'\n'+hub+'</style></head>');
   const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce',javaScriptEnabled:false});

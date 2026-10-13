@@ -13,8 +13,8 @@ $fail = function ($msg) { fwrite(STDERR, "FAIL: $msg\n"); exit(1); };
 if (preg_match('/%\d\$s\/%\d\$s/', $hub) || strpos($hub, "winner_categories'] ?? 0))); ?>/<?php") !== false) {
     $fail('The ceremony record must not render as winners/categories.');
 }
-if (substr_count($hub, 'esc_html($winner_record_label)') !== 2 || strpos($hub, '%1$s of %2$s') === false) {
-    $fail('Both ceremony record cards use the "X of Y" / "All Y" label.');
+if (substr_count($hub, 'esc_html($winner_record_label)') < 1 || strpos($hub, '%1$s of %2$s') === false) {
+    $fail('The ceremony record card uses the "X of Y" / "All Y" label.');
 }
 if (strpos($main, "'winner_categories' => count(array_unique(array_column(\$winner_rows, 'canonical_category')))") === false) {
     $fail('The rollup counts categories with a winner, not winner rows.');

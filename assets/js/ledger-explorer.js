@@ -11,9 +11,36 @@
 (function () {
     'use strict';
 
-    var root = document.querySelector('[data-lle-root]');
-    if (!root || !window.fetch || !window.history || !window.history.pushState || !window.URLSearchParams || !window.URL) {
+    if (window.LunaraLedgerExplorer) {
+        window.LunaraLedgerExplorer.mount(document);
         return;
+    }
+    var instance = null;
+
+    function createExplorer(root) {
+    if (!root || !window.fetch || !window.history || !window.history.pushState || !window.URLSearchParams || !window.URL) {
+        return function () {};
+    }
+
+    var disposed = false;
+    var listeners = [];
+    var requestId = 0;
+    var blurTimer = null;
+    function listen(target, name, callback) {
+        target.addEventListener(name, callback);
+        listeners.push(function () { target.removeEventListener(name, callback); });
+    }
+    function dispose() {
+        disposed = true;
+        requestId++;
+        if (pending) { pending.abort(); }
+        if (searching) { searching.abort(); }
+        if (manifestRequest) { manifestRequest.abort(); }
+        window.clearTimeout(timer);
+        window.clearTimeout(blurTimer);
+        listeners.forEach(function (remove) { remove(); });
+        listeners = [];
+        setBusy(false);
     }
 
     var base = root.getAttribute('data-lle-base');
@@ -26,10 +53,81 @@
     });
 
     var pending = null;
+    var manifestRequest = null;
+    var snapshots = {};
+    var snapshotConfig = {};
+    try { snapshotConfig = JSON.parse(root.getAttribute('data-lle-snapshot') || '{}'); } catch (error) {}
 
     function abortable() {
         return 'AbortController' in window ? new AbortController() : null;
     }
+
+    function freshSnapshot(stamp) {
+        var age = Date.now() / 1000 - Number(stamp && stamp.created_at);
+        return stamp && stamp.schema === 1 && stamp.generation === snapshotConfig.generation && age >= -5 && age <= Math.min(300, Number(snapshotConfig.max_age) || 300);
+    }
+    function trustedSnapshotUrl(url) {
+        try {
+            var target = new URL(url);
+            var manifest = new URL(snapshotConfig.url);
+            return /^https?:$/.test(target.protocol) && target.origin === manifest.origin && target.pathname.slice(0, target.pathname.lastIndexOf('/') + 1) === manifest.pathname.slice(0, manifest.pathname.lastIndexOf('/') + 1) && /\/[a-f0-9]{64}\.json$/.test(target.pathname) && !target.search;
+        } catch (error) { return false; }
+    }
+    function readJson(url, signal, isStatic) {
+        return fetch(url, { headers: { Accept: 'application/json' }, credentials: isStatic ? 'omit' : 'same-origin', cache: isStatic ? 'force-cache' : 'default', signal: signal }).then(function (response) {
+            if (!response.ok) { throw new Error('HTTP ' + response.status); }
+            return response.json();
+        });
+    }
+    function fragment(url, signal) {
+        var entry = snapshots[url];
+        var fallback = function () { return readJson(fragmentUrl(url), signal, false); };
+        if (!entry || !trustedSnapshotUrl(entry.url) || !freshSnapshot({schema:1, generation:snapshotConfig.generation, created_at:entry.created_at})) { return fallback(); }
+        return readJson(entry.url, signal, true).then(function (data) {
+            if (!freshSnapshot(data && data.snapshot) || data.url !== url || !data.regions || !Object.keys(regions).every(function (name) { return typeof data.regions[name] === 'string'; })) { throw new Error('Expired or invalid snapshot'); }
+            return data;
+        }).catch(function (error) {
+            if (disposed || (signal && signal.aborted) || (error && error.name === 'AbortError')) { throw error; }
+            delete snapshots[url];
+            return fallback();
+        });
+    }
+    function validSnapshotConfig(config) {
+        if (!config || typeof config.generation !== 'string' || !config.generation || typeof config.url !== 'string') { return false; }
+        try {
+            var url = new URL(config.url);
+            return /^https?:$/.test(url.protocol) && !url.username && !url.password;
+        } catch (error) { return false; }
+    }
+    function loadManifest() {
+        if (!validSnapshotConfig(snapshotConfig)) { return; }
+        if (manifestRequest) { manifestRequest.abort(); }
+        manifestRequest = abortable();
+        readJson(snapshotConfig.url, manifestRequest ? manifestRequest.signal : undefined, true).then(function (data) {
+            if (disposed || !freshSnapshot(data) || !data.entries || typeof data.entries !== 'object') { return; }
+            Object.keys(data.entries).forEach(function (url) {
+                var entry = data.entries[url];
+                if (entry && (!snapshots[url] || Number(entry.created_at) > Number(snapshots[url].created_at))) { snapshots[url] = entry; }
+            });
+        }).catch(function () {});
+    }
+    function learnSnapshot(data) {
+        // A valid same-origin dynamic response may outlive the HTML document's
+        // descriptor. Adopt its current generation before trusting its pointers.
+        var config = data.snapshot_manifest;
+        if (validSnapshotConfig(config)) {
+            var changed = config.generation !== snapshotConfig.generation || config.url !== snapshotConfig.url;
+            if (config.generation !== snapshotConfig.generation) { snapshots = {}; }
+            snapshotConfig = config;
+            if (changed) { loadManifest(); }
+        }
+        if (data.snapshot_url && trustedSnapshotUrl(data.snapshot_url)) {
+            snapshots[data.url] = {url:data.snapshot_url,created_at:Date.now()/1000};
+        }
+        // The immutable payload's own timestamp is still checked on every hit;
+        // learning a pointer never extends the underlying fragment's lifetime.
+    }
+    loadManifest();
 
     function fragmentUrl(url) {
         var u = new URL(url, window.location.href);
@@ -43,23 +141,35 @@
         }
     }
 
+    function isExplorerUrl(url) {
+        try {
+            var target = new URL(url, window.location.href);
+            var home = new URL(base, window.location.href);
+            return target.origin === home.origin && target.pathname === home.pathname;
+        } catch (error) { return false; }
+    }
+
+    function historyState(url) {
+        return Object.assign({}, window.history.state || {}, { url: new URL(url, window.location.href).href, lle: {
+            base: new URL(base, window.location.href).pathname,
+            url: new URL(url, window.location.href).href
+        } });
+    }
+
     function load(url, push, focusName) {
+        if (disposed || !isExplorerUrl(url)) { return Promise.resolve(); }
+        var sequence = ++requestId;
         if (pending) {
             pending.abort();
         }
         pending = abortable();
         setBusy(true);
-        return fetch(fragmentUrl(url), {
-            headers: { Accept: 'application/json' },
-            credentials: 'same-origin',
-            signal: pending ? pending.signal : undefined
-        }).then(function (response) {
-            if (!response.ok) {
-                throw new Error('HTTP ' + response.status);
-            }
-            return response.json();
-        }).then(function (data) {
+        return fragment(url, pending ? pending.signal : undefined).then(function (data) {
+            if (disposed || sequence !== requestId) { return; }
             var fresh = data && data.regions ? data.regions : {};
+            if (!isExplorerUrl(data && data.url) || !Object.keys(regions).every(function (name) { return typeof fresh[name] === 'string'; })) {
+                throw new Error('Invalid Explorer fragment');
+            }
             Object.keys(regions).forEach(function (name) {
                 if (regions[name] && typeof fresh[name] === 'string') {
                     regions[name].innerHTML = fresh[name];
@@ -69,10 +179,11 @@
                 document.title = data.title;
             }
             var next = data.url || url;
+            learnSnapshot(data);
             if (push) {
-                window.history.pushState({ lle: true }, '', next);
+                window.history.pushState(historyState(next), '', next);
             } else {
-                window.history.replaceState({ lle: true }, '', next);
+                window.history.replaceState(historyState(next), '', next);
             }
             setBusy(false);
             if (focusName && regions.filters) {
@@ -82,7 +193,7 @@
                 }
             }
         }).catch(function (error) {
-            if (error && error.name === 'AbortError') {
+            if (disposed || sequence !== requestId || (error && error.name === 'AbortError')) {
                 return;
             }
             window.location.href = url;
@@ -90,6 +201,7 @@
     }
 
     function scrollToResults() {
+        if (disposed) { return; }
         var status = root.querySelector('#lle-status');
         if (!status) {
             return;
@@ -131,7 +243,7 @@
 
     /* Filters: one change, one fetch. The rules mirror the server's. */
 
-    root.addEventListener('change', function (event) {
+    listen(root, 'change', function (event) {
         var target = event.target;
         var form = target && target.closest ? target.closest('form[data-lle-filters]') : null;
         if (!form || !target.name) {
@@ -155,7 +267,7 @@
         load(urlFromForm(form), true, target.name);
     });
 
-    root.addEventListener('submit', function (event) {
+    listen(root, 'submit', function (event) {
         var form = event.target;
         if (form && form.matches && form.matches('form[data-lle-filters]')) {
             event.preventDefault();
@@ -163,7 +275,7 @@
         }
     });
 
-    root.addEventListener('click', function (event) {
+    listen(root, 'click', function (event) {
         var link = event.target && event.target.closest ? event.target.closest('a[data-lle-nav]') : null;
         if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
             return;
@@ -172,9 +284,12 @@
         load(link.href, true).then(scrollToResults);
     });
 
-    window.history.replaceState({ lle: true }, '', window.location.href);
-    window.addEventListener('popstate', function () {
-        load(window.location.href, false);
+    window.history.replaceState(historyState(window.location.href), '', window.location.href);
+    listen(window, 'popstate', function (event) {
+        var state = event.state && event.state.lle;
+        if (!disposed && root.isConnected && state && state.base === new URL(base, window.location.href).pathname && state.url === window.location.href && isExplorerUrl(window.location.href)) {
+            load(window.location.href, false);
+        }
     });
 
     /* Hero search: an ARIA 1.2 combobox. */
@@ -183,7 +298,7 @@
     var input = root.querySelector('#lle-q');
     var list = root.querySelector('#lle-suggest');
     if (!form || !input || !list || !searchUrl) {
-        return;
+        return dispose;
     }
 
     var results = [];
@@ -296,16 +411,22 @@
                 span.textContent = part[1];
                 option.appendChild(span);
             });
-            option.addEventListener('mousedown', function (event) {
-                event.preventDefault();
-                choose(index);
-            });
+            option.setAttribute('data-lle-option', String(index));
             list.appendChild(option);
         });
         openList();
     }
 
+    listen(list, 'mousedown', function (event) {
+        var option = event.target.closest('[data-lle-option]');
+        if (option && list.contains(option)) {
+            event.preventDefault();
+            choose(Number(option.getAttribute('data-lle-option')));
+        }
+    });
+
     function suggest(query) {
+        if (disposed) { return; }
         if (searching) {
             searching.abort();
         }
@@ -318,7 +439,7 @@
                 return response.ok ? response.json() : { results: [] };
             })
             .then(function (data) {
-                if (input.value.trim() === query) {
+                if (!disposed && input.value.trim() === query) {
                     render((data && data.results) || [], query);
                 }
             })
@@ -336,7 +457,7 @@
         load(urlFromExplore(result.explore), true).then(scrollToResults);
     }
 
-    input.addEventListener('input', function () {
+    listen(input, 'input', function () {
         window.clearTimeout(timer);
         var query = input.value.trim();
         if (query.length < 2) {
@@ -349,7 +470,7 @@
         }, 160);
     });
 
-    input.addEventListener('keydown', function (event) {
+    listen(input, 'keydown', function (event) {
         if (event.key === 'Escape') {
             closeList();
             return;
@@ -369,11 +490,12 @@
         }
     });
 
-    input.addEventListener('blur', function () {
-        window.setTimeout(closeList, 120);
+    listen(input, 'blur', function () {
+        window.clearTimeout(blurTimer);
+        blurTimer = window.setTimeout(function () { if (!disposed) { closeList(); } }, 120);
     });
 
-    form.addEventListener('submit', function (event) {
+    listen(form, 'submit', function (event) {
         event.preventDefault();
         var query = input.value.trim();
         if (!query) {
@@ -386,4 +508,32 @@
         closeList();
         load(base + '?q=' + encodeURIComponent(query), true).then(scrollToResults);
     });
+    return dispose;
+    }
+
+    function mount(scope) {
+        scope = scope || document;
+        var root = scope.matches && scope.matches('[data-lle-root]') ? scope : scope.querySelector('[data-lle-root]');
+        if (instance && instance.root === root && root && root.isConnected) { return; }
+        if (instance) { instance.dispose(); instance = null; }
+        if (root) { instance = { root: root, dispose: createExplorer(root) }; }
+    }
+    function teardown(scope) {
+        if (instance && (!scope || scope === instance.root || (scope.contains && scope.contains(instance.root)))) {
+            instance.dispose();
+            instance = null;
+        }
+    }
+    window.LunaraLedgerExplorer = { mount: mount, teardown: teardown };
+    if (window.LunaraApp && typeof window.LunaraApp.register === 'function') {
+        window.LunaraApp.register('ledger-explorer', function (scope) {
+            mount(scope);
+            return function () { teardown(scope); };
+        });
+    } else {
+        window.addEventListener('lunara:page:mount', function (event) { mount(event.detail && event.detail.root); });
+        window.addEventListener('lunara:page:teardown', function (event) { teardown(event.detail && event.detail.root); });
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', function () { mount(document); }, { once: true }); }
+        else { mount(document); }
+    }
 })();

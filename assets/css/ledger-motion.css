@@ -94,7 +94,7 @@
 .aat-motion-label {
 	fill: var(--motion-muted);
 	font-family: var(--lunara-font-body, Georgia, serif);
-	font-size: 14px;
+	font-size: 16px;
 }
 
 .aat-motion-spoke.is-win .aat-motion-label {
@@ -104,7 +104,7 @@
 .aat-motion-win-title {
 	fill: var(--motion-gold-light);
 	font-family: var(--lunara-font-body, Georgia, serif);
-	font-size: 14px;
+	font-size: 16px;
 	font-style: italic;
 }
 
@@ -128,7 +128,7 @@
 .aat-motion-year {
 	fill: var(--motion-muted);
 	font-family: var(--lunara-font-label, sans-serif);
-	font-size: 14px;
+	font-size: 16px;
 	letter-spacing: normal;
 }
 

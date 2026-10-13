@@ -300,7 +300,7 @@ class AAT_Ledger_Motion {
 			$ly     = $cy + $sin * $rl;
 			$lines  = self::wrap( $rec['label'] );
 			$anchor = abs( $cos ) < 0.22 ? 'middle' : ( $cos > 0 ? 'start' : 'end' );
-			$lh     = 16;
+			$lh     = 18;
 			if ( 'middle' === $anchor ) {
 				$ly = $sin < 0 ? $ly - ( count( $lines ) - 1 ) * $lh : $ly + 10;
 			} else {
@@ -479,7 +479,9 @@ class AAT_Ledger_Motion {
 			$films = array_values( array_unique( $wl['films'] ) );
 			$text  = self::wrap( implode( ' / ', $films ), 24 )[0];
 			$y     = $wl['top'] - 18 - $lift * 18;
-			$svg  .= '<text class="aat-motion-win-title" style="--t:' . self::n( $wl['t'] ) . ';--w:' . (int) $wl['w'] . '" x="' . self::n( $wl['x'] ) . '" y="' . self::n( $y ) . '" text-anchor="middle">' . esc_html( $text ) . '</text>';
+			// A title near either edge of the stage is set towards the middle so it stays inside the frame.
+			$anchor = $wl['x'] < 150 ? 'start' : ( $wl['x'] > $w - 150 ? 'end' : 'middle' );
+			$svg  .= '<text class="aat-motion-win-title" style="--t:' . self::n( $wl['t'] ) . ';--w:' . (int) $wl['w'] . '" x="' . self::n( $wl['x'] ) . '" y="' . self::n( $y ) . '" text-anchor="' . $anchor . '">' . esc_html( $text ) . '</text>';
 			$prev_x = $wl['x'];
 		}
 		$svg .= '</svg>';

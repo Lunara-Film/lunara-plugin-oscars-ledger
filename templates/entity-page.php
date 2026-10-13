@@ -111,21 +111,6 @@ $get_primary_pipe_value = function($value_list) {
 
 $title_visual_cache = array();
 $title_label_cache = array();
-$get_title_visual = function($title_id, $size = 'large') use ($aat, &$title_visual_cache) {
-    $title_id = trim((string) $title_id);
-    if ($title_id === '' || !method_exists($aat, 'get_title_visual_package')) {
-        return array();
-    }
-
-    $cache_key = $title_id . '|' . $size;
-    if (!array_key_exists($cache_key, $title_visual_cache)) {
-        $visual = $aat->get_title_visual_package($title_id, $size);
-        $title_visual_cache[$cache_key] = is_array($visual) ? $visual : array();
-    }
-
-    return $title_visual_cache[$cache_key];
-};
-
 $get_title_label = function($title_id) use ($aat, &$title_label_cache) {
     $title_id = strtolower(trim((string) $title_id));
     if ($title_id === '' || !preg_match('/^tt\d+$/', $title_id)) {
@@ -141,51 +126,6 @@ $get_title_label = function($title_id) use ($aat, &$title_label_cache) {
     }
 
     return $title_label_cache[$title_id];
-};
-
-$get_visual_backdrop_style = function($visual_package, $args = array()) {
-    $visual_package = is_array($visual_package) ? $visual_package : array();
-    if (empty($visual_package)) {
-        return '';
-    }
-
-    $prefer_poster = !empty($args['prefer_poster']);
-    $position = !empty($args['position']) ? (string) $args['position'] : 'center';
-    $overlay = !empty($args['overlay'])
-        ? (string) $args['overlay']
-        : "linear-gradient(180deg, rgba(5, 13, 24, 0.58), rgba(5, 13, 24, 0.94))";
-
-    $sources = $prefer_poster
-        ? array(
-            $visual_package['poster_url'] ?? '',
-            $visual_package['backdrop_url'] ?? '',
-            $visual_package['portrait_url'] ?? '',
-        )
-        : array(
-            $visual_package['backdrop_url'] ?? '',
-            $visual_package['poster_url'] ?? '',
-            $visual_package['portrait_url'] ?? '',
-        );
-
-    $background_url = '';
-    foreach ($sources as $source) {
-        $source = trim((string) $source);
-        if ($source !== '') {
-            $background_url = $source;
-            break;
-        }
-    }
-
-    if ($background_url === '') {
-        return '';
-    }
-
-    return sprintf(
-        "background-image:%s, url('%s'); background-size: cover; background-position: %s;",
-        $overlay,
-        esc_url($background_url),
-        esc_attr($position)
-    );
 };
 
 $normalize_comparable_name = function($value) {
@@ -477,34 +417,25 @@ $profile_subject_label = $label ? $label : strtoupper($id);
 $summary = '';
 $visual = array();
 $entity_anchor_title = '';
+$entity_anchor_stats = array();
+$company_film_id = '';
 if ($entity === 'title' && method_exists($aat, 'get_title_visual_package')) {
     $visual = $aat->get_title_visual_package($id, 'medium_large');
 } elseif ($entity === 'name' && method_exists($aat, 'get_person_visual_package')) {
     $visual = $aat->get_person_visual_package($id, 'medium_large');
-} elseif ($entity === 'company' && !empty($distinct_films) && method_exists($aat, 'get_title_visual_package')) {
-    foreach (array_keys($distinct_films) as $company_film_id) {
-        $company_film_id = trim((string) $company_film_id);
-        if ($company_film_id === '') {
-            continue;
-        }
-
-        $company_visual = $aat->get_title_visual_package($company_film_id, 'medium_large');
-        $entity_anchor_title = method_exists($aat, 'lookup_title_label') ? $aat->lookup_title_label($company_film_id) : '';
-        if ($entity_anchor_title === '' && !empty($company_visual['title'])) {
-            $entity_anchor_title = (string) $company_visual['title'];
-        }
+} elseif ($entity === 'company' && !empty($distinct_films)) {
+    // A company has no artwork of its own: the identity plate carries the name, and
+    // the leading film of its record (most awarded, then most nominated) is named below it.
+    $company_film_ids = array_keys($distinct_films);
+    $company_film_id = trim((string) $company_film_ids[0]);
+    if ($company_film_id !== '') {
+        $entity_anchor_title = $get_title_label($company_film_id);
         if ($entity_anchor_title === '') {
             $entity_anchor_title = strtoupper($company_film_id);
         }
-
-        if (
-            !empty($company_visual['poster_html']) ||
-            !empty($company_visual['poster_url']) ||
-            !empty($company_visual['backdrop_url']) ||
-            !empty($company_visual['fallback_html'])
-        ) {
-            $visual = $company_visual;
-            break;
+        $entity_anchor_stats = is_array($distinct_films[$company_film_id] ?? null) ? $distinct_films[$company_film_id] : array();
+        if (method_exists($aat, 'get_title_visual_package')) {
+            $visual = $aat->get_title_visual_package($company_film_id, 'medium');
         }
     }
 }
@@ -521,49 +452,47 @@ if ($entity === 'name') {
         $hero_classes[] = 'is-person-visual-fallback';
     }
 }
-$hero_visual = ($entity === 'name' && !empty($latest_result['title_id']))
-    ? $get_title_visual($latest_result['title_id'], 'medium_large')
-    : $visual;
-$hero_style = $get_visual_backdrop_style($hero_visual, array(
-    'prefer_poster' => true,
-    'position' => $entity === 'name' ? 'center top' : 'center',
-));
-if ($hero_style !== '') {
-    $hero_classes[] = 'aat-card-has-backdrop';
+// Artwork appears once, as the identity image; no surface repeats it as a background wash.
+$aat_company_plate_html = '';
+if ($entity === 'company') {
+    $aat_company_plate_label = $label ? $label : strtoupper($id);
+    $aat_company_plate_mark = class_exists('AAT_Ledger_Media') ? AAT_Ledger_Media::initials($aat_company_plate_label) : strtoupper(substr($aat_company_plate_label, 0, 1));
+    $aat_company_plate_html = '<div class="aat-entity-poster-fallback is-company-plate"><div class="aat-fallback-inner"><div class="aat-fallback-kicker">' . esc_html__('Company', 'academy-awards-table') . '</div><div class="aat-fallback-title">' . esc_html($aat_company_plate_mark) . '</div><div class="aat-fallback-meta">' . esc_html($aat_company_plate_label) . '</div></div></div>';
 }
-if (
-    $entity === 'company' &&
-    empty($visual['poster_html']) &&
-    empty($visual['poster_url']) &&
-    empty($visual['fallback_html'])
-) {
+if ($entity === 'company' && $aat_company_plate_html === '') {
     $hero_classes[] = 'is-meta-only';
 } elseif ($entity === 'title' && empty($visual['poster_html']) && empty($visual['poster_url']) && empty($visual['fallback_html'])) {
     $hero_classes[] = 'is-no-poster';
 } elseif ($entity === 'name' && empty($visual['portrait_url']) && empty($visual['fallback_html'])) {
     $hero_classes[] = 'is-no-poster';
 }
-$latest_result_visual = array();
-if (!empty($latest_result['title_id'])) {
-    $latest_result_visual = $get_title_visual($latest_result['title_id'], 'medium_large');
-} elseif ($entity === 'title') {
-    $latest_result_visual = $visual;
+$aat_entity_subtitle_span = '';
+if ($entity === 'title' && !empty($visual['release_year'])) {
+    $aat_entity_subtitle_span = (string) $visual['release_year'];
+} elseif ($span !== '') {
+    $aat_entity_subtitle_span = $span;
 }
-$latest_result_style = $get_visual_backdrop_style($latest_result_visual, array(
-    'prefer_poster' => true,
-    'position' => 'center top',
-));
-if ($total_nominations > 0) {
-    $summary = sprintf(
-        '%s appears in the Lunara Oscar Ledger with %s nomination%s and %s win%s across %s ceremon%s.',
-        $label ? $label : strtoupper($id),
-        number_format_i18n($total_nominations),
-        $total_nominations === 1 ? '' : 's',
-        number_format_i18n($total_wins),
-        $total_wins === 1 ? '' : 's',
-        number_format_i18n($total_ceremonies),
-        $total_ceremonies === 1 ? 'y' : 'ies'
-    );
+if ($total_nominations > 0 && $latest_ceremony > 0) {
+    // The command band carries the counts; this line says where the record stands.
+    $aat_latest_label = $ordinal($latest_ceremony) . ' Academy Awards';
+    $aat_latest_ceremony_url = $build_ceremony_url($latest_ceremony);
+    $aat_latest_link = $aat_latest_ceremony_url
+        ? '<a class="aat-entity-link aat-timeline-link" href="' . esc_url($aat_latest_ceremony_url) . '">' . esc_html($aat_latest_label) . '</a>'
+        : esc_html($aat_latest_label);
+    if ((string) $latest_year !== '') {
+        $aat_latest_link .= ' (' . esc_html($latest_year) . ')';
+    }
+    if ($total_ceremonies > 1) {
+        $summary = sprintf(
+            /* translators: 1: number of ceremonies, 2: linked ceremony label. */
+            __('Nominated at %1$s ceremonies, most recently the %2$s.', 'academy-awards-table'),
+            number_format_i18n($total_ceremonies),
+            $aat_latest_link
+        );
+    } else {
+        /* translators: %s: linked ceremony label. */
+        $summary = sprintf(__('Nominated at the %s.', 'academy-awards-table'), $aat_latest_link);
+    }
 }
 
 $aat_review_ids = array();
@@ -614,14 +543,18 @@ if ($entity !== 'title' && !empty($distinct_films)) {
 
         $related_review_thumb = get_the_post_thumbnail_url($related_review_id, 'medium_large');
         $related_film_visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($related_film_id, 'medium') : array();
+        // The card's media box is a wide still; the film's backdrop fits it, a poster is the last resort.
         $related_visual_media_html = '';
-        if (!empty($related_film_visual['poster_html'])) {
+        if (!empty($related_film_visual['backdrop_url'])) {
+            $related_visual_media_html = '<img class="aat-related-review-image" src="' . esc_url($related_film_visual['backdrop_url']) . '" alt="' . esc_attr($related_film_label) . '" loading="lazy" decoding="async" />';
+        } elseif (!empty($related_film_visual['poster_html'])) {
             $related_visual_media_html = (string) $related_film_visual['poster_html'];
         } elseif (!empty($related_film_visual['poster_url'])) {
             $related_visual_media_html = '<img class="aat-related-review-image" src="' . esc_url($related_film_visual['poster_url']) . '" alt="' . esc_attr(sprintf(__('%s poster', 'academy-awards-table'), $related_film_label)) . '" loading="lazy" decoding="async" />';
-        } elseif (!empty($related_film_visual['backdrop_url'])) {
-            $related_visual_media_html = '<img class="aat-related-review-image" src="' . esc_url($related_film_visual['backdrop_url']) . '" alt="' . esc_attr($related_film_label) . '" loading="lazy" decoding="async" />';
         }
+        // Only a written excerpt is shown; the template never builds one from the content.
+        $related_review_excerpt = trim((string) get_post_field('post_excerpt', $related_review_id));
+        $related_review_excerpt = $related_review_excerpt !== '' ? wp_trim_words(strip_tags($related_review_excerpt), 32) : '';
         $related_release_year = '';
         if (!empty($related_film_visual['release_year'])) {
             $related_release_year = (string) $related_film_visual['release_year'];
@@ -639,6 +572,7 @@ if ($entity !== 'title' && !empty($distinct_films)) {
             'film_url' => $build_entity_url($related_film_id),
             'film_year' => $related_release_year,
             'fallback_html' => $related_visual_media_html,
+            'excerpt' => $related_review_excerpt,
             'sort_date' => get_post_field('post_date', $related_review_id),
         );
     }
@@ -662,16 +596,18 @@ get_header();
         <a href="<?php echo esc_url($database_url); ?>">Oscars</a>
         <span class="aat-sep">/</span>
         <span><?php echo esc_html($type_label); ?></span>
+        <span class="aat-sep">/</span>
+        <span aria-current="page"><?php echo esc_html($profile_subject_label); ?></span>
     </nav>
 <?php $aat_sections['breadcrumbs'] = ob_get_clean(); ob_start(); ?>
 
-    <section class="<?php echo esc_attr(implode(' ', $hero_classes)); ?>"<?php if ($hero_style !== '') : ?> style="<?php echo esc_attr($hero_style); ?>"<?php endif; ?>>
+    <section class="<?php echo esc_attr(implode(' ', $hero_classes)); ?>">
         <?php if (in_array($entity, array('title', 'name', 'company'), true)) : ?>
             <?php $aat_poster_html = ($entity === 'title' && !empty($visual['poster_html'])) ? $visual['poster_html'] : ''; ?>
+            <?php $aat_poster_url = ($entity === 'title' && !empty($visual['poster_url'])) ? (string) $visual['poster_url'] : ''; ?>
             <?php $aat_person_portrait_url = ($entity === 'name' && !empty($visual['portrait_url'])) ? $visual['portrait_url'] : ''; ?>
-            <?php $aat_company_poster_html = ($entity === 'company' && !empty($visual['poster_html'])) ? $visual['poster_html'] : ''; ?>
-            <?php $aat_fallback_html = !empty($visual['fallback_html']) ? $visual['fallback_html'] : ''; ?>
-            <?php if (!empty($aat_poster_html) || !empty($aat_company_poster_html) || !empty($visual['poster_url']) || !empty($aat_person_portrait_url) || !empty($aat_fallback_html)) : ?>
+            <?php $aat_fallback_html = $entity === 'company' ? $aat_company_plate_html : (!empty($visual['fallback_html']) ? $visual['fallback_html'] : ''); ?>
+            <?php if (!empty($aat_poster_html) || $aat_poster_url !== '' || !empty($aat_person_portrait_url) || !empty($aat_fallback_html)) : ?>
                 <?php
                 $aat_visual_wrap_classes = array('aat-entity-poster-wrap');
                 if ($entity === 'name') {
@@ -689,12 +625,10 @@ get_header();
                 <div class="<?php echo esc_attr(implode(' ', $aat_visual_wrap_classes)); ?>">
                     <?php if (!empty($aat_poster_html)) : ?>
                         <?php echo $aat_poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <?php elseif (!empty($aat_company_poster_html)) : ?>
-                        <?php echo $aat_company_poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <?php elseif (!empty($visual['poster_url'])) : ?>
-                        <img class="aat-entity-poster" src="<?php echo esc_url($visual['poster_url']); ?>" alt="<?php echo esc_attr($label ? $label : strtoupper($id)); ?> poster" loading="lazy" decoding="async" />
+                    <?php elseif ($aat_poster_url !== '') : ?>
+                        <img class="aat-entity-poster" src="<?php echo esc_url($aat_poster_url); ?>" alt="<?php echo esc_attr($label ? $label : strtoupper($id)); ?> poster" loading="eager" decoding="async" fetchpriority="high" />
                     <?php elseif (!empty($aat_person_portrait_url)) : ?>
-                        <img class="aat-entity-portrait" src="<?php echo esc_url($aat_person_portrait_url); ?>" alt="<?php echo esc_attr($label ? $label : strtoupper($id)); ?> portrait" loading="lazy" decoding="async" />
+                        <img class="aat-entity-portrait" src="<?php echo esc_url($aat_person_portrait_url); ?>" alt="<?php echo esc_attr($label ? $label : strtoupper($id)); ?> portrait" loading="eager" decoding="async" fetchpriority="high" />
                     <?php elseif (!empty($aat_fallback_html)) : ?>
                         <?php echo $aat_fallback_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php endif; ?>
@@ -704,16 +638,17 @@ get_header();
 
         <div class="aat-entity-hero-copy">
             <h1 class="aat-entity-title"><?php echo esc_html($profile_subject_label); ?></h1>
-            <p class="aat-entity-subtitle"><?php echo esc_html__('Lunara Oscar Ledger profile file', 'academy-awards-table'); ?></p>
+            <p class="aat-entity-subtitle"><?php echo esc_html($type_label); ?><?php if ($aat_entity_subtitle_span !== '') : ?><span class="aat-meta-sep">&middot;</span><?php echo wp_kses_post($aat_entity_subtitle_span); ?><?php endif; ?></p>
             <?php if ($summary) : ?>
-                <p class="aat-entity-summary"><?php echo esc_html($summary); ?></p>
+                <p class="aat-entity-summary"><?php echo wp_kses_post($summary); ?></p>
             <?php endif; ?>
-            <?php if ($entity === 'title' && !empty($tmdb)) : ?>
-                <div class="aat-entity-meta-line">
-                    <?php if (!empty($visual['release_year'])) : ?><span><?php echo esc_html($visual['release_year']); ?></span><?php endif; ?>
-                    <?php if (!empty($visual['director'])) : ?><span><?php echo esc_html($visual['director']); ?></span><?php endif; ?>
-                    <?php if (!empty($visual['runtime'])) : ?><span><?php echo esc_html($visual['runtime']); ?> min</span><?php endif; ?>
-                </div>
+            <?php if ($entity === 'title' && (!empty($visual['director']) || !empty($visual['runtime']) || !empty($visual['overview']))) : ?>
+                <?php if (!empty($visual['director']) || !empty($visual['runtime'])) : ?>
+                    <div class="aat-entity-meta-line">
+                        <?php if (!empty($visual['director'])) : ?><span><?php echo esc_html(sprintf(__('Directed by %s', 'academy-awards-table'), $visual['director'])); ?></span><?php endif; ?>
+                        <?php if (!empty($visual['runtime'])) : ?><span><?php echo esc_html($visual['runtime']); ?> min</span><?php endif; ?>
+                    </div>
+                <?php endif; ?>
                 <?php if (!empty($visual['overview'])) : ?><p class="aat-entity-overview"><?php echo esc_html($visual['overview']); ?></p><?php endif; ?>
             <?php elseif ($entity === 'name' && !empty($tmdb)) : ?>
                 <?php $person_meta_bits = array_values(array_filter((array) ($visual['meta_bits'] ?? array()), 'strlen')); ?>
@@ -725,26 +660,11 @@ get_header();
                     </div>
                 <?php endif; ?>
                 <?php if (!empty($visual['biography'])) : ?><p class="aat-entity-overview"><?php echo esc_html(wp_trim_words((string) $visual['biography'], 55)); ?></p><?php endif; ?>
-            <?php elseif ($entity === 'company') : ?>
-                <?php
-                $company_meta_bits = array();
-                if ($entity_anchor_title !== '') {
-                    $company_meta_bits[] = sprintf(__('Representative title: %s', 'academy-awards-table'), $entity_anchor_title);
-                }
-                if (!empty($visual['release_year'])) {
-                    $company_meta_bits[] = (string) $visual['release_year'];
-                }
-                ?>
-                <?php if (!empty($company_meta_bits)) : ?>
-                    <div class="aat-entity-meta-line">
-                        <?php foreach ($company_meta_bits as $company_meta_bit) : ?>
-                            <span><?php echo esc_html($company_meta_bit); ?></span>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-                <?php if ($entity_anchor_title !== '') : ?>
-                    <p class="aat-entity-overview"><?php echo esc_html(sprintf(__('%1$s is anchored visually through %2$s so company profiles can sit inside the same poster-led Oscars world as titles and people.', 'academy-awards-table'), $label ? $label : strtoupper($id), $entity_anchor_title)); ?></p>
-                <?php endif; ?>
+            <?php elseif ($entity === 'company' && $entity_anchor_title !== '') : ?>
+                <?php $company_anchor_url = $company_film_id !== '' ? $build_entity_url($company_film_id) : ''; ?>
+                <div class="aat-entity-meta-line">
+                    <span><?php echo esc_html(intval($entity_anchor_stats['wins'] ?? 0) > 0 ? __('Most awarded film:', 'academy-awards-table') : __('Most nominated film:', 'academy-awards-table')); ?> <?php if ($company_anchor_url) : ?><a class="aat-entity-link" href="<?php echo esc_url($company_anchor_url); ?>"><?php echo esc_html($entity_anchor_title); ?></a><?php else : ?><?php echo esc_html($entity_anchor_title); ?><?php endif; ?><?php if (!empty($visual['release_year'])) : ?> (<?php echo esc_html($visual['release_year']); ?>)<?php endif; ?></span>
+                </div>
             <?php endif; ?>
 
             <div class="aat-profile-command-band" aria-label="<?php esc_attr_e('Oscar profile summary', 'academy-awards-table'); ?>">
@@ -767,48 +687,100 @@ get_header();
             </div>
 
             <div class="aat-entity-actions">
-                <a class="aat-btn aat-btn-primary" href="#oscar-history"><?php echo esc_html__('Oscar History', 'academy-awards-table'); ?></a>
-                <?php if (!empty($category_rollups) || !empty($ceremony_rollups) || !empty($aat_editorial_refs)) : ?>
-                    <a class="aat-btn aat-btn-secondary" href="#ledger-crossroads"><?php echo esc_html__('Ledger Crossroads', 'academy-awards-table'); ?></a>
-                <?php endif; ?>
+                <a class="aat-btn aat-btn-primary" href="#oscar-history"><?php echo esc_html__('Oscar history', 'academy-awards-table'); ?></a>
                 <?php if ($entity !== 'title' && !empty($distinct_films)) : ?>
-                    <a class="aat-btn aat-btn-secondary" href="#nominated-films"><?php echo esc_html__('Nominated Films', 'academy-awards-table'); ?></a>
+                    <a class="aat-btn aat-btn-secondary" href="#nominated-films"><?php echo esc_html__('Nominated films', 'academy-awards-table'); ?></a>
                 <?php endif; ?>
                 <?php if (!empty($imdb_url)) : ?>
-                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($imdb_url); ?>" target="_blank" rel="noopener noreferrer">IMDb Reference</a>
+                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($imdb_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('IMDb page', 'academy-awards-table'); ?></a>
                 <?php endif; ?>
-                <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($database_url); ?>"><?php echo esc_html__('Return to Ledger', 'academy-awards-table'); ?></a>
             </div>
         </div>
     </section>
 <?php $aat_sections['hero'] = ob_get_clean(); ob_start(); ?>
 
     <?php if (!empty($latest_result)) : ?>
-        <?php $latest_status_classes = array('aat-entity-status-banner'); ?>
-        <?php if (!empty($latest_result['wins'])) { $latest_status_classes[] = 'is-winner'; } ?>
-        <?php if ($latest_result_style !== '') { $latest_status_classes[] = 'aat-card-has-backdrop'; } ?>
-        <section class="<?php echo esc_attr(implode(' ', $latest_status_classes)); ?>"<?php if ($latest_result_style !== '') : ?> style="<?php echo esc_attr($latest_result_style); ?>"<?php endif; ?>>
+        <?php
+        $latest_status_classes = array('aat-entity-status-banner');
+        if (!empty($latest_result['wins'])) { $latest_status_classes[] = 'is-winner'; }
+        $latest_ceremony_url = $build_ceremony_url(intval($latest_result['ceremony'] ?? 0));
+        $aat_latest_wins = intval($latest_result['wins'] ?? 0);
+        $aat_latest_nominations = intval($latest_result['nominations'] ?? 0);
+        // The films behind the latest result, for people and companies; the first one carries the poster.
+        $aat_latest_films = array();
+        if ($entity !== 'title' && !empty($timeline[$latest_ceremony]['rows'])) {
+            foreach ($timeline[$latest_ceremony]['rows'] as $aat_latest_row) {
+                $aat_latest_row_id = $get_primary_pipe_value($aat_latest_row['film_id'] ?? '');
+                if ($aat_latest_row_id === '' || isset($aat_latest_films[$aat_latest_row_id])) { continue; }
+                $aat_latest_row_label = $get_title_label($aat_latest_row_id);
+                if ($aat_latest_row_label === '') { $aat_latest_row_label = $get_primary_pipe_value($aat_latest_row['film'] ?? ''); }
+                if ($aat_latest_row_label === '') { continue; }
+                $aat_latest_films[$aat_latest_row_id] = $aat_latest_row_label;
+            }
+        }
+        $aat_latest_poster_html = '';
+        $aat_latest_first_id = '';
+        if (!empty($aat_latest_films)) {
+            reset($aat_latest_films);
+            $aat_latest_first_id = (string) key($aat_latest_films);
+        }
+        if ($aat_latest_first_id !== '' && method_exists($aat, 'get_poster_img_html_for_title')) {
+            $aat_latest_poster_html = (string) $aat->get_poster_img_html_for_title($aat_latest_first_id, 'medium', array('class' => 'aat-entity-status-poster', 'sizes' => '96px'));
+        }
+        if ($aat_latest_poster_html !== '') { $latest_status_classes[] = 'has-status-media'; }
+        ?>
+        <section class="<?php echo esc_attr(implode(' ', $latest_status_classes)); ?>" aria-label="<?php echo esc_attr__('Latest Oscar result', 'academy-awards-table'); ?>">
+            <?php if ($aat_latest_poster_html !== '') : ?>
+                <?php $aat_latest_poster_url = $build_entity_url($aat_latest_first_id); ?>
+                <div class="aat-entity-status-media">
+                    <?php if ($aat_latest_poster_url) : ?>
+                        <a href="<?php echo esc_url($aat_latest_poster_url); ?>" aria-label="<?php echo esc_attr(reset($aat_latest_films)); ?>"><?php echo $aat_latest_poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+                    <?php else : ?>
+                        <?php echo $aat_latest_poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
             <div class="aat-entity-status-copy">
-                <?php $latest_ceremony_url = $build_ceremony_url(intval($latest_result['ceremony'] ?? 0)); ?>
-                <p class="aat-entity-status-kicker"><?php echo esc_html__('Latest Oscar Result', 'academy-awards-table'); ?></p>
+                <p class="aat-entity-status-kicker"><?php echo esc_html__('Latest result', 'academy-awards-table'); ?></p>
                 <h2 class="aat-entity-status-title">
                     <?php
-                    if (!empty($latest_result['wins'])) {
-                        echo esc_html(sprintf(__('%1$s win%2$s at the %3$s ceremony', 'academy-awards-table'), number_format_i18n(intval($latest_result['wins'])), intval($latest_result['wins']) === 1 ? '' : 's', $ordinal(intval($latest_result['ceremony']))));
+                    if ($aat_latest_wins > 0 && $aat_latest_wins < $aat_latest_nominations) {
+                        echo esc_html(sprintf(
+                            /* translators: 1: wins phrase, 2: nominations phrase. */
+                            __('%1$s from %2$s', 'academy-awards-table'),
+                            sprintf(_n('%s win', '%s wins', $aat_latest_wins, 'academy-awards-table'), number_format_i18n($aat_latest_wins)),
+                            sprintf(_n('%s nomination', '%s nominations', $aat_latest_nominations, 'academy-awards-table'), number_format_i18n($aat_latest_nominations))
+                        ));
+                    } elseif ($aat_latest_wins > 0) {
+                        echo esc_html(sprintf(_n('%s win', '%s wins', $aat_latest_wins, 'academy-awards-table'), number_format_i18n($aat_latest_wins)));
                     } else {
-                        echo esc_html(sprintf(__('%1$s nomination%2$s at the %3$s ceremony', 'academy-awards-table'), number_format_i18n(intval($latest_result['nominations'])), intval($latest_result['nominations']) === 1 ? '' : 's', $ordinal(intval($latest_result['ceremony']))));
+                        echo esc_html(sprintf(_n('%s nomination', '%s nominations', $aat_latest_nominations, 'academy-awards-table'), number_format_i18n($aat_latest_nominations)));
                     }
                     ?>
                 </h2>
                 <p class="aat-entity-status-summary">
                     <?php
-                    $latest_appearance_label = (string) ($latest_result['year'] ?: $ordinal(intval($latest_result['ceremony'])) . ' Academy Awards');
-                    if ($latest_ceremony_url) {
-                        $latest_appearance_label = '<a class="aat-entity-link aat-timeline-link" href="' . esc_url($latest_ceremony_url) . '">' . esc_html($latest_appearance_label) . '</a>';
-                    } else {
-                        $latest_appearance_label = esc_html($latest_appearance_label);
+                    $aat_latest_where = $ordinal(intval($latest_result['ceremony'])) . ' Academy Awards';
+                    $aat_latest_where = $latest_ceremony_url
+                        ? '<a class="aat-entity-link aat-timeline-link" href="' . esc_url($latest_ceremony_url) . '">' . esc_html($aat_latest_where) . '</a>'
+                        : esc_html($aat_latest_where);
+                    if ((string) ($latest_result['year'] ?? '') !== '') {
+                        $aat_latest_where .= ' (' . esc_html($latest_result['year']) . ')';
                     }
-                    echo wp_kses_post(sprintf(__('Most recent appearance: %1$s. %2$s nomination%3$s and %4$s win%5$s recorded for %6$s.', 'academy-awards-table'), $latest_appearance_label, number_format_i18n(intval($latest_result['nominations'])), intval($latest_result['nominations']) === 1 ? '' : 's', number_format_i18n(intval($latest_result['wins'])), intval($latest_result['wins']) === 1 ? '' : 's', esc_html($label ? $label : strtoupper($id))));
+                    if (!empty($aat_latest_films)) {
+                        $aat_latest_film_links = array();
+                        foreach ($aat_latest_films as $aat_latest_film_id => $aat_latest_film_label) {
+                            $aat_latest_film_url = $build_entity_url((string) $aat_latest_film_id);
+                            $aat_latest_film_links[] = $aat_latest_film_url
+                                ? '<a class="aat-entity-link" href="' . esc_url($aat_latest_film_url) . '">' . esc_html($aat_latest_film_label) . '</a>'
+                                : esc_html($aat_latest_film_label);
+                        }
+                        /* translators: 1: linked ceremony label, 2: linked film titles. */
+                        echo wp_kses_post(sprintf(__('At the %1$s, for %2$s.', 'academy-awards-table'), $aat_latest_where, implode(', ', $aat_latest_film_links)));
+                    } else {
+                        /* translators: %s: linked ceremony label. */
+                        echo wp_kses_post(sprintf(__('At the %s.', 'academy-awards-table'), $aat_latest_where));
+                    }
                     ?>
                 </p>
             </div>
@@ -852,124 +824,6 @@ get_header();
         <?php endif; ?>
     </div>
 <?php $aat_sections['stats-bar'] = ob_get_clean(); ob_start(); ?>
-<?php
-// 2.8.8 Ledger Motion: the Nomination Ring (films) and the Career Arc (people).
-if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
-    echo AAT_Ledger_Motion::render($entity, $rows, array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderer escapes every value.
-        'label' => $profile_subject_label,
-        'image_url' => ($entity === 'title' && !empty($visual['poster_url'])) ? (string) $visual['poster_url'] : '',
-        'format_category' => $format_category,
-        // 2.8.9: each spoke opens its race on the ceremony's full ballot.
-        'race_url' => function($ceremony, $category) use ($build_ceremony_url) {
-            $url = $build_ceremony_url($ceremony);
-            return $url !== '' ? add_query_arg('ledger', 'full', $url) . '#ceremony-category-' . sanitize_title((string) $category) : '';
-        },
-    ));
-}
-?>
-<?php $aat_sections['ledger-motion'] = ob_get_clean(); ob_start(); ?>
-
-    <?php if (!empty($category_rollups) || !empty($ceremony_rollups) || !empty($aat_editorial_refs)) : ?>
-        <section id="ledger-crossroads" class="aat-entity-section aat-entity-crossroads" aria-label="<?php echo esc_attr__('Ledger Crossroads', 'academy-awards-table'); ?>">
-            <div class="aat-section-head">
-                <h2 class="aat-section-title">Ledger Crossroads</h2>
-                <p class="aat-section-description">Fast links from this <?php echo esc_html(strtolower($type_label)); ?> profile into the categories, ceremonies, and editorial notes that surround it.</p>
-            </div>
-
-            <div class="aat-crossroads-grid">
-                <?php if (!empty($category_rollups)) : ?>
-                    <article class="aat-crossroads-card">
-                        <div class="aat-crossroads-kicker">Category Trail</div>
-                        <h3>Where this profile competes</h3>
-                        <div class="aat-crossroads-list">
-                            <?php foreach (array_slice($category_rollups, 0, 8) as $category_rollup) : ?>
-                                <?php
-                                $rollup_nominations = intval($category_rollup['nominations'] ?? 0);
-                                $rollup_wins = intval($category_rollup['wins'] ?? 0);
-                                $rollup_meta = sprintf(_n('%s nomination', '%s nominations', $rollup_nominations, 'academy-awards-table'), number_format_i18n($rollup_nominations));
-                                if ($rollup_wins > 0) {
-                                    $rollup_meta .= ' / ' . sprintf(_n('%s win', '%s wins', $rollup_wins, 'academy-awards-table'), number_format_i18n($rollup_wins));
-                                }
-                                $rollup_url = (string) ($category_rollup['url'] ?? '');
-                                ?>
-                                <?php if ($rollup_url) : ?>
-                                    <a class="aat-crossroad-pill" href="<?php echo esc_url($rollup_url); ?>">
-                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($category_rollup['label'] ?? ''); ?></span>
-                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
-                                    </a>
-                                <?php else : ?>
-                                    <span class="aat-crossroad-pill">
-                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($category_rollup['label'] ?? ''); ?></span>
-                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
-                                    </span>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </article>
-                <?php endif; ?>
-
-                <?php if (!empty($ceremony_rollups)) : ?>
-                    <article class="aat-crossroads-card">
-                        <div class="aat-crossroads-kicker">Ceremony Trail</div>
-                        <h3>Recent ceremony touchpoints</h3>
-                        <div class="aat-crossroads-list">
-                            <?php foreach (array_slice($ceremony_rollups, 0, 8) as $ceremony_rollup) : ?>
-                                <?php
-                                $rollup_ceremony = intval($ceremony_rollup['ceremony'] ?? 0);
-                                $rollup_nominations = intval($ceremony_rollup['nominations'] ?? 0);
-                                $rollup_wins = intval($ceremony_rollup['wins'] ?? 0);
-                                $rollup_meta = sprintf(_n('%s nomination', '%s nominations', $rollup_nominations, 'academy-awards-table'), number_format_i18n($rollup_nominations));
-                                if ($rollup_wins > 0) {
-                                    $rollup_meta .= ' / ' . sprintf(_n('%s win', '%s wins', $rollup_wins, 'academy-awards-table'), number_format_i18n($rollup_wins));
-                                }
-                                $rollup_title = trim($ordinal($rollup_ceremony) . ' Ceremony');
-                                $rollup_year = trim((string) ($ceremony_rollup['year'] ?? ''));
-                                if ($rollup_year !== '') {
-                                    $rollup_title .= ' (' . $rollup_year . ')';
-                                }
-                                $rollup_url = (string) ($ceremony_rollup['url'] ?? '');
-                                ?>
-                                <?php if ($rollup_url) : ?>
-                                    <a class="aat-crossroad-pill" href="<?php echo esc_url($rollup_url); ?>">
-                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($rollup_title); ?></span>
-                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
-                                    </a>
-                                <?php else : ?>
-                                    <span class="aat-crossroad-pill">
-                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($rollup_title); ?></span>
-                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
-                                    </span>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </article>
-                <?php endif; ?>
-
-                <?php if (!empty($aat_editorial_refs)) : ?>
-                    <article class="aat-crossroads-card aat-crossroads-card-editorial">
-                        <div class="aat-crossroads-kicker">Oscar Picks and Facts</div>
-                        <h3>Editorial links</h3>
-                        <div class="aat-editorial-ref-list">
-                            <?php foreach ($aat_editorial_refs as $editorial_ref) : ?>
-                                <?php if (empty($editorial_ref['url']) || empty($editorial_ref['title'])) { continue; } ?>
-                                <a class="aat-editorial-ref-card" href="<?php echo esc_url($editorial_ref['url']); ?>">
-                                    <span class="aat-editorial-ref-type"><?php echo esc_html($editorial_ref['type_label'] ?? ''); ?></span>
-                                    <strong><?php echo esc_html($editorial_ref['title']); ?></strong>
-                                    <?php if (!empty($editorial_ref['excerpt'])) : ?>
-                                        <span class="aat-editorial-ref-excerpt"><?php echo esc_html($editorial_ref['excerpt']); ?></span>
-                                    <?php endif; ?>
-                                    <?php if (!empty($editorial_ref['meta_label'])) : ?>
-                                        <span class="aat-editorial-ref-meta"><?php echo esc_html($editorial_ref['meta_label']); ?></span>
-                                    <?php endif; ?>
-                                </a>
-                            <?php endforeach; ?>
-                        </div>
-                    </article>
-                <?php endif; ?>
-            </div>
-        </section>
-    <?php endif; ?>
-<?php $aat_sections['crossroads'] = ob_get_clean(); ob_start(); ?>
 
     <?php if ($entity === 'title' && !empty($aat_review_ids)) : ?>
         <?php
@@ -977,8 +831,17 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
         $aat_review_url = get_permalink($aat_primary_review_id);
         $aat_review_title = get_the_title($aat_primary_review_id);
         $aat_review_thumb = get_the_post_thumbnail_url($aat_primary_review_id, 'medium');
+        // Only a written excerpt is shown; the template never builds one from the content.
+        $aat_review_excerpt = trim((string) get_post_field('post_excerpt', $aat_primary_review_id));
+        $aat_review_excerpt = $aat_review_excerpt !== '' ? wp_trim_words(strip_tags($aat_review_excerpt), 32) : '';
+        // The review's image is shown only when it is not the identity poster already on the page.
+        $aat_review_thumb_id = function_exists('get_post_thumbnail_id') ? (int) get_post_thumbnail_id($aat_primary_review_id) : 0;
+        $aat_title_poster_id = method_exists($aat, 'get_poster_attachment_id_for_title') ? (int) $aat->get_poster_attachment_id_for_title($id) : 0;
+        if ($aat_review_thumb_id > 0 && $aat_review_thumb_id === $aat_title_poster_id) {
+            $aat_review_thumb = '';
+        }
         ?>
-        <section class="aat-lunara-review-module" aria-label="Lunara Film review">
+        <section class="aat-lunara-review-module<?php echo !empty($aat_review_thumb) ? ' has-review-media' : ''; ?>" aria-label="Lunara Film review">
             <div class="aat-lunara-review-inner">
                 <?php if (!empty($aat_review_thumb)) : ?>
                     <a class="aat-lunara-review-poster" href="<?php echo esc_url($aat_review_url); ?>">
@@ -986,12 +849,14 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
                     </a>
                 <?php endif; ?>
                 <div class="aat-lunara-review-content">
-                    <div class="aat-lunara-review-kicker">LUNARA FILM REVIEW</div>
+                    <div class="aat-lunara-review-kicker"><?php echo esc_html__('Lunara review', 'academy-awards-table'); ?></div>
                     <h2 class="aat-lunara-review-title"><a href="<?php echo esc_url($aat_review_url); ?>"><?php echo esc_html($aat_review_title); ?></a></h2>
-                    <p class="aat-lunara-review-excerpt"><?php echo esc_html__('Open the review and enter the full argument.', 'academy-awards-table'); ?></p>
+                    <?php if ($aat_review_excerpt !== '') : ?>
+                        <p class="aat-lunara-review-excerpt"><?php echo esc_html($aat_review_excerpt); ?></p>
+                    <?php endif; ?>
                     <div class="aat-lunara-review-actions">
-                        <a class="aat-btn aat-btn-primary" href="<?php echo esc_url($aat_review_url); ?>">Read the Review</a>
-                        <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url(home_url('/reviews/')); ?>">Review Archive</a>
+                        <a class="aat-btn aat-btn-primary" href="<?php echo esc_url($aat_review_url); ?>"><?php echo esc_html__('Read the review', 'academy-awards-table'); ?></a>
+                        <a class="aat-hub-inline-link" href="<?php echo esc_url(home_url('/reviews/')); ?>"><?php echo esc_html__('All Lunara reviews', 'academy-awards-table'); ?></a>
                     </div>
                     <?php if (count($aat_review_ids) > 1) : ?>
                         <div class="aat-lunara-review-more">
@@ -1015,12 +880,11 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
         <section id="oscar-history" class="aat-entity-section aat-entity-timeline">
         <div class="aat-section-head">
             <h2 class="aat-section-title">Oscar History</h2>
-            <p class="aat-section-description">Every ceremony touchpoint for this <?php echo esc_html(strtolower($type_label)); ?>, tracked through the Lunara Oscar ledger.</p>
+            <p class="aat-section-description"><?php echo esc_html(sprintf(__('Every nomination and win on record for %s, by ceremony.', 'academy-awards-table'), $profile_subject_label)); ?></p>
         </div>
 
         <?php if (empty($rows)) : ?>
             <div class="aat-no-results">
-                <div class="aat-no-results-icon">Awards</div>
                 <h3>No records found</h3>
                 <p>This profile has not yet been matched to a verified Oscar record in the ledger.</p>
             </div>
@@ -1028,46 +892,18 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
             <div class="aat-timeline-list">
                 <?php foreach ($timeline as $cer => $group) : ?>
                     <?php $ceremony_url = $build_ceremony_url($cer); ?>
-                    <?php
-                    $timeline_visual = array();
-                    if ($entity === 'title') {
-                        $timeline_visual = $visual;
-                    } else {
-                        foreach ($group['rows'] as $group_row) {
-                            $group_title_id = $get_primary_pipe_value($group_row['film_id'] ?? '');
-                            if ($group_title_id !== '') {
-                                $timeline_visual = $get_title_visual($group_title_id, 'medium_large');
-                                if (!empty($timeline_visual)) {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    $timeline_style = $get_visual_backdrop_style($timeline_visual, array(
-                        'prefer_poster' => true,
-                        'position' => 'center top',
-                    ));
-                    $timeline_classes = array('aat-timeline-card');
-                    if ($timeline_style !== '') {
-                        $timeline_classes[] = 'aat-card-has-backdrop';
-                    }
-                    ?>
-                    <section class="<?php echo esc_attr(implode(' ', $timeline_classes)); ?>"<?php if ($timeline_style !== '') : ?> style="<?php echo esc_attr($timeline_style); ?>"<?php endif; ?>>
+                    <section class="aat-timeline-card" aria-labelledby="aat-timeline-<?php echo (int) $cer; ?>">
                         <div class="aat-timeline-meta">
-                            <div class="aat-timeline-ceremony">
+                            <h3 class="aat-timeline-ceremony" id="aat-timeline-<?php echo (int) $cer; ?>">
                                 <?php if ($ceremony_url) : ?>
-                                    <a class="aat-entity-link aat-timeline-link" href="<?php echo esc_url($ceremony_url); ?>"><?php echo esc_html($ordinal($cer)); ?> Ceremony</a>
+                                    <a class="aat-entity-link aat-timeline-link" href="<?php echo esc_url($ceremony_url); ?>"><?php echo esc_html($ordinal($cer)); ?> Academy Awards</a>
                                 <?php else : ?>
-                                    <?php echo esc_html($ordinal($cer)); ?> Ceremony
+                                    <?php echo esc_html($ordinal($cer)); ?> Academy Awards
                                 <?php endif; ?>
-                            </div>
-                            <div class="aat-timeline-year">
-                                <?php if ($ceremony_url) : ?>
-                                    <a class="aat-entity-link aat-timeline-link" href="<?php echo esc_url($ceremony_url); ?>"><?php echo esc_html($group['year']); ?></a>
-                                <?php else : ?>
-                                    <?php echo esc_html($group['year']); ?>
-                                <?php endif; ?>
-                            </div>
+                            </h3>
+                            <?php if ((string) $group['year'] !== '') : ?>
+                                <div class="aat-timeline-year"><?php echo esc_html($group['year']); ?></div>
+                            <?php endif; ?>
                         </div>
                         <div class="aat-timeline-body">
                             <?php foreach ($group['rows'] as $r) :
@@ -1076,20 +912,22 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
                                 $cat_label = $format_category($cat, $cer);
                                 $is_winner = (!empty($r['winner']) && (int) $r['winner'] === 1);
                                 $row_title_id = $entity === 'title' ? $id : $get_primary_pipe_value($r['film_id'] ?? '');
-                                $row_visual = ($entity === 'title') ? $visual : $get_title_visual($row_title_id, 'medium');
-                                $history_style = $get_visual_backdrop_style($row_visual, array(
-                                    'prefer_poster' => true,
-                                    'position' => 'center top',
-                                ));
+                                // People and companies see the film beside each credit; a title page is already the film.
+                                $row_poster_html = ($entity !== 'title' && $row_title_id !== '' && method_exists($aat, 'get_poster_img_html_for_title'))
+                                    ? (string) $aat->get_poster_img_html_for_title($row_title_id, 'medium', array('class' => 'aat-history-poster', 'sizes' => '56px'))
+                                    : '';
                                 $history_classes = array('aat-history-item');
                                 if ($is_winner) {
                                     $history_classes[] = 'is-winner';
                                 }
-                                if ($history_style !== '') {
-                                    $history_classes[] = 'aat-card-has-backdrop';
+                                if ($row_poster_html !== '') {
+                                    $history_classes[] = 'has-history-media';
                                 }
                             ?>
-                                <article class="<?php echo esc_attr(implode(' ', $history_classes)); ?>"<?php if ($history_style !== '') : ?> style="<?php echo esc_attr($history_style); ?>"<?php endif; ?>>
+                                <article class="<?php echo esc_attr(implode(' ', $history_classes)); ?>">
+                                    <?php if ($row_poster_html !== '') : ?>
+                                        <div class="aat-history-media"><?php echo $row_poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+                                    <?php endif; ?>
                                     <div class="aat-history-main">
                                         <div class="aat-history-category">
                                             <?php if ($cat_url) : ?>
@@ -1157,18 +995,29 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
             <div class="aat-section-head">
                 <h2 class="aat-section-title">Nominated Films</h2>
                 <p class="aat-section-description">
-                    <?php if ($filmography_total > $filmography_fast_limit && !$filmography_full_requested) : ?>
-                        <?php echo esc_html(sprintf(__('Poster-first passage through the films that shape this Oscar trail. Fast view shows the strongest %1$s of %2$s films.', 'academy-awards-table'), number_format_i18n(count($filmography_render_ids)), number_format_i18n($filmography_total))); ?>
+                    <?php if ($filmography_hidden_count > 0) : ?>
+                        <?php echo esc_html(sprintf(
+                            /* translators: 1: profile name, 2: films shown, 3: films in total. */
+                            __('Films with nominations credited to %1$s, most awarded first. Showing %2$s of %3$s.', 'academy-awards-table'),
+                            $profile_subject_label,
+                            number_format_i18n(count($filmography_render_ids)),
+                            number_format_i18n($filmography_total)
+                        )); ?>
                     <?php else : ?>
-                        <?php echo esc_html__('Poster-first passage through the films that shape this Oscar trail.', 'academy-awards-table'); ?>
+                        <?php echo esc_html(sprintf(
+                            /* translators: 1: profile name, 2: number of films. */
+                            _n('%2$s film with nominations credited to %1$s.', '%2$s films with nominations credited to %1$s, most awarded first.', $filmography_total, 'academy-awards-table'),
+                            $profile_subject_label,
+                            number_format_i18n($filmography_total)
+                        )); ?>
                     <?php endif; ?>
                 </p>
                 <?php if ($filmography_total > $filmography_fast_limit) : ?>
                     <p class="aat-entity-mode-link">
                         <?php if ($filmography_full_requested) : ?>
-                            <a class="aat-winner-circle-action is-kind-film-history" href="<?php echo esc_url($filmography_fast_url); ?>"><?php echo esc_html__('Use Fast Film View', 'academy-awards-table'); ?></a>
+                            <a class="aat-winner-circle-action is-kind-film-history" href="<?php echo esc_url($filmography_fast_url); ?>"><?php echo esc_html(sprintf(__('Show the first %s films', 'academy-awards-table'), number_format_i18n($filmography_fast_limit))); ?></a>
                         <?php else : ?>
-                            <a class="aat-winner-circle-action is-kind-film-history" href="<?php echo esc_url($filmography_full_url); ?>"><?php echo esc_html__('Open Full Filmography', 'academy-awards-table'); ?></a>
+                            <a class="aat-winner-circle-action is-kind-film-history" href="<?php echo esc_url($filmography_full_url); ?>"><?php echo esc_html(sprintf(__('Show all %s films', 'academy-awards-table'), number_format_i18n($filmography_total))); ?></a>
                         <?php endif; ?>
                     </p>
                 <?php endif; ?>
@@ -1187,9 +1036,10 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
                     $poster_html = $aat->get_poster_img_html_for_title($fid, 'medium', array('class' => 'aat-filmography-poster', 'sizes' => '(max-width: 720px) 132px, 160px'));
                     $tmdb_item = method_exists($aat, 'get_tmdb_data_for_imdb_id') ? $aat->get_tmdb_data_for_imdb_id($fid, false) : array();
                     $film_url = $build_entity_url($fid);
+                    $film_year = !empty($tmdb_item['release_date']) ? substr((string) $tmdb_item['release_date'], 0, 4) : '';
                 ?>
                     <article class="aat-filmography-card">
-                        <a class="aat-filmography-link" href="<?php echo esc_url($film_url ? $film_url : $database_url); ?>">
+                        <a class="aat-filmography-link" href="<?php echo esc_url($film_url ? $film_url : $database_url); ?>" aria-label="<?php echo esc_attr($film_year !== '' ? sprintf('%1$s (%2$s)', $film_label, $film_year) : $film_label); ?>">
                             <div class="aat-filmography-poster-wrap">
                                 <?php if ($poster_html) : ?>
                                     <?php echo $poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -1204,8 +1054,9 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </div>
-                            <h3 class="aat-filmography-title"><?php echo esc_html($film_label); ?></h3>
-                            <?php if (!empty($tmdb_item['release_date'])) : ?><p class="aat-filmography-meta"><?php echo esc_html(substr($tmdb_item['release_date'], 0, 4)); ?></p><?php endif; ?>
+                        </a>
+                        <h3 class="aat-filmography-title"><a href="<?php echo esc_url($film_url ? $film_url : $database_url); ?>"><?php echo esc_html($film_label); ?></a></h3>
+                        <?php if ($film_year !== '') : ?><p class="aat-filmography-meta"><?php echo esc_html($film_year); ?></p><?php endif; ?>
                             <?php if ($film_nominations > 0) : ?>
                                 <div class="aat-filmography-trail" aria-label="<?php echo esc_attr(sprintf(__('%s Oscar trail summary', 'academy-awards-table'), $film_label)); ?>">
                                     <span><?php echo esc_html(sprintf(_n('%s nomination', '%s nominations', $film_nominations, 'academy-awards-table'), number_format_i18n($film_nominations))); ?></span>
@@ -1220,14 +1071,13 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
-                        </a>
                     </article>
                 <?php endforeach; ?>
             </div>
             <?php if ($filmography_hidden_count > 0) : ?>
                 <div class="aat-entity-compact-notice">
-                    <span><?php echo esc_html(sprintf(_n('%s additional film is summarized for speed.', '%s additional films are summarized for speed.', $filmography_hidden_count, 'academy-awards-table'), number_format_i18n($filmography_hidden_count))); ?></span>
-                    <a class="aat-winner-circle-action is-kind-film-history" href="<?php echo esc_url($filmography_full_url); ?>"><?php echo esc_html__('Open Full Filmography', 'academy-awards-table'); ?></a>
+                    <span><?php echo esc_html(sprintf(_n('%s more film is in the full list.', '%s more films are in the full list.', $filmography_hidden_count, 'academy-awards-table'), number_format_i18n($filmography_hidden_count))); ?></span>
+                    <a class="aat-winner-circle-action is-kind-film-history" href="<?php echo esc_url($filmography_full_url); ?>"><?php echo esc_html(sprintf(__('Show all %s films', 'academy-awards-table'), number_format_i18n($filmography_total))); ?></a>
                 </div>
             <?php endif; ?>
         </section>
@@ -1238,7 +1088,7 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
         <section id="on-lunara" class="aat-entity-section aat-related-reviews-section <?php echo esc_attr($aat_related_review_treatment_class); ?>">
             <div class="aat-section-head">
                 <h2 class="aat-section-title">On Lunara</h2>
-                <p class="aat-section-description">Criticism from the Lunara archive that keeps this Oscar history tied to the writing.</p>
+                <p class="aat-section-description"><?php echo esc_html__('Lunara reviews of films on this profile.', 'academy-awards-table'); ?></p>
             </div>
             <div class="aat-related-reviews-grid <?php echo esc_attr($aat_related_review_treatment_class); ?>">
                 <?php foreach ($aat_related_reviews as $related_review) : ?>
@@ -1257,7 +1107,7 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
                         </a>
                         <?php endif; ?>
                         <div class="aat-related-review-body">
-                            <div class="aat-related-review-kicker">LUNARA FILM REVIEW</div>
+                            <div class="aat-related-review-kicker"><?php echo esc_html__('Lunara review', 'academy-awards-table'); ?></div>
                             <h3 class="aat-related-review-title"><a href="<?php echo esc_url($related_review['review_url']); ?>"><?php echo esc_html($related_review['review_title']); ?></a></h3>
                             <p class="aat-related-review-meta">
                                 <?php if (!empty($related_review['film_url'])) : ?>
@@ -1269,12 +1119,11 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
                                     <span class="aat-sep"> &middot; </span><span><?php echo esc_html($related_review['film_year']); ?></span>
                                 <?php endif; ?>
                             </p>
-                            <p class="aat-related-review-excerpt"><?php echo esc_html__('Open the review and enter the full argument.', 'academy-awards-table'); ?></p>
+                            <?php if (!empty($related_review['excerpt'])) : ?>
+                                <p class="aat-related-review-excerpt"><?php echo esc_html($related_review['excerpt']); ?></p>
+                            <?php endif; ?>
                             <div class="aat-related-review-actions">
-                                <a class="aat-btn aat-btn-primary" href="<?php echo esc_url($related_review['review_url']); ?>">Read Review</a>
-                                <?php if (!empty($related_review['film_url'])) : ?>
-                                    <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($related_review['film_url']); ?>"><?php echo esc_html__('Title Profile', 'academy-awards-table'); ?></a>
-                                <?php endif; ?>
+                                <a class="aat-btn aat-btn-secondary" href="<?php echo esc_url($related_review['review_url']); ?>"><?php echo esc_html__('Read the review', 'academy-awards-table'); ?></a>
                             </div>
                         </div>
                     </article>
@@ -1283,6 +1132,121 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
         </section>
     <?php endif; ?>
 <?php $aat_sections['related-reviews'] = ob_get_clean(); ob_start(); ?>
+<?php
+// 2.8.8 Ledger Motion: the Nomination Ring (films) and the Career Arc (people).
+if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
+    echo AAT_Ledger_Motion::render($entity, $rows, array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderer escapes every value.
+        'label' => $profile_subject_label,
+        'image_url' => ($entity === 'title' && !empty($visual['poster_url'])) ? (string) $visual['poster_url'] : '',
+        'format_category' => $format_category,
+        // 2.8.9: each spoke opens its race on the ceremony's full ballot.
+        'race_url' => function($ceremony, $category) use ($build_ceremony_url) {
+            $url = $build_ceremony_url($ceremony);
+            return $url !== '' ? add_query_arg('ledger', 'full', $url) . '#ceremony-category-' . sanitize_title((string) $category) : '';
+        },
+    ));
+}
+?>
+<?php $aat_sections['ledger-motion'] = ob_get_clean(); ob_start(); ?>
+
+    <?php if (!empty($category_rollups) || !empty($ceremony_rollups) || !empty($aat_editorial_refs)) : ?>
+        <section id="ledger-crossroads" class="aat-entity-section aat-entity-crossroads" aria-label="<?php echo esc_attr__('Ledger Crossroads', 'academy-awards-table'); ?>">
+            <div class="aat-section-head">
+                <h2 class="aat-section-title">Ledger Crossroads</h2>
+                <p class="aat-section-description"><?php echo esc_html__('Category and ceremony pages this profile appears on, with related Lunara writing.', 'academy-awards-table'); ?></p>
+            </div>
+
+            <div class="aat-crossroads-grid">
+                <?php if (!empty($category_rollups)) : ?>
+                    <article class="aat-crossroads-card">
+                        <h3><?php echo esc_html__('Categories', 'academy-awards-table'); ?></h3>
+                        <div class="aat-crossroads-list">
+                            <?php foreach (array_slice($category_rollups, 0, 8) as $category_rollup) : ?>
+                                <?php
+                                $rollup_nominations = intval($category_rollup['nominations'] ?? 0);
+                                $rollup_wins = intval($category_rollup['wins'] ?? 0);
+                                $rollup_meta = sprintf(_n('%s nomination', '%s nominations', $rollup_nominations, 'academy-awards-table'), number_format_i18n($rollup_nominations));
+                                if ($rollup_wins > 0) {
+                                    $rollup_meta .= ' / ' . sprintf(_n('%s win', '%s wins', $rollup_wins, 'academy-awards-table'), number_format_i18n($rollup_wins));
+                                }
+                                $rollup_url = (string) ($category_rollup['url'] ?? '');
+                                ?>
+                                <?php if ($rollup_url) : ?>
+                                    <a class="aat-crossroad-pill" href="<?php echo esc_url($rollup_url); ?>">
+                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($category_rollup['label'] ?? ''); ?></span>
+                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
+                                    </a>
+                                <?php else : ?>
+                                    <span class="aat-crossroad-pill">
+                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($category_rollup['label'] ?? ''); ?></span>
+                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
+                                    </span>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </article>
+                <?php endif; ?>
+
+                <?php if (!empty($ceremony_rollups)) : ?>
+                    <article class="aat-crossroads-card">
+                        <h3><?php echo esc_html__('Ceremonies', 'academy-awards-table'); ?></h3>
+                        <div class="aat-crossroads-list">
+                            <?php foreach (array_slice($ceremony_rollups, 0, 8) as $ceremony_rollup) : ?>
+                                <?php
+                                $rollup_ceremony = intval($ceremony_rollup['ceremony'] ?? 0);
+                                $rollup_nominations = intval($ceremony_rollup['nominations'] ?? 0);
+                                $rollup_wins = intval($ceremony_rollup['wins'] ?? 0);
+                                $rollup_meta = sprintf(_n('%s nomination', '%s nominations', $rollup_nominations, 'academy-awards-table'), number_format_i18n($rollup_nominations));
+                                if ($rollup_wins > 0) {
+                                    $rollup_meta .= ' / ' . sprintf(_n('%s win', '%s wins', $rollup_wins, 'academy-awards-table'), number_format_i18n($rollup_wins));
+                                }
+                                $rollup_title = trim($ordinal($rollup_ceremony) . ' Academy Awards');
+                                $rollup_year = trim((string) ($ceremony_rollup['year'] ?? ''));
+                                if ($rollup_year !== '') {
+                                    $rollup_title .= ' (' . $rollup_year . ')';
+                                }
+                                $rollup_url = (string) ($ceremony_rollup['url'] ?? '');
+                                ?>
+                                <?php if ($rollup_url) : ?>
+                                    <a class="aat-crossroad-pill" href="<?php echo esc_url($rollup_url); ?>">
+                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($rollup_title); ?></span>
+                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
+                                    </a>
+                                <?php else : ?>
+                                    <span class="aat-crossroad-pill">
+                                        <span class="aat-crossroad-pill-title"><?php echo esc_html($rollup_title); ?></span>
+                                        <span class="aat-crossroad-pill-meta"><?php echo esc_html($rollup_meta); ?></span>
+                                    </span>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </article>
+                <?php endif; ?>
+
+                <?php if (!empty($aat_editorial_refs)) : ?>
+                    <article class="aat-crossroads-card aat-crossroads-card-editorial">
+                        <h3><?php echo esc_html__('Editorial', 'academy-awards-table'); ?></h3>
+                        <div class="aat-editorial-ref-list">
+                            <?php foreach ($aat_editorial_refs as $editorial_ref) : ?>
+                                <?php if (empty($editorial_ref['url']) || empty($editorial_ref['title'])) { continue; } ?>
+                                <a class="aat-editorial-ref-card" href="<?php echo esc_url($editorial_ref['url']); ?>">
+                                    <span class="aat-editorial-ref-type"><?php echo esc_html($editorial_ref['type_label'] ?? ''); ?></span>
+                                    <strong><?php echo esc_html($editorial_ref['title']); ?></strong>
+                                    <?php if (!empty($editorial_ref['excerpt'])) : ?>
+                                        <span class="aat-editorial-ref-excerpt"><?php echo esc_html($editorial_ref['excerpt']); ?></span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($editorial_ref['meta_label'])) : ?>
+                                        <span class="aat-editorial-ref-meta"><?php echo esc_html($editorial_ref['meta_label']); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    </article>
+                <?php endif; ?>
+            </div>
+        </section>
+    <?php endif; ?>
+<?php $aat_sections['crossroads'] = ob_get_clean(); ob_start(); ?>
 
     <div class="aat-footer">
         <p>Data sourced from the Academy of Motion Picture Arts and Sciences. Structured dataset compiled and maintained by Lunara Film.</p>

@@ -2,7 +2,8 @@
   "name": "lunara-ledger-checks",
   "private": true,
   "scripts": {
-    "test:editorial": "node tests/editorial-surfaces-browser.js"
+    "test:editorial": "node tests/editorial-surfaces-browser.js",
+    "test:explorer": "node tests/explorer-lifecycle-runtime.js"
   },
   "devDependencies": {
     "playwright-core": "1.62.1"
