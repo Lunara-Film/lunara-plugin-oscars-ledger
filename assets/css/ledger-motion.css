@@ -226,7 +226,7 @@
 		padding: 10px 14px;
 		max-width: 26rem;
 		border: 1px solid rgba(201, 169, 97, 0.28);
-		border-radius: 10px;
+		border-radius: 0;
 		background: rgba(11, 24, 38, 0.72);
 		text-align: center;
 	}

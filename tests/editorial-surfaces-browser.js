@@ -1,3 +1,4 @@
+const assertSquareSurfaces = require('./tools/assert-square-surfaces.cjs');
 /* Computed presentation contracts. Explorer records/filters and award diagrams
  * come from the real PHP renderers; the other component fixtures stress the
  * template class combinations without pretending to be a full WordPress site. */
@@ -39,6 +40,7 @@ const labels = '.aat-hub-card-type,.aat-hub-card-action,.aat-dossier-command-car
      : route.abort());
    for (const [name, html] of Object.entries(fixtures)) {
     await page.setContent(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>html{font-size:16px}body{margin:0;background:#0a1520;color:#e6eef7;font-family:Georgia,serif}*,*::before,*::after{box-sizing:border-box}a{color:#eadbb3}button,input,select{font:inherit}${css}</style></head><body>${html}</body></html>`);
+    await assertSquareSurfaces(page, `${name} at ${width}px`); checks++;
     const measured = await page.evaluate(({surfaces,labels}) => {
       const bad = [], detail = el => `${el.className || el.tagName}: ${el.textContent.slice(0,60)}`;
       for (const el of document.querySelectorAll(surfaces)) {
@@ -64,6 +66,7 @@ const labels = '.aat-hub-card-type,.aat-hub-card-action,.aat-dossier-command-car
      const select=page.locator('select[name="category"]'); await select.selectOption('sound');
      assert.equal(await select.inputValue(),'sound'); await select.focus();
      assert.equal(await select.evaluate(el=>getComputedStyle(el).outlineStyle),'solid','Keyboard focus remains visible');
+     await assertSquareSurfaces(page, `Explorer focused/filtered ${width}`); checks++;
      const colors=await page.locator('.lle-search__go').evaluate(el=>{const s=getComputedStyle(el);return [s.color,s.backgroundColor]});
      assert.deepEqual(colors,['rgb(6, 13, 21)','rgb(201, 169, 97)'],'Gold action retains dark readable ink'); checks+=4;
     }
