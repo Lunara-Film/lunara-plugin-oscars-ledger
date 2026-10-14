@@ -224,7 +224,7 @@ body.aat-shell-page aside[data-type="type-2"] {
 .aat-filter-group input[type="text"] {
     padding: 12px 16px;
     border: 2px solid rgba(201, 169, 97, 0.3);
-    border-radius: 2px;
+    border-radius: 0;
     background: var(--aat-dark-gray);
     color: var(--aat-white);
     font-size: 1rem;
@@ -284,7 +284,7 @@ body.aat-shell-page aside[data-type="type-2"] {
     min-height: 46px;
     padding: 12px 22px;
     border: 1px solid transparent;
-    border-radius: 2px;
+    border-radius: 0;
     font-size: .875rem;
     font-weight: 700;
     cursor: pointer;
@@ -332,7 +332,7 @@ body.aat-shell-page aside[data-type="type-2"] {
     padding: 8px 16px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
+    border-radius: 0;
     color: var(--aat-light-gray);
     font-size: .875rem;
     cursor: pointer;
@@ -592,7 +592,7 @@ body.aat-shell-page aside[data-type="type-2"] {
     align-items: center;
     min-height: 44px;
     padding: 8px 14px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid rgba(201, 169, 97, 0.28);
     color: var(--aat-gold-light);
     background: transparent;
@@ -686,7 +686,7 @@ body.aat-shell-page aside[data-type="type-2"] {
 }
 .aat-hub-spotlight-media {
     position: relative;
-    border-radius: 16px;
+    border-radius: 0;
     overflow: hidden;
     background: rgba(255,255,255,.04);
     min-height: 100%;
@@ -749,7 +749,7 @@ body.aat-shell-page aside[data-type="type-2"] {
     display: grid;
     gap: 4px;
     padding: 18px 18px;
-    border-radius: 2px;
+    border-radius: 0;
     min-height: 88px;
 }
 .aat-hub-chip-rich.aat-card-has-backdrop {
@@ -891,7 +891,7 @@ body.aat-shell-page aside[data-type="type-2"] {
     justify-content: center;
     min-height: 44px;
     padding: 7px 12px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid rgba(201,169,97,.18);
     background: rgba(7,15,26,.62);
     color: rgba(242,212,122,0.92);
@@ -944,7 +944,7 @@ body.aat-shell-page aside[data-type="type-2"] {
     box-sizing: border-box;
     position: relative;
     margin: 0 -8px;
-    border-radius: 16px;
+    border-radius: 0;
     overflow: hidden;
     background: rgba(255,255,255,.04);
     border: 1px solid rgba(255,255,255,.08);
@@ -1023,7 +1023,7 @@ body.aat-shell-page aside[data-type="type-2"] {
 
 .aat-winner-circle-card.is-hero-latest .aat-winner-circle-media {
     margin: 0 0 4px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid rgba(201,169,97,.18);
     aspect-ratio: 2 / 3;
     min-height: 0;
@@ -1081,7 +1081,7 @@ body.aat-shell-page aside[data-type="type-2"] {
     aspect-ratio: 2 / 3;
     min-height: 0;
     border: 1px solid rgba(201,169,97,.18);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255,255,255,.03);
 }
 
@@ -1163,11 +1163,11 @@ table.aat-entity-table thead th {
 }
 
 table.aat-entity-table thead th:first-child {
-    border-radius: 2px;
+    border-radius: 0;
 }
 
 table.aat-entity-table thead th:last-child {
-    border-radius: 0 8px 0 0;
+    border-radius: 0;
 }
 
 table.aat-entity-table tbody tr {
@@ -1217,11 +1217,11 @@ table.aat-datatable thead th {
 }
 
 table.aat-datatable thead th:first-child {
-    border-radius: 2px;
+    border-radius: 0;
 }
 
 table.aat-datatable thead th:last-child {
-    border-radius: 0 8px 0 0;
+    border-radius: 0;
 }
 
 table.aat-datatable tbody tr {
@@ -1270,7 +1270,7 @@ table.aat-datatable thead th.aat-col-control {
     background: var(--aat-gold);
     color: var(--aat-black);
     padding: 6px 12px;
-    border-radius: 2px;
+    border-radius: 0;
     font-size: .875rem;
     font-weight: 700;
     text-transform: none;
@@ -1282,7 +1282,7 @@ table.aat-datatable thead th.aat-col-control {
     background: rgba(255, 255, 255, 0.1);
     color: var(--aat-light-gray);
     padding: 6px 12px;
-    border-radius: 2px;
+    border-radius: 0;
     font-size: .875rem;
 }
 
@@ -1292,7 +1292,7 @@ table.aat-datatable thead th.aat-col-control {
     padding: 6px 14px;
     background: rgba(201, 169, 97, 0.2);
     color: var(--aat-gold-light);
-    border-radius: 2px;
+    border-radius: 0;
     font-size: .875rem;
     font-weight: 500;
 }
@@ -1356,7 +1356,7 @@ table.aat-datatable thead th.aat-col-control {
 .aat-imdb-link:focus-visible {
     outline: 2px solid var(--aat-gold);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 0;
 }
 
 .aat-imdb-pills {
@@ -1372,7 +1372,7 @@ table.aat-datatable thead th.aat-col-control {
     align-items: center;
     justify-content: center;
     padding: 4px 10px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid rgba(201, 169, 97, 0.55);
     color: var(--aat-gold);
     text-decoration: none;
@@ -1417,7 +1417,7 @@ table.aat-datatable thead th.aat-col-control {
 .dataTables_wrapper .dataTables_filter input {
     background: var(--aat-dark-gray);
     border: 2px solid rgba(201, 169, 97, 0.3);
-    border-radius: 2px;
+    border-radius: 0;
     color: var(--aat-white);
     padding: 8px 12px;
     margin: 0 8px;
@@ -1432,7 +1432,7 @@ table.aat-datatable thead th.aat-col-control {
     background: transparent !important;
     border: 1px solid rgba(201, 169, 97, 0.3) !important;
     color: var(--aat-light-gray) !important;
-    border-radius: 2px;
+    border-radius: 0;
     margin: 0 3px;
     transition: var(--aat-transition);
 }
@@ -1464,7 +1464,7 @@ table.aat-datatable thead th.aat-col-control {
     background: transparent !important;
     border: 2px solid var(--aat-gold) !important;
     color: var(--aat-gold) !important;
-    border-radius: 2px;
+    border-radius: 0;
     padding: 10px 20px;
     font-weight: 600;
     transition: var(--aat-transition);
@@ -1499,7 +1499,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
     width: 20px;
     margin-top: -10px;
     border: 1px solid rgba(201, 169, 97, 0.6);
-    border-radius: 2px;
+    border-radius: 0;
     box-shadow: none;
     background-color: rgba(201, 169, 97, 0.12);
     color: var(--aat-gold);
@@ -1520,7 +1520,7 @@ table.dataTable > tbody > tr.child ul.dtr-details {
     width: 100%;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(201, 169, 97, 0.25);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 12px 14px;
     margin: 10px 0;
 }
@@ -1559,7 +1559,7 @@ table.dataTable > tbody > tr.child ul.dtr-details .dtr-data {
     height: 50px;
     border: 3px solid rgba(201, 169, 97, 0.2);
     border-top-color: var(--aat-gold);
-    border-radius: 2px;
+    border-radius: 0;
     animation: aat-spin 1s linear infinite;
 }
 
@@ -1730,7 +1730,7 @@ table.dataTable > tbody > tr.child ul.dtr-details .dtr-data {
     background: var(--aat-black);
     color: var(--aat-white);
     padding: 8px 12px;
-    border-radius: 2px;
+    border-radius: 0;
     font-size: .875rem;
     white-space: nowrap;
     opacity: 0;
@@ -1780,7 +1780,7 @@ table.dataTable > tbody > tr.child ul.dtr-details .dtr-data {
     transform: translate(-50%, -50%) !important;
     padding: 14px 18px;
     width: auto;
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(10, 21, 32, 0.92);
     border: 1px solid rgba(201, 169, 97, 0.35);
     color: var(--aat-gold) !important;
@@ -1870,7 +1870,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     display: block;
     width: 120px;
     aspect-ratio: 2 / 3;
-    border-radius: 12px;
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, 0.35);
     box-shadow: none;
@@ -1972,7 +1972,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     justify-content: center;
     margin-left: 10px;
     padding: 4px 9px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid rgba(201, 169, 97, 0.6);
     color: rgba(201,169,97,0.95);
     font-size: 14px;
@@ -2018,7 +2018,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(201, 169, 97, 0.35);
     color: var(--aat-light-gray);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 10px 14px;
     min-width: 0;
     max-width: 100%;
@@ -2049,7 +2049,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(201, 169, 97, 0.28);
     color: var(--aat-light-gray);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 10px 16px;
     cursor: pointer;
     font-weight: 700;
@@ -2146,7 +2146,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-tracker-poster {
     width: 84px;
     height: 126px;
-    border-radius: 10px;
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, 0.25);
     background: rgba(255, 255, 255, 0.04);
@@ -2190,7 +2190,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     align-items: center;
     justify-content: center;
     padding: 4px 10px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid rgba(201, 169, 97, 0.35);
     color: var(--aat-gold);
     font-weight: 800;
@@ -2231,7 +2231,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     max-width: 240px;
     width: 100%;
     height: auto;
-    border-radius: 14px;
+    border-radius: 0;
     border: 1px solid rgba(201, 169, 97, 0.28);
     box-shadow: none;
 }
@@ -2274,7 +2274,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-entity-poster {
     width: 100%;
     height: auto;
-    border-radius: 18px;
+    border-radius: 0;
     box-shadow: none;
 }
 .aat-entity-poster-wrap img,
@@ -2324,7 +2324,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 .aat-entity-hero.aat-card-has-backdrop {
     padding: 16px 0;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid rgba(201,169,97,.2);
     box-shadow: none;
 }
@@ -2379,7 +2379,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     align-items: center;
     justify-content: center;
     padding: 8px 12px;
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255,255,255,.06);
     border: 1px solid rgba(201,169,97,.18);
     color: var(--aat-gold-light);
@@ -2660,7 +2660,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-related-reviews-grid{display: flex;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;flex-wrap: wrap;justify-content: center;}.aat-related-review-card{display:flex;flex-direction:column;overflow:hidden;border:0;border-radius:0;background:transparent;box-shadow:none}.aat-related-review-media{display:block;aspect-ratio:16/10;background:rgba(255,255,255,.03);overflow:hidden}.aat-related-review-image,.aat-related-review-media img{width:100%;height:100%;object-fit:cover;display:block}.aat-related-review-body{display:flex;flex-direction:column;gap:12px;padding:18px}.aat-related-review-kicker{font-size:.875rem;letter-spacing:normal;text-transform:none;color:rgba(201,169,97,0.92);font-weight:700}.aat-related-review-title{margin:0;font-size:1.12rem;line-height:1.28}.aat-related-review-title a{color:var(--aat-light-gray);text-decoration:none}.aat-related-review-title a:hover{color:#fff}.aat-related-review-meta{margin:0;color:#d0c5aa;font-size:.92rem}.aat-related-review-meta a{color:#d0c5aa;text-decoration:none;border-bottom:1px solid rgba(201,169,97,.25)}.aat-related-review-meta a:hover{color:#fff;border-bottom-color:rgba(201,169,97,.8)}.aat-related-review-excerpt{margin:0;color:rgba(230,238,247,0.9);line-height:1.62}.aat-related-review-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
 .aat-entity-poster-wrap.is-person{max-width:280px}
 .aat-entity-poster-wrap.is-company{max-width:280px}
-.aat-entity-portrait{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;border-radius:22px;border:1px solid rgba(201,169,97,.28);box-shadow:none}
+.aat-entity-portrait{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;border-radius:0;border:1px solid rgba(201,169,97,.28);box-shadow:none}
 .aat-person-portrait-fallback{min-height:360px}
 .aat-entity-meta-line span+span:before{content:'•';margin-right:14px;color:rgba(201,169,97,0.74)}
 .aat-fallback-dot{font-size:0;line-height:0}
@@ -2899,7 +2899,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     justify-content: flex-start;
     padding: 20px;
     background: transparent;
-    border-radius: 18px;
+    border-radius: 0;
     border: 1px solid rgba(201,169,97,.24);
     overflow: hidden;
     position: relative;
@@ -3080,7 +3080,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     min-height: 44px;
     padding: 12px 16px;
     border: 1px solid rgba(201,169,97,.24);
-    border-radius: 2px;
+    border-radius: 0;
     color: inherit;
     text-decoration: none;
     text-align: left;
@@ -3653,7 +3653,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 }
 
 .aat-hub-chip-rich {
-    border-radius: 2px;
+    border-radius: 0;
 }
 
 .aat-explorer-callout {
@@ -3753,7 +3753,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
     .aat-entity-hero.aat-card-has-backdrop {
         padding: 16px 0;
-        border-radius: 2px;
+        border-radius: 0;
     }
 
     .aat-entity-hero-copy {
@@ -3862,7 +3862,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
     .aat-entity-hero.aat-card-has-backdrop {
         padding: 16px 0;
-        border-radius: 2px;
+        border-radius: 0;
     }
 
     .aat-timeline-card {
@@ -4153,7 +4153,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .24);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255, 255, 255, .04);
 }
 
@@ -4280,7 +4280,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .2);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255, 255, 255, .04);
 }
 
@@ -4332,7 +4332,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     min-height: 44px;
     padding: 12px 14px;
     border: 1px solid rgba(201, 169, 97, .22);
-    border-radius: 2px;
+    border-radius: 0;
     background: transparent;
     box-shadow: none;
     backdrop-filter: none;
@@ -4426,7 +4426,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     min-height: 44px;
     padding: 6px 12px;
     border: 1px solid rgba(201, 169, 97, .22);
-    border-radius: 2px;
+    border-radius: 0;
     background: none;
     color: var(--aat-light-gray);
     font-family: inherit;
@@ -4520,7 +4520,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .2);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255, 255, 255, .04);
     text-decoration: none;
 }
@@ -4620,7 +4620,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     margin: 0 0 2px;
     padding: 4px 9px;
     border: 1px solid rgba(201, 169, 97, .32);
-    border-radius: 2px;
+    border-radius: 0;
     background: none;
     color: var(--aat-gold);
     font-family: inherit;
@@ -4774,7 +4774,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     width: auto;
     padding: 6px 12px;
     border: 1px solid rgba(201, 169, 97, .22);
-    border-radius: 2px;
+    border-radius: 0;
     background: transparent;
     color: var(--aat-gold-light);
     font-family: inherit;
@@ -5405,7 +5405,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-hub-page .aat-winner-circle-card.is-marquee-latest .aat-winner-circle-media {
     aspect-ratio: 2 / 3;
     border: 1px solid rgba(201,169,97,.22);
-    border-radius: 14px;
+    border-radius: 0;
     margin: 0 auto 4px;
     max-width: 168px;
     min-height: 0;
@@ -5462,7 +5462,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
 .aat-entity-page .aat-entity-hero.aat-card-has-backdrop {
     padding: 16px 0;
-    border-radius: 2px;
+    border-radius: 0;
 }
 
 .aat-entity-page .aat-entity-poster-wrap,
@@ -5475,7 +5475,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-entity-page .aat-entity-poster-wrap img,
 .aat-entity-page .aat-entity-poster,
 .aat-entity-page .aat-entity-portrait {
-    border-radius: 14px;
+    border-radius: 0;
     max-height: 320px;
     object-fit: cover;
 }
@@ -5745,7 +5745,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .16);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255, 255, 255, .03);
     transition: border-color .18s ease;
 }
@@ -5839,7 +5839,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     align-items: center;
     width: auto;
     border: 0;
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(6, 13, 21, .86);
     color: var(--aat-gold-light);
     font-size: .8125rem;
@@ -5866,7 +5866,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-hub-page .aat-related-review-media,
 .aat-entity-page .aat-related-review-media {
     border: 1px solid rgba(201, 169, 97, .16);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255, 255, 255, .03);
 }
 
@@ -5920,7 +5920,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 
 .aat-hub-page .aat-hub-chip {
     border: 1px solid rgba(201, 169, 97, .22);
-    border-radius: 2px;
+    border-radius: 0;
     background: transparent;
     transition: border-color .18s ease;
 }
@@ -6004,7 +6004,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .3);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(6, 15, 26, .72);
     box-shadow: none;
     transition: none;
@@ -6533,7 +6533,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     display: block;
     width: 100%;
     aspect-ratio: 2 / 3;
-    border-radius: 2px;
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .22);
     background: rgba(255, 255, 255, .03);
@@ -6809,7 +6809,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     width: fit-content;
     padding: 4px 9px;
     border: 1px solid rgba(201, 169, 97, .32);
-    border-radius: 2px;
+    border-radius: 0;
     background: none;
     color: var(--aat-gold);
     font-family: inherit;
@@ -6846,7 +6846,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     width: auto;
     padding: 6px 12px;
     border: 1px solid rgba(201, 169, 97, .22);
-    border-radius: 2px;
+    border-radius: 0;
     background: transparent;
     color: var(--aat-gold-light);
     font-family: inherit;
@@ -7242,7 +7242,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: var(--lunara-oscars-profile-media-aspect, 2 / 3);
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .3);
-    border-radius: 4px;
+    border-radius: 0;
     background: transparent;
 }
 
@@ -7475,7 +7475,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     object-fit: cover;
     border: 1px solid rgba(201, 169, 97, .3);
-    border-radius: 2px;
+    border-radius: 0;
 }
 
 .aat-profile-file .aat-entity-status-copy {
@@ -7521,7 +7521,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     min-height: 44px;
     padding: 8px 12px;
     border: 1px solid rgba(201, 169, 97, .24);
-    border-radius: 2px;
+    border-radius: 0;
     background: transparent;
     color: var(--aat-gold-light);
     font-size: .9375rem;
@@ -7628,7 +7628,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .3);
-    border-radius: 2px;
+    border-radius: 0;
     box-shadow: none;
 }
 
@@ -7800,7 +7800,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     object-fit: cover;
     border: 1px solid rgba(201, 169, 97, .24);
-    border-radius: 2px;
+    border-radius: 0;
 }
 
 .aat-profile-file .aat-history-main {
@@ -7906,7 +7906,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     min-width: 0;
     min-height: 0;
     padding: 4px 10px;
-    border-radius: 2px;
+    border-radius: 0;
     font-size: .875rem;
     font-weight: 700;
     line-height: 1.3;
@@ -7972,7 +7972,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: 2 / 3;
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .16);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255, 255, 255, .03);
     box-shadow: none;
 }
@@ -8092,7 +8092,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     margin: 0;
     padding: 8px 14px;
     border: 1px solid rgba(201, 169, 97, .3);
-    border-radius: 2px;
+    border-radius: 0;
     background: transparent;
     color: var(--aat-gold-light);
     font-size: .9375rem;
@@ -8145,7 +8145,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     aspect-ratio: var(--lunara-oscars-related-review-media-aspect, 16 / 10);
     overflow: hidden;
     border: 1px solid rgba(201, 169, 97, .16);
-    border-radius: 2px;
+    border-radius: 0;
     background: rgba(255, 255, 255, .03);
 }
 

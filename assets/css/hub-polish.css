@@ -6,7 +6,7 @@
             body .aat-container .aat-hub-page-index-grid .aat-hub-card.has-index-poster{display:grid!important;grid-template-columns:84px minmax(0,1fr)!important;column-gap:16px!important;align-items:start!important;padding:14px 0!important}
             body .aat-container .aat-hub-card{transition:border-color .25s ease!important}
             body .aat-container .aat-hub-card:hover{border-color:rgba(225,197,126,.5)!important;box-shadow:none!important;transform:none!important}
-            body .aat-container .aat-index-poster{grid-column:1!important;grid-row:1/span 6!important;aspect-ratio:2/3!important;border:1px solid rgba(201,169,97,.28)!important;border-radius:2px!important;overflow:hidden!important;width:100%!important}
+            body .aat-container .aat-index-poster{grid-column:1!important;grid-row:1/span 6!important;aspect-ratio:2/3!important;border:1px solid rgba(201,169,97,.28)!important;border-radius:0!important;overflow:hidden!important;width:100%!important}
             body .aat-container .aat-index-poster img{border:0!important;border-radius:0!important;box-shadow:none!important;display:block!important;height:100%!important;max-width:none!important;object-fit:cover!important;transition:none!important;width:100%!important}
             body .aat-container .aat-hub-page-index-grid .aat-hub-card.has-index-poster > :not(.aat-index-poster){grid-column:2!important;min-width:0!important}
             body .aat-container .aat-index-winnerline{display:flex!important;flex-wrap:wrap!important;gap:0 8px!important;align-items:baseline!important;margin:4px 0 0!important;color:var(--aat-light-gray)!important;font-size:1rem!important;line-height:1.45!important;letter-spacing:normal!important}
