@@ -22,9 +22,6 @@ jobs:
 
       - run: npm ci
 
-      - name: Browser runtime
-        run: npx playwright-core install --with-deps --only-shell chromium
-
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -53,6 +50,9 @@ jobs:
           echo "PHP clean"
 
       - name: Public Ledger browser behavior
+        env:
+          # Use the same runner-provided Chrome as the theme browser suite.
+          CHROME_PATH: /usr/bin/google-chrome
         run: node --test --test-concurrency=2 tests/*.js
 
       - name: JS syntax
