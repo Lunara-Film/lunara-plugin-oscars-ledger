@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -19,7 +23,7 @@ jobs:
       - run: npm ci
 
       - name: Browser runtime
-        run: npx playwright-core install --with-deps chromium
+        run: npx playwright-core install --with-deps --only-shell chromium
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -49,9 +53,7 @@ jobs:
           echo "PHP clean"
 
       - name: Public Ledger browser behavior
-        run: |
-          set -e
-          for test in tests/*.js; do node "$test"; done
+        run: node --test --test-concurrency=2 tests/*.js
 
       - name: JS syntax
         run: |
