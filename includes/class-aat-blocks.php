@@ -33,7 +33,7 @@ class Academy_Awards_Table_Blocks {
 
         array_unshift($categories, array(
             'slug'  => 'lunara',
-            'title' => __('Lunara', 'academy-awards-table'),
+            'title' => __('Lunara Film', 'academy-awards-table'),
             'icon'  => 'awards',
         ));
 
@@ -82,7 +82,7 @@ class Academy_Awards_Table_Blocks {
         )));
 
         register_block_type('academy-awards/tracker', array_merge($common, array(
-            'title'           => __('Lunara Awards Tracker', 'academy-awards-table'),
+            'title'           => __('Lunara Film Awards Tracker', 'academy-awards-table'),
             'attributes'      => array(
                 'ceremony'    => array('type' => 'string', 'default' => 'latest'),
                 'year'        => array('type' => 'string', 'default' => ''),
@@ -95,7 +95,7 @@ class Academy_Awards_Table_Blocks {
         )));
 
         register_block_type('academy-awards/tracker-v2', array_merge($common, array(
-            'title'           => __('Lunara Awards Tracker V2', 'academy-awards-table'),
+            'title'           => __('Lunara Film Awards Tracker V2', 'academy-awards-table'),
             'attributes'      => array(
                 'ceremony'        => array('type' => 'string', 'default' => 'latest'),
                 'showSelector'    => array('type' => 'boolean', 'default' => true),

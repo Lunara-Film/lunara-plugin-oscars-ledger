@@ -35,7 +35,7 @@ $issue_labels = array(
 
 $issue_descriptions = array(
     'mismatch' => __('Title or year disagrees with OMDb. Verify before touching the Oscar row.', 'academy-awards-table'),
-    'omdb_missing' => __('OMDb did not return a usable record. Usually a source gap, not a Lunara error.', 'academy-awards-table'),
+    'omdb_missing' => __('OMDb did not return a usable record. Usually a source gap, not a Lunara Film error.', 'academy-awards-table'),
     'poster_missing' => __('Identity reads cleanly enough, but OMDb does not provide a poster URL.', 'academy-awards-table'),
     'match' => __('No correction needed in the current read-only check.', 'academy-awards-table'),
 );
@@ -435,7 +435,7 @@ $review_filter_url_args = array(
                                         <?php endif; ?>
                                     </div>
                                     <div class="aat-muted">
-                                        <a href="<?php echo esc_url((string) ($row['entity_url'] ?? '')); ?>" target="_blank" rel="noopener"><?php echo esc_html__('Open Lunara title page', 'academy-awards-table'); ?></a>
+                                        <a href="<?php echo esc_url((string) ($row['entity_url'] ?? '')); ?>" target="_blank" rel="noopener"><?php echo esc_html__('Open Lunara Film title page', 'academy-awards-table'); ?></a>
                                         <?php echo esc_html(' / '); ?>
                                         <a href="<?php echo esc_url((string) ($row['imdb_url'] ?? '')); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('IMDb', 'academy-awards-table'); ?></a>
                                     </div>
@@ -470,9 +470,9 @@ $review_filter_url_args = array(
                                             <?php endif; ?>
                                         </div>
                                         <div class="aat-omdb-poster-preview-block">
-                                            <span><?php echo esc_html__('Lunara', 'academy-awards-table'); ?></span>
+                                            <span><?php echo esc_html__('Lunara Film', 'academy-awards-table'); ?></span>
                                             <?php if ($has_local_poster && $local_thumb_url !== '') : ?>
-                                                <img class="aat-omdb-poster" src="<?php echo esc_url($local_thumb_url); ?>" alt="<?php echo esc_attr__('Current Lunara poster', 'academy-awards-table'); ?>" loading="lazy" decoding="async">
+                                                <img class="aat-omdb-poster" src="<?php echo esc_url($local_thumb_url); ?>" alt="<?php echo esc_attr__('Current Lunara Film poster', 'academy-awards-table'); ?>" loading="lazy" decoding="async">
                                                 <em><?php echo esc_html((string) ($local_poster['source'] ?? __('Mapped', 'academy-awards-table'))); ?></em>
                                             <?php elseif ($has_local_poster) : ?>
                                                 <em><?php echo esc_html__('Mapped locally', 'academy-awards-table'); ?></em>
@@ -486,7 +486,7 @@ $review_filter_url_args = array(
                                                 <input type="hidden" name="aat_omdb_poster_import_imdb_id" value="<?php echo esc_attr((string) ($dataset['imdb_id'] ?? '')); ?>">
                                                 <label>
                                                     <input type="checkbox" name="aat_omdb_poster_import_confirm" value="1">
-                                                    <?php echo esc_html__('Accept this OMDb poster into Lunara.', 'academy-awards-table'); ?>
+                                                    <?php echo esc_html__('Accept this OMDb poster into Lunara Film.', 'academy-awards-table'); ?>
                                                 </label>
                                                 <button class="button button-small aat-omdb-poster-import-button" type="submit"><?php echo esc_html__('Import Poster', 'academy-awards-table'); ?></button>
                                             </form>

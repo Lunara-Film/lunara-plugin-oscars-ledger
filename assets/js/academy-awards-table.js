@@ -477,7 +477,7 @@
                 const url = self.buildEntityUrl(id);
                 if (!url) return;
 
-                const label = (ids.length > 1) ? ('Lunara ' + (idx + 1)) : 'Lunara';
+                const label = (ids.length > 1) ? ('Lunara Film ' + (idx + 1)) : 'Lunara Film';
                 html += '<a class="aat-imdb-pill" href="' + url + '" aria-label="Open ' + self.escapeHtml(label) + '">' + self.escapeHtml(label) + '</a>';
             });
             html += '</span>';

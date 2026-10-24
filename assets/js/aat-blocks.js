@@ -102,7 +102,7 @@
     });
 
     blocks.registerBlockType('academy-awards/tracker', {
-        title: __('Lunara Awards Tracker', 'academy-awards-table'),
+        title: __('Lunara Film Awards Tracker', 'academy-awards-table'),
         icon: 'chart-bar',
         category: 'lunara',
         attributes: {
@@ -134,7 +134,7 @@
     });
 
     blocks.registerBlockType('academy-awards/tracker-v2', {
-        title: __('Lunara Awards Tracker V2', 'academy-awards-table'),
+        title: __('Lunara Film Awards Tracker V2', 'academy-awards-table'),
         icon: 'star-filled',
         category: 'lunara',
         attributes: {
