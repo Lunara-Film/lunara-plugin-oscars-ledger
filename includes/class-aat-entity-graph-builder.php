@@ -250,7 +250,7 @@ final class AAT_Entity_Graph_Builder {
             return $state;
         }
         if (!self::models_ready()) {
-            $state['last_error'] = 'Lunara Core 0.2.0 (entity graph models) is not active — deploy/activate it first.';
+            $state['last_error'] = 'Lunara Film Core 0.2.0 (entity graph models) is not active — deploy/activate it first.';
             $state['running'] = false;
             self::save_state($state);
             return $state;
@@ -1188,7 +1188,7 @@ final class AAT_Entity_Graph_Builder {
             <p><?php esc_html_e('Translates the Academy Awards tables into Movie, Person, and Ledger Entry entities with posters attached from the local library. Idempotent and resumable: re-running updates in place, never duplicates.', 'academy-awards-table'); ?></p>
 
             <?php if (!$ready) : ?>
-                <div class="notice notice-error"><p><strong><?php esc_html_e('Lunara Core 0.2.0 is not active (movie/person/ledger_entry models missing). Deploy and activate it, then reload this page.', 'academy-awards-table'); ?></strong></p></div>
+                <div class="notice notice-error"><p><strong><?php esc_html_e('Lunara Film Core 0.2.0 is not active (movie/person/ledger_entry models missing). Deploy and activate it, then reload this page.', 'academy-awards-table'); ?></strong></p></div>
             <?php endif; ?>
 
             <h2><?php esc_html_e('Source data', 'academy-awards-table'); ?></h2>

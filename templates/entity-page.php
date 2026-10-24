@@ -849,18 +849,18 @@ get_header();
                     </a>
                 <?php endif; ?>
                 <div class="aat-lunara-review-content">
-                    <div class="aat-lunara-review-kicker"><?php echo esc_html__('Lunara review', 'academy-awards-table'); ?></div>
+                    <div class="aat-lunara-review-kicker"><?php echo esc_html__('Lunara Film review', 'academy-awards-table'); ?></div>
                     <h2 class="aat-lunara-review-title"><a href="<?php echo esc_url($aat_review_url); ?>"><?php echo esc_html($aat_review_title); ?></a></h2>
                     <?php if ($aat_review_excerpt !== '') : ?>
                         <p class="aat-lunara-review-excerpt"><?php echo esc_html($aat_review_excerpt); ?></p>
                     <?php endif; ?>
                     <div class="aat-lunara-review-actions">
                         <a class="aat-btn aat-btn-primary" href="<?php echo esc_url($aat_review_url); ?>"><?php echo esc_html__('Read the review', 'academy-awards-table'); ?></a>
-                        <a class="aat-hub-inline-link" href="<?php echo esc_url(home_url('/reviews/')); ?>"><?php echo esc_html__('All Lunara reviews', 'academy-awards-table'); ?></a>
+                        <a class="aat-hub-inline-link" href="<?php echo esc_url(home_url('/reviews/')); ?>"><?php echo esc_html__('All Lunara Film reviews', 'academy-awards-table'); ?></a>
                     </div>
                     <?php if (count($aat_review_ids) > 1) : ?>
                         <div class="aat-lunara-review-more">
-                            <span class="aat-lunara-review-more-label">Also on Lunara:</span>
+                            <span class="aat-lunara-review-more-label">Also on Lunara Film:</span>
                             <?php
                             $more_links = array();
                             foreach (array_slice($aat_review_ids, 1) as $rid) {
@@ -1087,8 +1087,8 @@ get_header();
     <?php if ($entity !== 'title' && !empty($aat_related_reviews)) : ?>
         <section id="on-lunara" class="aat-entity-section aat-related-reviews-section <?php echo esc_attr($aat_related_review_treatment_class); ?>">
             <div class="aat-section-head">
-                <h2 class="aat-section-title">On Lunara</h2>
-                <p class="aat-section-description"><?php echo esc_html__('Lunara reviews of films on this profile.', 'academy-awards-table'); ?></p>
+                <h2 class="aat-section-title">On Lunara Film</h2>
+                <p class="aat-section-description"><?php echo esc_html__('Lunara Film reviews of films on this profile.', 'academy-awards-table'); ?></p>
             </div>
             <div class="aat-related-reviews-grid <?php echo esc_attr($aat_related_review_treatment_class); ?>">
                 <?php foreach ($aat_related_reviews as $related_review) : ?>
@@ -1107,7 +1107,7 @@ get_header();
                         </a>
                         <?php endif; ?>
                         <div class="aat-related-review-body">
-                            <div class="aat-related-review-kicker"><?php echo esc_html__('Lunara review', 'academy-awards-table'); ?></div>
+                            <div class="aat-related-review-kicker"><?php echo esc_html__('Lunara Film review', 'academy-awards-table'); ?></div>
                             <h3 class="aat-related-review-title"><a href="<?php echo esc_url($related_review['review_url']); ?>"><?php echo esc_html($related_review['review_title']); ?></a></h3>
                             <p class="aat-related-review-meta">
                                 <?php if (!empty($related_review['film_url'])) : ?>
@@ -1153,7 +1153,7 @@ if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
         <section id="ledger-crossroads" class="aat-entity-section aat-entity-crossroads" aria-label="<?php echo esc_attr__('Ledger Crossroads', 'academy-awards-table'); ?>">
             <div class="aat-section-head">
                 <h2 class="aat-section-title">Ledger Crossroads</h2>
-                <p class="aat-section-description"><?php echo esc_html__('Category and ceremony pages this profile appears on, with related Lunara writing.', 'academy-awards-table'); ?></p>
+                <p class="aat-section-description"><?php echo esc_html__('Category and ceremony pages this profile appears on, with related Lunara Film writing.', 'academy-awards-table'); ?></p>
             </div>
 
             <div class="aat-crossroads-grid">

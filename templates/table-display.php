@@ -281,7 +281,7 @@ if (!empty($aat_winner_rows)) {
                 />
             </div>
             <div class="aat-ledger-command-copy">
-                <h2><?php esc_html_e('The Lunara Oscar Ledger', 'academy-awards-table'); ?></h2>
+                <h2><?php esc_html_e('The Lunara Film Oscar Ledger', 'academy-awards-table'); ?></h2>
                 <p class="aat-subtitle"><?php echo esc_html(sprintf(/* translators: 1: record count, 2: ceremony count */ __('%1$s nominations and winners across %2$s ceremonies, with a profile for every film, person and company.', 'academy-awards-table'), number_format_i18n($aat_record_count), number_format_i18n($aat_ceremony_count))); ?></p>
             </div>
             <nav class="aat-ledger-header-actions" aria-label="<?php echo esc_attr__('Oscar Ledger shortcuts', 'academy-awards-table'); ?>">
@@ -519,7 +519,7 @@ if (!empty($aat_winner_rows)) {
                 loading="lazy"
             />
             <div class="aat-ledger-command-copy">
-                <h2><?php esc_html_e('The Lunara Oscar Ledger', 'academy-awards-table'); ?></h2>
+                <h2><?php esc_html_e('The Lunara Film Oscar Ledger', 'academy-awards-table'); ?></h2>
                 <p class="aat-subtitle"><?php echo wp_kses_post(sprintf('Every nominee & winner in our dataset (%s)', $aat_span ? $aat_span : 'through 2024')); ?></p>
             </div>
             <nav class="aat-ledger-header-actions" aria-label="<?php echo esc_attr__('Oscar Ledger shortcuts', 'academy-awards-table'); ?>">
@@ -714,7 +714,7 @@ if (!empty($aat_winner_rows)) {
             <p class="aat-footer-line">
                 <span class="aat-footer-count"><?php echo esc_html(sprintf(_n('%s ceremony', '%s ceremonies', $aat_ceremony_count, 'academy-awards-table'), number_format_i18n($aat_ceremony_count))); ?><?php if ($aat_span) : ?> (<?php echo wp_kses_post($aat_span); ?>)<?php endif; ?></span>
                 <span class="aat-footer-sep">&bull;</span>
-                <?php esc_html_e('Click nominees and films to open Lunara profiles; IMDb links are provided for verification.', 'academy-awards-table'); ?>
+                <?php esc_html_e('Click nominees and films to open Lunara Film profiles; IMDb links are provided for verification.', 'academy-awards-table'); ?>
                 <span class="aat-footer-mobile-hint"><?php esc_html_e('On mobile, tap the + icon to view full details.', 'academy-awards-table'); ?></span>
             </p>
             <p class="aat-footer-links">

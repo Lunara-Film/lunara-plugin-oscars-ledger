@@ -1007,7 +1007,7 @@ get_header();
                         (string) $aat->get_ceremony_year($max_ceremony)
                     ));
                 } else {
-                    echo esc_html__('Every Academy Awards ceremony in the Lunara Oscar Ledger, newest first.', 'academy-awards-table');
+                    echo esc_html__('Every Academy Awards ceremony in the Lunara Film Oscar Ledger, newest first.', 'academy-awards-table');
                 }
             ?></p>
 
@@ -2073,7 +2073,7 @@ get_header();
 
         <?php if (!empty($ceremony_review_cards)) : ?>
             <div class="aat-hub-section aat-related-reviews-section <?php echo esc_attr($aat_related_review_treatment_class); ?>">
-                <h2><?php echo esc_html__('On Lunara', 'academy-awards-table'); ?></h2>
+                <h2><?php echo esc_html__('On Lunara Film', 'academy-awards-table'); ?></h2>
                 <p class="aat-hub-copy"><?php echo esc_html__('Lunara Film reviews of films from this ceremony.', 'academy-awards-table'); ?></p>
                 <div class="aat-related-reviews-grid <?php echo esc_attr($aat_related_review_treatment_class); ?>">
                     <?php foreach ($ceremony_review_cards as $card) : ?>
@@ -2909,7 +2909,7 @@ get_header();
 
         <?php if (!empty($category_review_cards)) : ?>
             <div class="aat-hub-section aat-related-reviews-section <?php echo esc_attr($aat_related_review_treatment_class); ?>">
-                <h2><?php echo esc_html__('On Lunara', 'academy-awards-table'); ?></h2>
+                <h2><?php echo esc_html__('On Lunara Film', 'academy-awards-table'); ?></h2>
                 <p class="aat-hub-copy"><?php echo esc_html__('Lunara Film reviews of films from this category.', 'academy-awards-table'); ?></p>
                 <div class="aat-related-reviews-grid <?php echo esc_attr($aat_related_review_treatment_class); ?>">
                     <?php foreach ($category_review_cards as $card) : ?>
@@ -2988,7 +2988,7 @@ get_header();
     ?>
         <div class="aat-hub-header">
             <h1 class="aat-hub-title"><?php echo esc_html__('Not Found', 'academy-awards-table'); ?></h1>
-            <p class="aat-hub-subtitle"><?php echo esc_html__('This page does not exist in the Lunara Oscar Ledger.', 'academy-awards-table'); ?></p>
+            <p class="aat-hub-subtitle"><?php echo esc_html__('This page does not exist in the Lunara Film Oscar Ledger.', 'academy-awards-table'); ?></p>
             <div class="aat-hub-actions">
                 <a class="aat-btn aat-btn-primary" href="<?php echo esc_url($db_url); ?>"><?php echo esc_html__('Open Full Ledger', 'academy-awards-table'); ?></a>
             </div>
