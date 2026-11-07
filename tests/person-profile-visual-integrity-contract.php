@@ -6,7 +6,10 @@ $files = array(
     'academy-awards-table.php',
     'templates/entity-page.php',
     'templates/poster-admin.php',
-    'assets/css/academy-awards-table.css',
+    'assets/css/ledger-base.css',
+    'assets/css/ledger-hub.css',
+    'assets/css/ledger-profile.css',
+    'assets/css/ledger-table.css',
 );
 
 $failures = array();
@@ -27,7 +30,7 @@ foreach ($files as $relative_path) {
 $plugin = $source['academy-awards-table.php'];
 $entity_template = $source['templates/entity-page.php'];
 $poster_admin = $source['templates/poster-admin.php'];
-$css = $source['assets/css/academy-awards-table.css'];
+$css = $source['assets/css/ledger-base.css'] . "\n" . $source['assets/css/ledger-hub.css'] . "\n" . $source['assets/css/ledger-profile.css'] . "\n" . $source['assets/css/ledger-table.css']; // 2.8.29: the four route sheets in cascade order
 
 foreach (array(
     "'visual_source' => 'none'",

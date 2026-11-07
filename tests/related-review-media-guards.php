@@ -33,7 +33,7 @@ foreach ($files as $relative_path) {
     }
 }
 
-$css = file_get_contents($root . '/assets/css/academy-awards-table.css');
+$css = implode("\n", array_map(static function ($sheet) use ($root) { return (string) file_get_contents($root . '/assets/css/' . $sheet); }, array('ledger-base.css', 'ledger-hub.css', 'ledger-profile.css', 'ledger-table.css'))); // 2.8.29: the four route sheets in cascade order
 $assert(strpos($css, '.aat-related-review-card.has-no-media') !== false, 'CSS should style text-led related-review cards.');
 
 if ($failures) {

@@ -3,7 +3,7 @@
  * Plugin Name: Lunara Film - Academy Awards Database
  * Plugin URI: https://lunarafilm.com/oscars/
  * Description: A premium, server-side searchable database of every Academy Award nominee and winner (1st ceremony through 2025), compiled and maintained by Lunara Film.
- * Version: 2.8.28
+ * Version: 2.8.29
  * Author: Lunara Film (Dalton Johnson)
  * Author URI: https://lunarafilm.com/
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('AAT_VERSION', '2.8.28');
+define('AAT_VERSION', '2.8.29');
 define('AAT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AAT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AAT_BUNDLED_CSV_PATH', AAT_PLUGIN_DIR . 'data/oscars.csv');
@@ -3550,6 +3550,47 @@ class Academy_Awards_Table {
     /**
      * Load theme-owned Oscars styling when present.
      */
+    /**
+     * The plugin stylesheets a route loads, in cascade order: handle => path under the plugin directory.
+     *
+     * Every route takes the base sheet. Hub routes add the hub sheet, title/name/company routes the
+     * profile sheet, and the sortable ledger, the Awards Trackers and embedded tables the table sheet.
+     * A rule lives outside the base sheet only when every one of its selectors carries a class that the
+     * route kind's own templates print and no other template prints (2.8.29).
+     */
+    public function route_stylesheets($is_hub, $is_entity, $needs_table) {
+        $sheets = array('aat-styles' => 'assets/css/ledger-base.css');
+        if ($is_hub) {
+            $sheets['aat-hub-styles'] = 'assets/css/ledger-hub.css';
+        }
+        if ($is_entity) {
+            $sheets['aat-profile-styles'] = 'assets/css/ledger-profile.css';
+        }
+        if ($needs_table) {
+            $sheets['aat-table-styles'] = 'assets/css/ledger-table.css';
+        }
+        return $sheets;
+    }
+
+    /**
+     * Enqueue a route's stylesheets so each one depends on the ones before it, each versioned by its own
+     * file time, then the theme's Oscars sheet after all of them.
+     */
+    private function enqueue_route_stylesheets($sheets, $deps = array()) {
+        $deps = is_array($deps) ? array_values($deps) : array();
+        foreach ($sheets as $handle => $relative_path) {
+            $file = AAT_PLUGIN_DIR . $relative_path;
+            wp_enqueue_style(
+                $handle,
+                AAT_PLUGIN_URL . $relative_path,
+                $deps,
+                file_exists($file) ? (string) filemtime($file) : AAT_VERSION
+            );
+            $deps[] = $handle;
+        }
+        $this->enqueue_theme_route_assets(array_keys($sheets));
+    }
+
     public function enqueue_theme_route_assets($deps = array()) {
         $deps = is_array($deps) ? $deps : array();
         $styles = array(
@@ -6403,6 +6444,7 @@ class Academy_Awards_Table {
         $is_table_page = false;
         $is_ballot_page = false;
         $is_tracker_v2_page = false;
+        $is_tracker_page = false;
         $table_shortcode_autoload = false;
 
         if (!$is_entity) {
@@ -6420,6 +6462,12 @@ class Academy_Awards_Table {
                     has_shortcode($post->post_content, 'academy_awards') ||
                     has_shortcode($post->post_content, 'lunara_awards_tracker') ||
                     has_block('academy-awards/database', $post) ||
+                    has_block('academy-awards/tracker', $post)
+                );
+
+                // The Awards Tracker (shortcode or block) prints the tracker markup whatever its layout, so it takes the table sheet.
+                $is_tracker_page = (
+                    has_shortcode($post->post_content, 'lunara_awards_tracker') ||
                     has_block('academy-awards/tracker', $post)
                 );
 
@@ -6458,12 +6506,14 @@ class Academy_Awards_Table {
             return;
         }
 
-        $aat_stylesheet_path = AAT_PLUGIN_DIR . 'assets/css/academy-awards-table.css';
-        $aat_stylesheet_version = file_exists($aat_stylesheet_path) ? (string) filemtime($aat_stylesheet_path) : AAT_VERSION;
+        $needs_datatables = $hub_needs_table || ($is_table_page && $table_view_requested) || $table_shortcode_autoload;
 
-        // Always load plugin styles for the table, entity pages, and hub pages.
+        // 2.8.29: one sheet per route kind (route_stylesheets()). Every route takes the base sheet; the hub, profile and
+        // table sheets carry only rules anchored to classes their own templates print.
+        $sheets = $this->route_stylesheets($is_hub, $is_entity, $needs_datatables || $is_tracker_page || $is_tracker_v2_page);
+
         // Only load DataTables and the plugin JS when we are actually rendering a table.
-        if ($hub_needs_table || ($is_table_page && $table_view_requested) || $table_shortcode_autoload) {
+        if ($needs_datatables) {
             // DataTables CSS
             wp_enqueue_style(
                 'datatables-css',
@@ -6479,14 +6529,8 @@ class Academy_Awards_Table {
                 '2.5.0'
             );
 
-            // Plugin CSS
-            wp_enqueue_style(
-                'aat-styles',
-                AAT_PLUGIN_URL . 'assets/css/academy-awards-table.css',
-                array('datatables-css'),
-                $aat_stylesheet_version
-            );
-            $this->enqueue_theme_route_assets(array('aat-styles'));
+            // Plugin CSS, after DataTables so the Ledger's table rules win.
+            $this->enqueue_route_stylesheets($sheets, array('datatables-css'));
 
             // jQuery (WordPress includes this)
             wp_enqueue_script('jquery');
@@ -6525,13 +6569,7 @@ class Academy_Awards_Table {
             ));
         } else {
             // Entity pages + hub pages (non-table): just the plugin styling (keeps pages light and fast).
-            wp_enqueue_style(
-                'aat-styles',
-                AAT_PLUGIN_URL . 'assets/css/academy-awards-table.css',
-                array(),
-                $aat_stylesheet_version
-            );
-            $this->enqueue_theme_route_assets(array('aat-styles'));
+            $this->enqueue_route_stylesheets($sheets, array());
         }
 
         // Tracker V2 page (no DataTables required)
@@ -6575,7 +6613,7 @@ class Academy_Awards_Table {
 
         if ($is_hub) {
             $hub_polish_path = AAT_PLUGIN_DIR . 'assets/css/hub-polish.css';
-            $hub_polish_dependencies = array('aat-styles');
+            $hub_polish_dependencies = array('aat-styles', 'aat-hub-styles');
 
             if ($hub === 'ceremony') {
                 $ceremony_css_path = AAT_PLUGIN_DIR . 'assets/css/ceremony-dossier.css';
@@ -6583,7 +6621,7 @@ class Academy_Awards_Table {
                 wp_enqueue_style(
                     'aat-ceremony-dossier',
                     AAT_PLUGIN_URL . 'assets/css/ceremony-dossier.css',
-                    array('aat-styles'),
+                    array('aat-styles', 'aat-hub-styles'),
                     file_exists($ceremony_css_path) ? (string) filemtime($ceremony_css_path) : AAT_VERSION
                 );
                 $hub_polish_dependencies = array('aat-ceremony-dossier');

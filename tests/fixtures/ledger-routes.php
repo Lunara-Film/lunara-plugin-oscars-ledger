@@ -11,6 +11,8 @@
  *   name portrait|noportrait            templates/entity-page.php
  *   company                             templates/entity-page.php
  *   explorer                            tests/fixtures/editorial-surfaces.php explorer, unchanged
+ *   stylesheets hub|entity|landing|table   prints the plugin stylesheets that route kind loads, in cascade
+ *                                        order, from the production route_stylesheets() (2.8.29)
  *
  * Formatting, URL, visual-package and route methods are the production ones,
  * extracted from academy-awards-table.php the way tests/entity-category-labels-runtime.php
@@ -604,7 +606,7 @@ foreach (array(
     'get_entity_url', 'build_entity_url_from_id', 'build_imdb_url', 'infer_entity_type_from_id',
     'is_title_entity_id', 'is_imdb_name_entity_id', 'is_local_name_entity_id', 'is_name_entity_id', 'is_company_entity_id',
     'get_entity_rows', 'get_card_backdrop_image_url', 'get_title_visual_package', 'get_person_visual_package',
-    'get_route_context', 'is_entity_request', 'is_hub_request',
+    'get_route_context', 'is_entity_request', 'is_hub_request', 'route_stylesheets',
     // 2.8.28: the picture builders are production code, so a route renders the srcset, sizes and loading the live site prints.
     'get_poster_img_html_for_title', 'add_poster_srcset_widths', 'image_cdn_callback', 'poster_sizes_for', 'get_attachment_crop_srcset', 'get_attachment_img_html',
 ) as $name) {
@@ -769,6 +771,13 @@ $GLOBALS['cache'] = array('aat_category_slug_map_v1' => $ledger['slug_map']);
 foreach ($ledger['entities'] as $key => $rows) {
     list($kind, $id) = explode(':', $key);
     $GLOBALS['cache']['aat_entity_rows_v2_' . md5($kind . ':' . $id)] = $rows;
+}
+if ($route === 'stylesheets') {
+    $kind = $variant;
+    if (!in_array($kind, array('hub', 'entity', 'landing', 'table'), true)) { fwrite(STDERR, "stylesheets takes hub, entity, landing or table\n"); exit(2); }
+    $sheets = Academy_Awards_Table::get_instance()->route_stylesheets($kind === 'hub', $kind === 'entity', $kind === 'table');
+    echo json_encode(array_values($sheets));
+    exit(0);
 }
 $_GET = array();
 switch ($route) {

@@ -45,7 +45,7 @@ function admin_url($path) { return 'https://example.test/wp-admin/' . $path; }
 function wp_create_nonce($action) { return 'fixture'; }
 function __($text, $domain = '') { return $text; }
 $methods = '';
-foreach (array('enqueue_scripts', 'shortcode_requests_autoload', 'block_requests_autoload', 'is_entity_request', 'is_hub_request', 'render_shortcode', 'render_tracker_shortcode') as $name) {
+foreach (array('enqueue_scripts', 'route_stylesheets', 'enqueue_route_stylesheets', 'shortcode_requests_autoload', 'block_requests_autoload', 'is_entity_request', 'is_hub_request', 'render_shortcode', 'render_tracker_shortcode') as $name) {
     $methods .= routing_method($source, $name);
 }
 eval('class AssetRoutingFixture {' . $methods . '
@@ -70,11 +70,22 @@ function run_route($name, $content, $route, $get, $expected, $blocks = array(), 
     $GLOBALS['blocks'] = $blocks;
     $GLOBALS['force'] = $force;
     $GLOBALS['styles'] = $GLOBALS['scripts'] = $GLOBALS['localized'] = array();
+    $GLOBALS['theme_deps'] = null;
     $_GET = $get;
     $GLOBALS['plugin']->enqueue_scripts();
-    foreach (array('aat-styles', 'aat-script', 'aat-tracker-v2', 'aat-ballot') as $handle) {
+    foreach (array('aat-styles', 'aat-hub-styles', 'aat-profile-styles', 'aat-table-styles', 'aat-script', 'aat-tracker-v2', 'aat-ballot') as $handle) {
         $exists = isset($GLOBALS['styles'][$handle]) || isset($GLOBALS['scripts'][$handle]);
         verify($exists === in_array($handle, $expected, true), "$name: wrong asset presence for $handle");
+    }
+    // 2.8.29: the plugin sheets cascade in enqueue order, the base sheet first, each depending on the one before it,
+    // and the theme's Oscars sheet follows all of them.
+    $plugin_sheets = array_values(array_intersect(array_keys($GLOBALS['styles']), array('aat-styles', 'aat-hub-styles', 'aat-profile-styles', 'aat-table-styles')));
+    if ($plugin_sheets) {
+        verify($plugin_sheets[0] === 'aat-styles', "$name: the base sheet must come first");
+        verify($GLOBALS['theme_deps'] === $plugin_sheets, "$name: the theme sheet must follow every plugin sheet");
+        foreach ($plugin_sheets as $i => $handle) {
+            if ($i > 0) verify(in_array($plugin_sheets[$i - 1], $GLOBALS['styles'][$handle], true), "$name: $handle must depend on {$plugin_sheets[$i - 1]}");
+        }
     }
     $table = in_array('aat-script', $expected, true);
     foreach (array('datatables-js', 'datatables-responsive-js') as $handle) {
@@ -83,18 +94,22 @@ function run_route($name, $content, $route, $get, $expected, $blocks = array(), 
     verify(isset($GLOBALS['styles']['aat-ballot-styles']) === in_array('aat-ballot', $expected, true), "$name: ballot styling must follow its script");
 }
 $base = array('aat-styles');
-$table = array('aat-styles', 'aat-script');
+$hub = array('aat-styles', 'aat-hub-styles');
+$profile = array('aat-styles', 'aat-profile-styles');
+$table = array('aat-styles', 'aat-table-styles', 'aat-script');
+$hub_table = array('aat-styles', 'aat-hub-styles', 'aat-table-styles', 'aat-script');
+$tracker = array('aat-styles', 'aat-table-styles');
 run_route('ordinary page', '', array(), array(), array());
 run_route('unrelated query', '', array(), array('view'=>'table'), array());
 run_route('portal landing', '', array('post_name'=>'oscars'), array(), $base);
 run_route('portal explorer', '', array('post_name'=>'oscars'), array('view'=>'table'), $table);
 run_route('assigned portal', '', array('template'=>'page-oscars.php'), array('view'=>'table'), $table);
 foreach (array('title', 'name', 'company') as $entity) {
-    run_route("$entity ignores table query", '', array('aat_entity'=>$entity,'aat_entity_id'=>'record'), array('view'=>'table'), $base);
+    run_route("$entity ignores table query", '', array('aat_entity'=>$entity,'aat_entity_id'=>'record'), array('view'=>'table'), $profile);
 }
-foreach (array('category', 'ceremony', 'categories', 'ceremonies', 'about') as $hub) {
-    run_route("$hub landing", '', array('aat_hub'=>$hub), array(), $base);
-    run_route("$hub query", '', array('aat_hub'=>$hub), array('view'=>'table'), in_array($hub,array('category','ceremony')) ? $table : $base);
+foreach (array('category', 'ceremony', 'categories', 'ceremonies', 'about') as $hub_route) {
+    run_route("$hub_route landing", '', array('aat_hub'=>$hub_route), array(), $hub);
+    run_route("$hub_route query", '', array('aat_hub'=>$hub_route), array('view'=>'table'), in_array($hub_route,array('category','ceremony')) ? $hub_table : $hub);
 }
 run_route('shortcode landing', '[academy_awards]', array(), array(), $base);
 run_route('shortcode explorer', '[academy_awards]', array(), array('view'=>'table'), $table);
@@ -104,15 +119,16 @@ foreach (array('false','0','no','trueish') as $value) run_route("no autoload $va
 run_route('escaped shortcode', '[[academy_awards autoload=true]]', array(), array(), $base);
 run_route('attribute lookalike', '[academy_awards note="autoload=true"]', array(), array(), $base);
 run_route('tracker default', '[lunara_awards_tracker]', array(), array(), $table);
-run_route('tracker full', '[lunara_awards_tracker layout="full"]', array(), array(), $base);
+run_route('tracker full', '[lunara_awards_tracker layout="full"]', array(), array(), $tracker);
 run_route('ballot with irrelevant query', '[lunara_oscar_ballot]', array(), array('view'=>'table'), array('aat-styles','aat-ballot'));
-run_route('tracker v2 with irrelevant query', '[lunara_awards_tracker_v2]', array(), array('view'=>'table'), array('aat-styles','aat-tracker-v2'));
-run_route('mixed widgets', '[academy_awards layout="embedded"][academy_awards_ballot][academy_awards_tracker_v2]', array(), array(), array('aat-styles','aat-script','aat-ballot','aat-tracker-v2'));
+run_route('tracker v2 with irrelevant query', '[lunara_awards_tracker_v2]', array(), array('view'=>'table'), array('aat-styles','aat-table-styles','aat-tracker-v2'));
+run_route('mixed widgets', '[academy_awards layout="embedded"][academy_awards_ballot][academy_awards_tracker_v2]', array(), array(), array('aat-styles','aat-table-styles','aat-script','aat-ballot','aat-tracker-v2'));
 foreach (array('academy-awards/database', 'academy-awards/tracker') as $block) {
     foreach (array(array(),array('layout'=>'full'),array('autoload'=>true),array('layout'=>'embedded'),array('autoload'=>'false','layout'=>'full')) as $attrs) {
         $embedded = ($attrs['layout'] ?? ($block === 'academy-awards/tracker' ? 'embedded' : 'full')) === 'embedded';
         $immediate = $embedded || ($attrs['autoload'] ?? false) === true;
-        run_route('nested '.$block.' '.json_encode($attrs), '<!-- wp:'.$block.' -->', array(), array(), $immediate ? $table : $base, array(array('blockName'=>'core/group','innerBlocks'=>array(array('blockName'=>$block,'attrs'=>$attrs)))));
+        $idle = $block === 'academy-awards/tracker' ? $tracker : $base;
+        run_route('nested '.$block.' '.json_encode($attrs), '<!-- wp:'.$block.' -->', array(), array(), $immediate ? $table : $idle, array(array('blockName'=>'core/group','innerBlocks'=>array(array('blockName'=>$block,'attrs'=>$attrs)))));
     }
 }
 run_route('force compatibility', '', array(), array(), $table, array(), true);

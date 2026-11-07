@@ -14,7 +14,7 @@ This plugin owns the server-side Oscars database, public Oscars routes, title/pe
 
 ## Version
 
-Current baseline: `2.8.21`.
+Current baseline: `2.8.29`.
 
 ## Oscar Ledger Explorer (2.8.1)
 
@@ -38,6 +38,7 @@ The shared filters are `ceremony`, `decade` (for example `1970`), `class`, `cate
 
 ## Current Public Surface
 
+- Stylesheets (2.8.29): every public route loads `assets/css/ledger-base.css`; hub routes add `ledger-hub.css`, title/name/company routes add `ledger-profile.css`, and the sortable ledger, the Awards Trackers and embedded tables add `ledger-table.css` (`route_stylesheets()` in `academy-awards-table.php`). A rule lives outside the base sheet only when every selector carries a class that its own template prints and no other template prints; `tests/stylesheet-split-runtime.php` measures that. `academy-awards-table.css` is superseded and ships for one release only, for pages the edge cached before the deploy.
 - Ceremony pages include a data-derived Ceremony Thesis layer with critical-path navigation and compact major-race briefing cards.
 - Generic Oscar category pages now use dossier-grade route framing with command-band summaries, denser ledger-card rows, and linked craft/person credit chips where the person entity can be resolved.
 - Oscar reporting-table rebuilds now recover missing person-link projections from unique, single-person `PERSON_PROFILE` media labels with embedded IMDb `nm` IDs, giving craft/category credits a real route-backed fallback when source rows lack `nominee_ids`.

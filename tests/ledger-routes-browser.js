@@ -13,8 +13,21 @@ const { execFileSync } = require('node:child_process');
 const { chromium } = require('playwright-core');
 const root = path.resolve(__dirname, '..');
 const output = process.env.LEDGER_VISUAL_OUTPUT || path.join(os.tmpdir(), 'lunara-ledger-routes');
-const assets = ['academy-awards-table', 'ledger-explorer', 'ledger-motion', 'ceremony-dossier', 'hub-polish'];
-const css = assets.map(name => fs.readFileSync(path.join(root, 'assets/css', `${name}.css`), 'utf8')).join('\n');
+// 2.8.29: a route is dressed with the sheets production enqueues for its kind (route_stylesheets(), read through
+// the fixture), then the route-scoped sheets in enqueue order. The explorer, which production dresses with its own
+// sheet only, keeps every Ledger sheet so its checks measure what they measured before the split.
+const read = name => fs.readFileSync(path.join(root, name.includes('/') ? name : `assets/css/${name}.css`), 'utf8');
+const extras = ['ledger-explorer', 'ledger-motion', 'ceremony-dossier', 'hub-polish'].map(read).join('\n');
+const kindOf = route => ['title', 'name', 'company'].includes(route) ? 'entity' : route === 'explorer' ? 'explorer' : 'hub';
+const sheetCache = new Map();
+const sheetsFor = route => {
+  const kind = kindOf(route);
+  if (!sheetCache.has(kind)) {
+    const files = kind === 'explorer' ? ['hub', 'entity', 'table'].flatMap(k => JSON.parse(php(['stylesheets', k]))) : JSON.parse(php(['stylesheets', kind]));
+    sheetCache.set(kind, [...new Set(files)].map(read).join('\n') + '\n' + extras);
+  }
+  return sheetCache.get(kind);
+};
 const base = 'html{font-size:16px}body{margin:0;background:#0a1520;color:#e6eef7;font-family:Georgia,serif}*,*::before,*::after{box-sizing:border-box}a{color:#eadbb3}button,input,select{font:inherit}';
 // The theme sizes the entity hero through its profile-media variables (lunara-theme-blocks inc/frontend.php, the
 // Site Studio Oscars block): 340px, 260px to 700px and min(45vw, 180px) to 540px. The plugin's own sheet stops at
@@ -49,7 +62,7 @@ const records = ['aat-hub-card', 'aat-ceremony-ballot-row', 'aat-major-race-card
 const countInOutput = (html, cls) => (html.match(new RegExp(`class="(?:[^"]*\\s)?${cls}(?:\\s[^"]*)?"`, 'g')) || []).length;
 const expectedRecords = html => Object.fromEntries(records.map(cls => [cls, countInOutput(html, cls)]));
 const placeholder = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600"><rect width="400" height="600" fill="#142a3d"/><path d="M0 400L400 140V600H0Z" fill="#29465a"/></svg>';
-const wrap = page => `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${base}${variables}${css}${themeContract}</style></head><body class="aat-shell-page${page.route === 'explorer' ? ' aat-shell-explorer' : ''}">${page.html}</body></html>`;
+const wrap = page => `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${base}${variables}${sheetsFor(page.route)}${themeContract}</style></head><body class="aat-shell-page${page.route === 'explorer' ? ' aat-shell-explorer' : ''}">${page.html}</body></html>`;
 
 /* Runs inside the page. Returns [check, detail] pairs for everything that misses the contract. */
 function measure({ controls, reading, metadata, surfaces, records, frames }) {

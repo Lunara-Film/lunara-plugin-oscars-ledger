@@ -1,0 +1,632 @@
+/**
+ * Academy Awards Table - Frontend Styles: the table sheet (2.8.29).
+ *
+ * Loaded after ledger-base.css wherever the sortable ledger renders (DataTables), on the Awards Tracker
+ * pages and on embedded tables. Every selector here carries a DataTables class or a class only the table
+ * and tracker templates print.
+ */
+
+.aat-container.aat-embedded {
+    max-width: 100%;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+.aat-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    background: transparent;
+    border-radius: 0;
+    border: 0;
+}
+.aat-filter-group {
+    display: flex;
+    flex-direction: column;
+}
+.aat-filter-group label {
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+.aat-filter-group select,
+.aat-filter-group input[type="text"] {
+    padding: 12px 16px;
+    border: 2px solid rgba(201, 169, 97, 0.3);
+    border-radius: 0;
+    background: var(--aat-dark-gray);
+    color: var(--aat-white);
+    font-size: 1rem;
+    transition: var(--aat-transition);
+    cursor: pointer;
+}
+.aat-filter-group select:hover,
+.aat-filter-group input[type="text"]:hover {
+    border-color: var(--aat-gold);
+}
+.aat-filter-group select:focus,
+.aat-filter-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--aat-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
+}
+.aat-filter-group select option {
+    background: var(--aat-dark-gray);
+    color: var(--aat-white);
+}
+.aat-checkbox-group {
+    display: flex;
+    align-items: center;
+    padding-top: 25px;
+}
+.aat-checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    accent-color: var(--aat-gold);
+    cursor: pointer;
+}
+.aat-checkbox-group label {
+    margin-bottom: 0;
+    cursor: pointer;
+    color: var(--aat-light-gray);
+}
+.aat-filter-actions {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+.aat-quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+.aat-footer-links {
+    margin: 10px 0 0 0;
+    font-size: .875rem;
+}
+.aat-footer-links a {
+    color: var(--aat-gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.4);
+    transition: var(--aat-transition);
+}
+.aat-footer-links a:hover {
+    color: var(--aat-gold-light);
+    border-bottom-color: rgba(224, 196, 129, 0.65);
+}
+.aat-footer-mobile-hint {
+    display: none;
+    margin-left: 10px;
+    color: rgba(255,255,255,0.74);
+}
+.aat-hub-metric-card.aat-card-has-backdrop {
+    border-color: rgba(201,169,97,.24);
+}
+.aat-hub-metric-card:hover {
+    transform: none;
+    border-color: rgba(201,169,97,.34);
+    background: transparent;
+}
+.aat-hub-metric-card:hover::before {
+    opacity: 1;
+}
+.aat-hub-metric-copy {
+    margin: 12px 0 0;
+    color: rgba(255,255,255,0.74);
+    line-height: 1.6;
+    font-size: 0.98rem;
+}
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--aat-light-gray) !important;
+    padding: 15px 0;
+}
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+    background: var(--aat-dark-gray);
+    border: 2px solid rgba(201, 169, 97, 0.3);
+    border-radius: 0;
+    color: var(--aat-white);
+    padding: 8px 12px;
+    margin: 0 8px;
+}
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: var(--aat-gold);
+    outline: none;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: transparent !important;
+    border: 1px solid rgba(201, 169, 97, 0.3) !important;
+    color: var(--aat-light-gray) !important;
+    border-radius: 0;
+    margin: 0 3px;
+    transition: var(--aat-transition);
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: rgba(201, 169, 97, 0.2) !important;
+    border-color: var(--aat-gold) !important;
+    color: var(--aat-gold) !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--aat-gold) !important;
+    border-color: var(--aat-gold) !important;
+    color: var(--aat-black) !important;
+    font-weight: 700;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+.dt-buttons {
+    margin-bottom: 20px;
+}
+.dt-buttons .dt-button {
+    background: transparent !important;
+    border: 2px solid var(--aat-gold) !important;
+    color: var(--aat-gold) !important;
+    border-radius: 0;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: var(--aat-transition);
+    margin-right: 10px;
+}
+.dt-buttons .dt-button:hover {
+    background: var(--aat-gold) !important;
+    color: var(--aat-black) !important;
+}
+.aat-table-top .dt-buttons {
+    margin-bottom: 0;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
+    top: 50%;
+    left: 8px;
+    height: 20px;
+    width: 20px;
+    margin-top: -10px;
+    border: 1px solid rgba(201, 169, 97, 0.6);
+    border-radius: 0;
+    box-shadow: none;
+    background-color: rgba(201, 169, 97, 0.12);
+    color: var(--aat-gold);
+    font-weight: 900;
+    line-height: 20px;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before {
+    background-color: rgba(201, 169, 97, 0.25);
+}
+table.dataTable > tbody > tr.child {
+    background: transparent !important;
+}
+table.dataTable > tbody > tr.child ul.dtr-details {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 0;
+    padding: 12px 14px;
+    margin: 10px 0;
+}
+table.dataTable > tbody > tr.child ul.dtr-details li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 0;
+}
+table.dataTable > tbody > tr.child ul.dtr-details li:last-child {
+    border-bottom: 0;
+}
+table.dataTable > tbody > tr.child ul.dtr-details .dtr-title {
+    color: var(--aat-gold-light);
+    font-weight: 700;
+    padding-right: 10px;
+}
+table.dataTable > tbody > tr.child ul.dtr-details .dtr-data {
+    color: var(--aat-light-gray);
+}
+@media screen and (max-width: 768px) {
+.aat-filters {
+        grid-template-columns: 1fr;
+        padding: 20px 0;
+    }
+.aat-filter-actions {
+        flex-direction: column;
+    }
+.dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        width: 100%;
+        text-align: left;
+    }
+.dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_filter input {
+        width: 100%;
+        margin: 8px 0 0 0;
+        box-sizing: border-box;
+    }
+.dt-buttons {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+.dt-buttons .dt-button {
+        margin-right: 0 !important;
+        flex: 1 1 auto;
+        padding: 10px 12px;
+    }
+}
+@media (prefers-color-scheme: light) {
+.aat-container.light-mode .aat-header h2 {
+        color: var(--aat-gold-dark);
+    }
+}
+@media print {
+.aat-filters,
+    .dt-buttons,
+    .dataTables_paginate {
+        display: none !important;
+    }
+}
+.dataTables_wrapper .dataTables_processing {
+    position: absolute;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    padding: 14px 18px;
+    width: auto;
+    border-radius: 0;
+    background: rgba(10, 21, 32, 0.92);
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    color: var(--aat-gold) !important;
+    box-shadow: none;
+    backdrop-filter: blur(4px);
+}
+.aat-filter-group select,
+.aat-filter-group input[type="text"] {
+    box-sizing: border-box;
+    min-height: 46px;
+    line-height: 1.25;
+}
+.aat-filter-group select {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_filter label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
+    content: '+' !important;
+    text-align: center;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before {
+    content: '–' !important;
+}
+.aat-footer-mobile-hint {
+    display: none;
+}
+@media screen and (max-width: 768px) {
+.aat-footer-mobile-hint {
+        display: block;
+        margin-top: 6px;
+    }
+}
+.aat-tracker-v2 .aat-header {
+    margin-bottom: 20px;
+}
+.aat-tracker-season-selector {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+.aat-tracker-season-label {
+    color: var(--aat-light-gray);
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+.aat-tracker-season-select {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    color: var(--aat-light-gray);
+    border-radius: 0;
+    padding: 10px 14px;
+    min-width: 0;
+    max-width: 100%;
+}
+.aat-tracker-season-select:focus {
+    outline: none;
+    border-color: var(--aat-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.18);
+}
+.aat-tracker-mini-stats {
+    margin-top: 14px;
+    color: var(--aat-light-gray);
+    opacity: 0.85;
+    font-size: 0.95rem;
+}
+.aat-tracker-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0 22px;
+}
+.aat-tracker-tab {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    color: var(--aat-light-gray);
+    border-radius: 0;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: normal;
+    transition: var(--aat-transition);
+}
+.aat-tracker-tab:hover {
+    border-color: var(--aat-gold);
+    transform: none;
+}
+.aat-tracker-tab.active {
+    background: rgba(201, 169, 97, 0.16);
+    border-color: rgba(201, 169, 97, 0.7);
+    color: var(--aat-gold);
+}
+.aat-tracker-panel {
+    display: none;
+}
+.aat-tracker-panel.active {
+    display: block;
+}
+.aat-tracker-panel-head {
+    text-align: center;
+    margin: 0 0 18px;
+}
+.aat-tracker-panel-head h3 {
+    margin: 0 0 6px;
+    color: var(--aat-gold);
+    text-transform: none;
+    letter-spacing: normal;
+}
+.aat-tracker-panel-kicker {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: 0.9;
+}
+.aat-tracker-category {
+    margin: 18px 0 26px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: hidden;
+}
+.aat-tracker-category-title {
+    margin: 0;
+    padding: 14px 0;
+    font-size: 1.05rem;
+    color: var(--aat-gold);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.18);
+    background: transparent;
+}
+.aat-tracker-picks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 16px 0;
+}
+@media (max-width: 900px) {
+.aat-tracker-picks {
+        grid-template-columns: 1fr;
+        padding: 16px 0;
+    }
+}
+.aat-tracker-pick {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 14px;
+    padding: 16px 0;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    transition: var(--aat-transition);
+    border-bottom: 1px solid rgba(201,169,97,.22);
+}
+.aat-tracker-pick:hover {
+    transform: none;
+    border-color: rgba(201, 169, 97, 0.45);
+    box-shadow: none;
+}
+.aat-tracker-poster {
+    width: 84px;
+    height: 126px;
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    background: rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.aat-tracker-poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.aat-tracker-poster-placeholder span {
+    font-size: 28px;
+    opacity: 0.85;
+}
+.aat-tracker-pick-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+.aat-tracker-pick-title {
+    color: var(--aat-light-gray);
+    text-decoration: none;
+    font-weight: 800;
+    line-height: 1.25;
+}
+.aat-tracker-pick-title:hover {
+    color: var(--aat-gold);
+}
+.aat-tracker-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 0;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    color: var(--aat-gold);
+    font-weight: 800;
+    font-size: .875rem;
+}
+.aat-tracker-pick-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+.aat-tracker-imdb {
+    color: var(--aat-gold-light);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    opacity: 0.95;
+}
+.aat-tracker-imdb:hover {
+    color: var(--aat-gold);
+}
+.aat-tracker-note {
+    margin: 10px 0 0;
+    color: var(--aat-light-gray);
+    opacity: 0.9;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+.aat-database-landing-metrics .aat-hub-metric-copy,
+.aat-explorer-signal-grid .aat-hub-metric-copy {
+    margin: 4px 0 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.aat-explorer-signal-grid {
+    margin: 10px 0 26px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 24px;
+}
+.aat-ledger-header-action:hover,
+.aat-ledger-header-action:focus-visible {
+    border-color: var(--aat-gold);
+}
+.aat-footer-count {
+    color: inherit;
+}
+.aat-filters-disclosure {
+    margin: 0 0 26px;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow:
+        none;
+    overflow: hidden;
+    padding: 20px 0;
+}
+.aat-filters-disclosure > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 20px;
+    color: var(--aat-gold-light);
+    font-size: .88rem;
+    font-weight: 700;
+    letter-spacing: normal;
+    text-transform: none;
+    transition: background-color .2s ease, color .2s ease;
+}
+.aat-filters-disclosure > summary::-webkit-details-marker {
+    display: none;
+}
+.aat-filters-disclosure > summary:hover,
+.aat-filters-disclosure > summary:focus-visible {
+    background: rgba(201,169,97,.08);
+    color: var(--aat-gold);
+}
+.aat-filters-disclosure > summary::after {
+    content: '+';
+    float: right;
+    color: var(--aat-gold);
+    font-size: 1rem;
+}
+.aat-filters-disclosure[open] > summary::after {
+    content: '–';
+}
+.aat-filters-disclosure .aat-filters {
+    margin-bottom: 0;
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,.06);
+    border-radius: 0;
+    background: transparent;
+}
+@media (max-width: 900px) {
+.aat-explorer-signal-grid .aat-hub-metric-card {
+        min-height: 0;
+    }
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before { content: "\2013" !important; }
+.aat-filters-disclosure[open] > summary::after { content: "\2013"; }
+@media (max-width: 640px) {
+.aat-filters {
+        padding: 20px 0;
+        gap: 14px;
+        border-radius: 0;
+    }
+.aat-filter-group select,
+    .aat-filter-group input[type="text"] {
+        min-height: 46px;
+        font-size: 0.96rem;
+    }
+.aat-filter-actions {
+        gap: 10px;
+    }
+.dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_paginate {
+        font-size: .875rem;
+    }
+.dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_filter input {
+        min-height: 44px;
+    }
+.aat-filters-disclosure > summary {
+        padding: 14px 16px;
+        font-size: .875rem;
+    }
+}
+@media (max-width: 720px) {
+.aat-footer-mobile-hint {
+        display: inline;
+    }
+}
