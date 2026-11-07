@@ -132,7 +132,7 @@ foreach (array(
     '_aat_person_portrait_verified',
     '_aat_person_portrait_batch',
     '_aat_person_portrait_original_file',
-    'delete_transient',
+    'retire_person_portrait_caches',
     'copy_profile_image_source_to_temp_file',
 ) as $needle) {
     $assert(strpos($import_method, $needle) !== false, "Manual import should create verified local portrait metadata: {$needle}");

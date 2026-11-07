@@ -120,7 +120,7 @@ foreach (array(
     '_aat_person_portrait_adopted_at',
     '_aat_person_portrait_adopted_by',
     '_aat_person_portrait_adoption_note',
-    "delete_transient('aat_person_profile_attachment_v2_' . \$person_id)",
+    "\$this->retire_person_portrait_caches(\$person_id)",
 ) as $needle) {
     $assert(strpos($adopt_method, $needle) !== false, "Adoption method should validate and write only reviewed portrait metadata: {$needle}");
 }

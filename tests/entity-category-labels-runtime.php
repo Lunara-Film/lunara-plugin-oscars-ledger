@@ -67,6 +67,9 @@ eval('class Academy_Awards_Table {' . $methods . '
     public function get_ceremony_url($ceremony) { return $this->get_entity_base_url() . "ceremony/" . $ceremony . "/"; }
     public function get_review_ids_for_title_id($id, $limit) { return array(); }
     public function get_poster_img_html_for_title($id, $size, $attrs) { return ""; }
+    public function poster_sizes_for($slot) { return "160px"; }
+    public function get_attachment_img_html($id, $size = "medium_large", $attrs = array(), $frame = array(), $widths = array(), $fallback = 0) { return ""; }
+    public function get_card_backdrop_image_url($url, $width = 400) { return $url; }
     public function get_route_context() { return array("kind" => get_query_var("aat_entity"), "id" => get_query_var("aat_entity_id")); }
 }');
 set_error_handler(function($severity, $message, $file, $line) { throw new RuntimeException("$message at $file:$line"); });
