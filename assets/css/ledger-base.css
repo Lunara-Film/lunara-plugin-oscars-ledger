@@ -223,6 +223,13 @@ body.aat-shell-page aside[data-type="type-2"] {
     font-size: 1.2rem;
     margin: 0 5px;
 }
+.aat-table-wrapper {
+    background: transparent;
+    border-radius: 0;
+    padding: 20px;
+    /* Allow native <select> dropdowns (DataTables length menu) to render without clipping. */
+    overflow: visible;
+}
 .aat-footer {
     text-align: center;
     padding-top: 30px;
@@ -1643,6 +1650,15 @@ table.aat-datatable th {
 }
 .aat-database-landing-footer {
     padding-top: 6px;
+}
+.aat-table-wrapper {
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow:
+        none;
+    overflow: hidden;
 }
 @media (max-width: 900px) {
 .aat-database-landing-actions {
