@@ -1,0 +1,2548 @@
+/**
+ * Academy Awards Table - Frontend Styles: the base sheet (2.8.29).
+ *
+ * Every public Ledger route loads this sheet: the variables, the shell, the shared cards, every rule the
+ * landing (/oscars/) can print, and every rule a later shared rule overrides (those keep their place in
+ * the cascade here). Hub routes add ledger-hub.css, title, name and company routes add ledger-profile.css,
+ * and the sortable ledger, the trackers and embedded tables add ledger-table.css. A rule lives outside this
+ * sheet only when every one of its selectors carries a class that its own template prints and no other
+ * template prints (academy-awards-table.php, route_stylesheets(); tests/stylesheet-split-runtime.php).
+ */
+
+:root {
+    /*
+      Lunara Film palette (falls back gracefully for other themes)
+      - Background: #0a1520
+      - Gold:       #c9a961
+    */
+    --aat-black: var(--lunara-bg-primary, #0a1520);
+    --aat-dark-gray: var(--lunara-bg-secondary, #0d1b29);
+    --aat-medium-gray: var(--lunara-bg-card, #142a3d);
+
+    --aat-gold: var(--lunara-gold, #c9a961);
+    --aat-gold-light: var(--lunara-gold-light, #eadbb3);
+    --aat-gold-dark: #8f7534;
+    --aat-focus-ring: var(--aat-gold-light);
+    --aat-focus-halo: rgba(201, 169, 97, 0.18);
+    --aat-selection-bg: rgba(201, 169, 97, 0.38);
+    --aat-selection-text: #fff8df;
+    --aat-target-text-bg: rgba(224, 196, 129, 0.68);
+    --aat-target-text: #07101b;
+
+    --aat-light-gray: var(--lunara-text, #e6eef7);
+    --aat-white: #ffffff;
+    --aat-winner-bg: rgba(201, 169, 97, 0.15);
+    --aat-winner-border: var(--aat-gold);
+    --aat-shadow: none;
+    --aat-shadow-hover: none;
+    --aat-transition: color .18s ease, background-color .18s ease, border-color .18s ease;
+}
+.aat-container ::selection {
+    background: var(--aat-selection-bg);
+    color: var(--aat-selection-text);
+    text-shadow: none;
+}
+::target-text {
+    background-color: var(--aat-target-text-bg);
+    color: var(--aat-target-text);
+    text-shadow: none;
+}
+.aat-container :where(a:visited) {
+    color: inherit;
+}
+.aat-container :where(a, button, summary, input, select, textarea):focus-visible {
+    outline: 2px solid var(--aat-focus-ring);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px var(--aat-focus-halo);
+}
+.aat-container :where(a, summary):focus-visible {
+    text-decoration-color: rgba(234, 219, 179, 0.82);
+}
+.aat-container {
+    /* Let the active theme control typography (Blocksy/Lunara uses Inter). */
+    font-family: var(--lunara-font-body, Georgia, serif);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
+    background:
+        transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+body.aat-shell-page {
+    background: var(--aat-black);
+    color: var(--aat-light-gray);
+}
+body.aat-shell-page #main-container,
+body.aat-shell-page .site-content,
+body.aat-shell-page .ct-container,
+body.aat-shell-page .content-area,
+body.aat-shell-page .site-main {
+    background: transparent;
+}
+body.aat-shell-page .ct-container,
+body.aat-shell-page .site-content > .container,
+body.aat-shell-page .site-content > .wrap,
+body.aat-shell-page .content-area,
+body.aat-shell-page .ct-container-narrow,
+body.aat-shell-page .entry-content,
+body.aat-shell-page .post-content,
+body.aat-shell-page article {
+    width: min(1540px, calc(100% - 32px));
+    max-width: 1540px;
+    margin-left: auto;
+    margin-right: auto;
+}
+body.aat-shell-page .content-area,
+body.aat-shell-page .site-main,
+body.aat-shell-page .entry-content,
+body.aat-shell-page .post-content,
+body.aat-shell-page article {
+    float: none;
+    width: 100% !important;
+    max-width: none !important;
+}
+body.aat-shell-page .sidebar,
+body.aat-shell-page aside[data-type="type-2"] {
+    display: none;
+}
+.aat-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid var(--aat-gold);
+}
+.aat-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--aat-gold);
+    margin: 0 0 10px 0;
+    text-transform: none;
+    letter-spacing: normal;
+}
+.aat-header .aat-subtitle {
+    color: var(--aat-light-gray);
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+.aat-oscar-icon {
+    width: 60px;
+    height: auto;
+    margin-bottom: 15px;
+    filter: none;
+}
+.aat-stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+.aat-stat {
+    text-align: center;
+    padding: 15px 25px;
+    background: transparent;
+    border-radius: 0;
+    border: 0;
+    transition: var(--aat-transition);
+}
+.aat-stat:hover {
+    border-color: var(--aat-gold);
+    transform: none;
+}
+.aat-stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--aat-gold);
+    display: block;
+}
+.aat-stat-label {
+    font-size: .875rem;
+    color: var(--aat-light-gray);
+    text-transform: none;
+    letter-spacing: normal;
+}
+.aat-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 12px 22px;
+    border: 1px solid transparent;
+    border-radius: 0;
+    font-size: .875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--aat-transition);
+    text-transform: none;
+    letter-spacing: normal;
+    text-decoration: none;
+    box-shadow: none;
+}
+.aat-btn-primary {
+    background: var(--aat-gold);
+    color: var(--aat-black);
+    border-color: rgba(224,196,129,.28);
+}
+.aat-btn-primary:hover {
+    transform: none;
+    box-shadow: none;
+}
+.aat-btn-secondary {
+    background: rgba(255,255,255,.03);
+    color: var(--aat-gold-light);
+    border-color: rgba(201,169,97,.22);
+    box-shadow: none;
+}
+.aat-btn-secondary:hover {
+    background: rgba(201, 169, 97, 0.1);
+    border-color: rgba(201,169,97,.38);
+    transform: none;
+}
+.aat-quick-filter {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    color: var(--aat-light-gray);
+    font-size: .875rem;
+    cursor: pointer;
+    transition: var(--aat-transition);
+}
+.aat-quick-filter:hover,
+.aat-quick-filter.active {
+    background: var(--aat-gold);
+    color: var(--aat-black);
+    border-color: var(--aat-gold);
+}
+.aat-filter-divider {
+    color: rgba(201,169,97,0.74);
+    font-size: 1.2rem;
+    margin: 0 5px;
+}
+.aat-footer {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(201, 169, 97, 0.2);
+    margin-top: 30px;
+}
+.aat-footer p {
+    color: rgba(255,255,255,0.74);
+    font-size: .875rem;
+    margin: 0;
+}
+.aat-footer-line {
+    margin: 0 0 8px 0;
+}
+.aat-footer-sep {
+    margin: 0 10px;
+}
+.aat-hub-link {
+    text-decoration: none;
+    color: inherit;
+}
+.aat-hub-link:hover .aat-category-pill {
+    background: rgba(201, 169, 97, 0.28);
+    color: var(--aat-gold);
+}
+.aat-hub-link.aat-ceremony {
+    color: var(--aat-gold-light);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.35);
+}
+.aat-hub-link.aat-ceremony:hover {
+    color: var(--aat-gold);
+    border-bottom-color: rgba(201, 169, 97, 0.65);
+}
+.aat-hub-header {
+    display: grid;
+    gap: 18px;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(201,169,97,.24);
+}
+.aat-hub-title {
+    margin: 0;
+    color: var(--aat-light-gray);
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.12;
+    text-wrap: balance;
+}
+.aat-hub-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.aat-hub-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-hub-card {
+    display: block;
+    padding: 24px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    text-decoration: none;
+    transition: var(--aat-transition);
+    border-bottom: 1px solid rgba(201,169,97,.24);
+}
+.aat-hub-card:hover {
+    border-color: var(--aat-gold);
+    transform: none;
+}
+.aat-hub-section {
+    margin-top: 25px;
+}
+.aat-hub-section h2 {
+    color: var(--aat-gold);
+    font-size: 1.4rem;
+    margin: 0 0 12px 0;
+    letter-spacing: normal;
+}
+.aat-hub-copy {
+    color: rgba(255,255,255,0.75);
+    line-height: 1.8;
+}
+.aat-hub-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 14px;
+    border-radius: 0;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    color: var(--aat-gold-light);
+    background: transparent;
+    text-decoration: none;
+    transition: border-color .18s ease, color .18s ease;
+}
+.aat-hub-chip:hover {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-gold-light);
+}
+.aat-hub-kicker {
+    margin: 0 0 10px;
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-marquee {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+    gap: 18px;
+    align-items: start;
+    padding: 26px;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    position: relative;
+    overflow: hidden;
+}
+.aat-ceremony-marquee > * {
+    position: relative;
+    z-index: 1;
+}
+.aat-ceremony-marquee h2 {
+    margin: 0 0 10px;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    line-height: 1.06;
+}
+.aat-ceremony-marquee .aat-hub-copy {
+    margin-bottom: 0;
+    max-width: 68ch;
+}
+.aat-ceremony-marquee-stack {
+    display: grid;
+    gap: 10px;
+}
+.aat-hub-chip-stack {
+    display: grid;
+    gap: 10px;
+}
+.aat-card-has-backdrop {
+    background-color: rgba(7, 17, 30, 0.96);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    box-shadow: none;
+}
+.aat-card-has-backdrop > * {
+    position: relative;
+    z-index: 1;
+}
+.aat-hub-spotlight-card {
+    display: grid;
+    grid-template-columns: minmax(136px, 168px) minmax(0, 1fr);
+    gap: 18px;
+    align-items: stretch;
+    padding: 18px;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    text-decoration: none;
+    color: inherit;
+    min-height: 272px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .28s ease;
+}
+.aat-meta-sep {
+    color: rgba(201,169,97,0.74);
+    font-size: .92em;
+}
+.aat-hub-chip-rich {
+    display: grid;
+    gap: 4px;
+    padding: 18px 18px;
+    border-radius: 0;
+    min-height: 88px;
+}
+.aat-hub-chip-rich.aat-card-has-backdrop {
+    box-shadow: none;
+}
+.aat-hub-chip-rich strong {
+    color: var(--aat-white);
+    font-size: 1.08rem;
+}
+.aat-hub-chip-rich span {
+    color: rgba(255,255,255,0.74);
+    font-size: 0.92rem;
+}
+.aat-hub-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin: 22px 0 34px;
+}
+.aat-hub-metric-card {
+    padding: 24px;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform .26s ease, border-color .26s ease, background .26s ease;
+    min-height: 206px;
+}
+.aat-hub-metric-label {
+    display: block;
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-hub-metric-value {
+    display: block;
+    margin-top: 10px;
+    color: var(--aat-gold);
+    font-size: clamp(1.35rem, 2.6vw, 2.2rem);
+    line-height: 1.1;
+}
+.aat-winner-circle-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 22px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-winner-circle-card {
+    padding: 24px;
+    border-radius: 0;
+    border: 0;
+    background:
+        transparent;
+    position: relative;
+    overflow: hidden;
+    transition: transform .26s ease, border-color .26s ease, background .26s ease;
+    min-height: 420px;
+    display: grid;
+    align-content: start;
+    gap: 14px;
+}
+.aat-winner-circle-card.has-hero-media {
+    border-color: rgba(201,169,97,.18);
+}
+.aat-winner-circle-card:hover {
+    transform: none;
+    border-color: rgba(201,169,97,.24);
+    background: transparent;
+}
+.aat-winner-circle-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.aat-winner-circle-category {
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+}
+.aat-winner-circle-category:hover {
+    color: var(--aat-gold);
+}
+.aat-winner-circle-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: 1.08rem;
+    line-height: 1.35;
+}
+.aat-winner-circle-title a {
+    color: inherit;
+    text-decoration: none;
+}
+.aat-winner-circle-title a:hover {
+    color: var(--aat-gold);
+}
+.aat-winner-circle-meta {
+    margin: 10px 0 0;
+    color: rgba(255,255,255,0.74);
+    line-height: 1.55;
+}
+.aat-winner-circle-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(201,169,97,.12);
+}
+.aat-winner-circle-action {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 7px 12px;
+    border-radius: 0;
+    border: 1px solid rgba(201,169,97,.18);
+    background: rgba(7,15,26,.62);
+    color: rgba(242,212,122,0.92);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    box-shadow: none;
+    transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease;
+}
+.aat-winner-circle-action:hover,
+.aat-winner-circle-action:focus {
+    transform: none;
+    border-color: rgba(242,212,122,.52);
+    background: rgba(11,21,35,.94);
+    color: #fff2c2;
+}
+.aat-winner-circle-action.is-kind-ceremony {
+    background: rgba(201,169,97,.1);
+    border-color: rgba(201,169,97,.24);
+    color: #edd296;
+}
+.aat-winner-circle-action.is-kind-category {
+    border-color: rgba(201,169,97,.28);
+}
+.aat-winner-circle-action.is-kind-film-history,
+.aat-winner-circle-action.is-kind-person-history,
+.aat-winner-circle-action.is-kind-producer-history,
+.aat-winner-circle-action.is-kind-company-history {
+    border-color: rgba(201,169,97,.3);
+    background: transparent;
+    color: var(--aat-gold-light);
+}
+.aat-winner-circle-action.is-kind-film-history:hover,
+.aat-winner-circle-action.is-kind-film-history:focus,
+.aat-winner-circle-action.is-kind-person-history:hover,
+.aat-winner-circle-action.is-kind-person-history:focus,
+.aat-winner-circle-action.is-kind-producer-history:hover,
+.aat-winner-circle-action.is-kind-producer-history:focus,
+.aat-winner-circle-action.is-kind-company-history:hover,
+.aat-winner-circle-action.is-kind-company-history:focus {
+    border-color: rgba(201,169,97,.55);
+    background: rgba(201,169,97,.08);
+    color: var(--aat-white);
+}
+.aat-winner-circle-media {
+    display: block;
+    /* The plaque variant carries padding; without border-box it grows wider than the
+       poster and portrait boxes beside it and the row stops lining up. */
+    box-sizing: border-box;
+    position: relative;
+    margin: 0 -8px;
+    border-radius: 0;
+    overflow: hidden;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    /* One shape for every card. Posters and portraits are both 2:3, so they fill the
+       box with no crop; the effective sizing lives in the .aat-hub-page block below. */
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+}
+.aat-winner-circle-media img,
+.aat-winner-circle-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Posters centre; portraits sit high so the crop never takes the face. */
+    object-position: center center;
+}
+.aat-winner-circle-media.is-portrait img,
+.aat-winner-circle-media.is-portrait .aat-winner-circle-photo {
+    object-position: center 18%;
+}
+.aat-winner-circle-media.is-plaque {
+    display: flex;
+    /* A grid item's automatic minimum size is its content: without this the long
+       award names push the plaque wider than the poster/portrait boxes beside it. */
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px;
+    text-align: center;
+    background:
+        transparent;
+    border-color: rgba(201,169,97,.16);
+}
+.aat-winner-circle-plaque-label {
+    font-size: 14px;
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgba(255,255,255,0.74);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+.aat-winner-circle-media:hover {
+    border-color: rgba(201,169,97,.28);
+}
+.aat-winner-circle-section.is-hero-latest .aat-hub-copy {
+    max-width: 88ch;
+}
+.aat-winner-circle-grid.is-hero-latest {
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 28px;
+}
+.aat-winner-circle-card.is-hero-latest {
+    padding: 16px 0;
+    min-height: 0;
+    gap: 12px;
+    background:
+        transparent;
+    box-shadow: none;
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-top {
+    margin-bottom: 4px;
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-media {
+    margin: 0 0 4px;
+    border-radius: 0;
+    border: 1px solid rgba(201,169,97,.18);
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+    background: rgba(255,255,255,.03);
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-photo,
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-media img {
+    object-position: center center;
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-title {
+    font-size: clamp(1.3rem, 2vw, 1.65rem);
+    line-height: 1.18;
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-meta {
+    margin-top: 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: rgba(244,239,227,0.86);
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-actions {
+    margin-top: 6px;
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-circle-category {
+    font-size: .875rem;
+    letter-spacing: normal;
+}
+.aat-winner-circle-card.is-hero-latest .aat-winner-badge {
+    background: rgba(7, 15, 26, 0.8);
+    border-color: rgba(201,169,97,.28);
+}
+.aat-winner-circle-section.is-marquee-latest .aat-hub-copy {
+    max-width: 96ch;
+}
+.aat-winner-circle-grid.is-marquee-latest {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 24px;
+}
+.aat-winner-circle-card.is-marquee-latest {
+    min-height: 0;
+    padding: 16px 0;
+    border-top: 1px solid rgba(201,169,97,.14);
+}
+.aat-winner-circle-card.is-marquee-latest .aat-winner-circle-media {
+    margin: 0 0 8px;
+    width: min(100%, 220px);
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+    border: 1px solid rgba(201,169,97,.18);
+    border-radius: 0;
+    background: rgba(255,255,255,.03);
+}
+.aat-winner-circle-card.is-marquee-latest .aat-winner-circle-title {
+    font-size: clamp(1.45rem, 2.4vw, 1.95rem);
+}
+.aat-winner-circle-card.is-marquee-latest .aat-winner-circle-meta {
+    font-size: 1.04rem;
+}
+.aat-winner-circle-card.is-marquee-latest .aat-winner-circle-actions {
+    gap: 12px;
+}
+.aat-winner-circle-card.is-marquee-latest .aat-winner-circle-action {
+    min-height: 44px;
+    padding: 8px 14px;
+    font-size: .875rem;
+}
+.aat-entity-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.25);
+}
+.aat-entity-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.aat-entity-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+table.aat-entity-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+table.aat-entity-table thead th {
+    background: var(--aat-gold);
+    color: var(--aat-black);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: .875rem;
+    padding: 14px 16px;
+    border: none;
+}
+table.aat-entity-table thead th:first-child {
+    border-radius: 0;
+}
+table.aat-entity-table thead th:last-child {
+    border-radius: 0;
+}
+table.aat-entity-table tbody tr {
+    background: rgba(255, 255, 255, 0.02);
+}
+table.aat-entity-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05);
+}
+table.aat-entity-table tbody td {
+    padding: 12px 16px;
+    color: var(--aat-light-gray);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+.aat-entity-link {
+    color: var(--aat-gold-light);
+    text-decoration: none;
+    font-weight: 600;
+}
+.aat-entity-link:hover {
+    color: var(--aat-gold);
+    text-decoration: underline;
+}
+table.aat-datatable {
+    width: 100% !important;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+table.aat-datatable thead th {
+    background: var(--aat-gold);
+    color: var(--aat-black);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: .875rem;
+    padding: 16px 20px;
+    border: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+table.aat-datatable thead th:first-child {
+    border-radius: 0;
+}
+table.aat-datatable thead th:last-child {
+    border-radius: 0;
+}
+table.aat-datatable tbody tr {
+    background: rgba(255, 255, 255, 0.02);
+    transition: var(--aat-transition);
+}
+table.aat-datatable tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05);
+}
+table.aat-datatable tbody tr:hover {
+    background: rgba(201, 169, 97, 0.1);
+    transform: none;
+}
+table.aat-datatable tbody tr.winner-row {
+    background: var(--aat-winner-bg);
+    border-left: 0;
+}
+table.aat-datatable tbody tr.winner-row:hover {
+    background: rgba(201, 169, 97, 0.25);
+}
+table.aat-datatable tbody td {
+    padding: 14px 20px;
+    color: var(--aat-light-gray);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+table.aat-datatable tbody td.aat-col-control,
+table.aat-datatable thead th.aat-col-control {
+    position: relative;
+    padding-left: 30px;
+    padding-right: 10px;
+}
+.aat-winner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--aat-gold);
+    color: var(--aat-black);
+    padding: 6px 12px;
+    border-radius: 0;
+    font-size: .875rem;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: normal;
+}
+.aat-nominee-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--aat-light-gray);
+    padding: 6px 12px;
+    border-radius: 0;
+    font-size: .875rem;
+}
+.aat-category-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(201, 169, 97, 0.2);
+    color: var(--aat-gold-light);
+    border-radius: 0;
+    font-size: .875rem;
+    font-weight: 500;
+}
+.aat-year {
+    font-weight: 700;
+    color: var(--aat-gold);
+    font-size: 1.1rem;
+}
+.aat-ceremony {
+    font-weight: 600;
+    color: var(--aat-gold-light);
+    font-size: 0.9rem;
+}
+.aat-film-title {
+    font-weight: 600;
+    color: var(--aat-white);
+}
+.aat-no-film {
+    color: rgba(255,255,255,0.74);
+    font-style: italic;
+}
+.aat-nominee-name {
+    color: var(--aat-light-gray);
+}
+.aat-credit-line {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.74);
+    font-size: .875rem;
+    line-height: 1.35;
+}
+.aat-credit-separator {
+    color: rgba(255,255,255,0.74);
+}
+.aat-imdb-link {
+    color: var(--aat-gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.45);
+    padding: 1px 0;
+    transition: var(--aat-transition);
+}
+.aat-imdb-link:hover {
+    color: var(--aat-gold-light);
+    border-bottom-color: var(--aat-gold);
+}
+.aat-imdb-link:focus-visible {
+    outline: 2px solid var(--aat-gold);
+    outline-offset: 2px;
+    border-radius: 0;
+}
+.aat-imdb-pills {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+.aat-imdb-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 0;
+    border: 1px solid rgba(201, 169, 97, 0.55);
+    color: var(--aat-gold);
+    text-decoration: none;
+    font-size: .875rem;
+    font-weight: 700;
+    letter-spacing: normal;
+    line-height: 1;
+}
+.aat-imdb-pill:hover {
+    background: rgba(201, 169, 97, 0.12);
+    border-color: var(--aat-gold);
+    transform: none;
+}
+.aat-role-suffix {
+    color: rgba(255,255,255,0.74);
+    font-size: 0.9rem;
+}
+.aat-sep {
+    color: rgba(201,169,97,0.74);
+}
+.aat-detail {
+    color: rgba(255,255,255,0.74);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+.aat-table-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+.aat-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    color: var(--aat-gold);
+}
+.aat-loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(201, 169, 97, 0.2);
+    border-top-color: var(--aat-gold);
+    border-radius: 0;
+    animation: aat-spin 1s linear infinite;
+}
+@keyframes aat-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.aat-loading-text {
+    margin-top: 15px;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+.aat-no-results {
+    text-align: center;
+    padding: 60px;
+    color: var(--aat-light-gray);
+}
+.aat-no-results-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+.aat-no-results h3 {
+    color: var(--aat-gold);
+    margin-bottom: 10px;
+}
+@media screen and (max-width: 768px) {
+.aat-container {
+        padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
+        border-radius: 0;
+        font-family: var(--lunara-font-body, Georgia, serif);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+.aat-header h2 {
+        font-size: 1.5rem;
+        letter-spacing: normal;
+        text-transform: none;
+    }
+.aat-stats-bar {
+        gap: 15px;
+    }
+.aat-stat {
+        padding: 10px 15px;
+    }
+.aat-stat-number {
+        font-size: 1.5rem;
+    }
+.aat-btn {
+        width: 100%;
+    }
+table.aat-datatable thead th,
+    table.aat-datatable tbody td {
+        padding: 10px 12px;
+        font-size: .875rem;
+    }
+.aat-winner-badge,
+    .aat-nominee-badge {
+        padding: 4px 8px;
+        font-size: .875rem;
+    }
+.aat-table-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+.aat-imdb-pill {
+        padding: 6px 12px;
+        font-size: .875rem;
+    }
+}
+@media (prefers-color-scheme: light) {
+.aat-container.light-mode {
+        background: transparent;
+    }
+.aat-container.light-mode table.aat-datatable tbody td {
+        color: var(--aat-dark-gray);
+    }
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.aat-animate-in {
+    animation: fadeInUp 0.5s ease forwards;
+}
+.aat-tooltip {
+    position: relative;
+    cursor: help;
+}
+.aat-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--aat-black);
+    color: var(--aat-white);
+    padding: 8px 12px;
+    border-radius: 0;
+    font-size: .875rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--aat-transition);
+    z-index: 1000;
+}
+.aat-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+@media print {
+.aat-container {
+        background: transparent;
+        box-shadow: none;
+        font-family: var(--lunara-font-body, Georgia, serif);
+        font-size: 1rem;
+        line-height: 1.6;
+        padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
+    }
+table.aat-datatable thead th {
+        background: var(--aat-gold) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+table.aat-datatable tbody td {
+        color: black;
+    }
+}
+table.aat-datatable td,
+table.aat-datatable th {
+    white-space: normal;
+}
+.aat-review-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    padding: 4px 9px;
+    border-radius: 0;
+    border: 1px solid rgba(201, 169, 97, 0.6);
+    color: rgba(201,169,97,0.95);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    background: rgba(10, 21, 32, 0.55);
+    transition: var(--aat-transition);
+    vertical-align: middle;
+}
+.aat-review-chip:hover {
+    background: rgba(201, 169, 97, 0.15);
+    transform: none;
+}
+.aat-entity-poster {
+    display: block;
+    max-width: 240px;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    box-shadow: none;
+}
+.aat-entity-poster-wrap img,
+.aat-entity-poster {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+.aat-entity-poster-wrap img,
+.aat-entity-poster,
+.aat-entity-portrait {
+    transition: border-color .42s ease;
+}
+.aat-entity-kicker {
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--aat-gold-light);
+    margin-bottom: 10px;
+}
+.aat-entity-page .aat-entity-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.12;
+    margin: 0 0 8px;
+    color: var(--aat-light-gray);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    text-wrap: balance;
+}
+.aat-entity-summary {
+    max-width: 72ch;
+    font-size: 1.04rem;
+    line-height: 1.7;
+    color: var(--aat-light-gray);
+    opacity: .95;
+    margin: 18px 0 0;
+}
+.aat-entity-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+}
+.aat-entity-stats {
+    margin-top: 0;
+    margin-bottom: 34px;
+}
+.aat-entity-status-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
+    gap: 18px;
+    align-items: start;
+    margin: 0 0 28px;
+    padding: 24px;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.aat-entity-status-kicker {
+    margin: 0 0 8px;
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-entity-status-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.aat-crossroads-kicker,
+.aat-editorial-ref-type {
+    color: rgba(224,196,129,0.94);
+    font-size: .875rem;
+    font-weight: 800;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-section-head {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 0;
+    justify-items: center;
+    text-align: center;
+}
+.aat-section-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.45rem, 2.3vw, 2rem);
+    line-height: 1.08;
+    text-wrap: balance;
+}
+.aat-section-description {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .85;
+    max-width: 72ch;
+    line-height: 1.68;
+}
+.aat-timeline-card {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 16px 0;
+    box-shadow: none;
+    transition: transform .28s ease, border-color .28s ease, background .28s ease;
+}
+.aat-timeline-card:hover {
+    transform: none;
+    border-color: rgba(201,169,97,.3);
+    background: transparent;
+}
+.aat-history-item {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto;
+    gap: 16px;
+    align-items: start;
+    padding: 16px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    transition: transform .24s ease, border-color .24s ease, background .24s ease;
+}
+.aat-history-item:hover {
+    transform: none;
+    border-color: rgba(201,169,97,.22);
+    background: transparent;
+}
+@media (max-width: 900px) {
+.aat-ceremony-marquee,
+    .aat-entity-status-banner {
+        grid-template-columns: 1fr;
+    }
+.aat-hub-metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 720px) {
+.aat-hub-metric-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.aat-filmography-grid{display: flex;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:24px;flex-wrap: wrap;justify-content: center;}
+.aat-filmography-card{border:0;border-radius:0;background:transparent;overflow:hidden;min-height:100%}
+.aat-filmography-card.aat-card-has-backdrop{border-color:rgba(201,169,97,.24)}
+.aat-filmography-link{display:block;color:inherit;text-decoration:none;height:100%}
+.aat-filmography-poster-wrap{aspect-ratio:2/3;background:rgba(255,255,255,.03);overflow:hidden}
+.aat-filmography-poster,.aat-filmography-poster-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.aat-filmography-poster-placeholder{display:grid;place-items:center;width:100%;height:100%;padding:18px;text-align:center;color:#d7ceb8}
+.aat-filmography-title{font-size:1.08rem;line-height:1.22;padding:16px 16px 4px;margin:0}
+.aat-filmography-meta{padding:0 16px 16px;margin:0;color:#b9ad92;font-size:.95rem}
+.aat-related-reviews-grid{display: flex;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;flex-wrap: wrap;justify-content: center;}
+.aat-related-review-card{display:flex;flex-direction:column;overflow:hidden;border:0;border-radius:0;background:transparent;box-shadow:none}
+.aat-related-review-media{display:block;aspect-ratio:16/10;background:rgba(255,255,255,.03);overflow:hidden}
+.aat-related-review-image,.aat-related-review-media img{width:100%;height:100%;object-fit:cover;display:block}
+.aat-related-review-body{display:flex;flex-direction:column;gap:12px;padding:18px}
+.aat-related-review-kicker{font-size:.875rem;letter-spacing:normal;text-transform:none;color:rgba(201,169,97,0.92);font-weight:700}
+.aat-related-review-title{margin:0;font-size:1.12rem;line-height:1.28}
+.aat-related-review-title a{color:var(--aat-light-gray);text-decoration:none}
+.aat-related-review-title a:hover{color:#fff}
+.aat-related-review-meta{margin:0;color:#d0c5aa;font-size:.92rem}
+.aat-related-review-meta a{color:#d0c5aa;text-decoration:none;border-bottom:1px solid rgba(201,169,97,.25)}
+.aat-related-review-meta a:hover{color:#fff;border-bottom-color:rgba(201,169,97,.8)}
+.aat-related-review-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+.aat-person-portrait-fallback{min-height:360px}
+.aat-fallback-dot{font-size:0;line-height:0}
+.aat-fallback-dot::before{content:'•';font-size:.92rem;line-height:1;color:rgba(201,169,97,0.74)}
+@media (prefers-reduced-motion: reduce) {
+.aat-ceremony-marquee::before {
+        animation: none;
+    }
+.aat-hub-card,
+    .aat-hub-card::before,
+    .aat-hub-card::after,
+    .aat-filmography-card,
+    .aat-related-review-card,
+    .aat-filmography-poster,
+    .aat-filmography-poster-wrap img,
+    .aat-related-review-image,
+    .aat-related-review-media img,
+    .aat-hub-spotlight-card,
+    .aat-hub-metric-card,
+    .aat-winner-circle-card,
+    .aat-timeline-card,
+    .aat-history-item,
+    .aat-entity-poster-wrap img,
+    .aat-entity-poster,
+    .aat-entity-portrait {
+        transition: none;
+    }
+}
+.aat-hub-section {
+    position: relative;
+    margin-top: 34px;
+}
+.aat-hub-section h2 {
+    font-size: clamp(1.42rem, 2.5vw, 1.8rem);
+    letter-spacing: normal;
+}
+.aat-hub-copy {
+    max-width: 72ch;
+    color: rgba(235,228,212,0.84);
+    line-height: 1.78;
+}
+.aat-hub-card,
+.aat-filmography-card,
+.aat-related-review-card,
+.aat-timeline-card,
+.aat-history-item,
+.aat-winner-circle-card {
+    position: relative;
+    isolation: isolate;
+}
+.aat-hub-card {
+    padding: 24px 0;
+    border-radius: 0;
+    overflow: hidden;
+    background:
+        transparent;
+    transition: border-color .18s ease;
+    border-bottom: 1px solid rgba(201,169,97,.24);
+}
+.aat-hub-card:hover,
+.aat-filmography-card:hover,
+.aat-related-review-card:hover,
+.aat-timeline-card:hover,
+.aat-history-item:hover,
+.aat-winner-circle-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+.aat-hub-card:hover::before,
+.aat-filmography-card:hover::before,
+.aat-related-review-card:hover::before,
+.aat-timeline-card:hover::before,
+.aat-history-item:hover::before,
+.aat-winner-circle-card:hover::after {
+    opacity: 1;
+}
+.aat-filmography-card {
+    border-radius: 0;
+    background:
+        transparent;
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
+}
+.aat-filmography-link,
+.aat-related-review-media,
+.aat-related-review-title a {
+    position: relative;
+    z-index: 1;
+}
+.aat-filmography-poster-wrap,
+.aat-related-review-media {
+    position: relative;
+}
+.aat-filmography-poster-wrap::after,
+.aat-related-review-media::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 56%;
+    background: linear-gradient(180deg, rgba(5,10,18,0), rgba(5,10,18,.72));
+    pointer-events: none;
+}
+.aat-filmography-title,
+.aat-related-review-title {
+    position: relative;
+    z-index: 1;
+}
+.aat-filmography-title {
+    font-size: 1.02rem;
+    line-height: 1.32;
+}
+.aat-filmography-meta,
+.aat-related-review-meta {
+    color: rgba(218,205,178,0.8);
+}
+.aat-related-review-card {
+    border-radius: 0;
+    background:
+        transparent;
+    transition: transform .32s ease, border-color .32s ease, box-shadow .32s ease, background .32s ease;
+}
+.aat-related-review-card.has-no-media {
+    min-height: 100%;
+    border-color: rgba(201,169,97,.24);
+    background:
+        transparent;
+}
+.aat-related-review-card.has-no-media .aat-related-review-body {
+    min-height: 100%;
+    padding: clamp(20px, 3vw, 28px);
+}
+.aat-related-review-body {
+    gap: 13px;
+}
+.aat-entity-meta-line span + span::before,
+.aat-fallback-dot::before {
+    content: '\2022';
+}
+.aat-entity-poster-fallback,
+.aat-filmography-poster-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 20px;
+    background: transparent;
+    border-radius: 0;
+    border: 1px solid rgba(201,169,97,.24);
+    overflow: hidden;
+    position: relative;
+}
+.aat-fallback-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 8px;
+}
+.aat-fallback-kicker {
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--aat-gold-light);
+}
+.aat-fallback-title {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    line-height: 1.04;
+    font-weight: 700;
+    color: #fff;
+    text-wrap: balance;
+}
+.aat-fallback-title.small {
+    font-size: 1.08rem;
+    line-height: 1.15;
+}
+.aat-fallback-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    color: var(--aat-gold-light);
+    font-size: .88rem;
+}
+.aat-fallback-dot {
+    opacity: .72;
+}
+.aat-filmography-poster-placeholder span { display:none; }
+.aat-explorer-callout {
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow: none;
+}
+.aat-explorer-shell.aat-card-has-backdrop {
+    padding: 26px;
+    border-color: rgba(201,169,97,.24);
+    box-shadow: none;
+}
+.aat-explorer-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: center;
+}
+.aat-explorer-copy {
+    display: grid;
+    gap: 12px;
+}
+.aat-explorer-context {
+    margin: 0;
+    max-width: 70ch;
+    color: rgba(244,239,227,0.82);
+    font-size: .98rem;
+    line-height: 1.68;
+}
+.aat-view-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.aat-view-toggle .aat-btn.is-active {
+    box-shadow: none;
+}
+@media (max-width: 840px) {
+.aat-explorer-shell {
+        grid-template-columns: 1fr;
+    }
+}
+.aat-database-landing-shell {
+    display: grid;
+    gap: 28px;
+}
+.aat-database-landing-header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+.aat-database-landing-actions {
+    justify-content: center;
+    margin-top: 18px;
+}
+.aat-database-landing-note {
+    margin: 18px auto 0;
+    max-width: 760px;
+    color: rgba(230,238,247,0.82);
+    font-size: .98rem;
+    line-height: 1.7;
+}
+.aat-database-landing-metrics {
+    margin-bottom: 0;
+    gap: 0 24px;
+}
+.aat-database-landing-metrics .aat-hub-metric-card,
+.aat-explorer-signal-grid .aat-hub-metric-card {
+    min-height: 0;
+    padding: 14px 0;
+    border: 0;
+    border-top: 1px solid rgba(201,169,97,.18);
+    border-radius: 0;
+    background: transparent;
+    transition: none;
+}
+.aat-database-landing-metrics .aat-hub-metric-label,
+.aat-explorer-signal-grid .aat-hub-metric-label {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-database-landing-metrics .aat-hub-metric-value,
+.aat-explorer-signal-grid .aat-hub-metric-value {
+    margin-top: 4px;
+    color: var(--aat-white);
+    font-family: var(--lunara-font-display, inherit);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+    line-height: 1.1;
+}
+.aat-ledger-command {
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+}
+.aat-ledger-command-copy h2 {
+    margin: 0;
+}
+.aat-ledger-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+.aat-ledger-header-action {
+    display: grid;
+    gap: 4px;
+    min-height: 44px;
+    padding: 12px 16px;
+    border: 1px solid rgba(201,169,97,.24);
+    border-radius: 0;
+    color: inherit;
+    text-decoration: none;
+    text-align: left;
+    transition: border-color .18s ease;
+}
+.aat-ledger-header-action.is-primary {
+    border-color: var(--aat-gold);
+}
+.aat-ledger-header-action strong {
+    color: var(--aat-gold-light);
+    font-size: 1rem;
+    line-height: 1.3;
+}
+.aat-ledger-header-action span {
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-view-toggle .aat-btn.is-active {
+    background: transparent;
+    color: var(--aat-gold-light);
+    border: 1px solid var(--aat-gold);
+    cursor: default;
+}
+.aat-footer-line a {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-decoration-color: rgba(224,196,129,.45);
+    text-underline-offset: 4px;
+}
+.aat-database-landing-footer {
+    padding-top: 6px;
+}
+@media (max-width: 900px) {
+.aat-database-landing-actions {
+        justify-content: flex-start;
+    }
+.aat-explorer-shell.aat-card-has-backdrop {
+        padding: 22px;
+    }
+body.aat-shell-page {
+        --theme-container-width: calc(100vw - 28px);
+    }
+.aat-hub-header {
+        gap: 18px;
+    }
+.aat-hub-actions,
+    .aat-entity-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+.aat-hub-actions .aat-btn,
+    .aat-entity-actions .aat-btn,
+    .aat-related-review-actions .aat-btn {
+        width: 100%;
+        justify-content: center;
+    }
+.aat-hub-grid,
+    .aat-entity-stats {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+.aat-hub-card,
+    .aat-hub-spotlight-card,
+    .aat-entity-status-banner,
+    .aat-history-item,
+    .aat-timeline-card,
+    .aat-explorer-callout {
+        border-radius: 0;
+    }
+.aat-hub-card,
+    .aat-entity-status-banner,
+    .aat-history-item,
+    .aat-timeline-card,
+    .aat-explorer-callout {
+        padding: 16px 0;
+    }
+.aat-filmography-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+.aat-related-reviews-grid {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+.aat-entity-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+@media (max-width: 640px) {
+body.aat-shell-page {
+        --theme-container-width: calc(100vw - 20px);
+    }
+.aat-hub-header {
+        gap: 14px;
+    }
+.aat-hub-title,
+    .aat-entity-page .aat-entity-title {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        line-height: 1.12;
+    }
+.aat-hub-spotlight-card,
+    .aat-entity-status-banner {
+        padding: 18px;
+    }
+.aat-hub-chip-stack,
+    .aat-entity-status-tags,
+    .aat-hub-actions,
+    .aat-view-toggle {
+        gap: 10px;
+    }
+.aat-related-review-body {
+        padding: 16px;
+    }
+}
+@media (max-width: 480px) {
+.aat-filmography-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+.aat-related-review-actions {
+    padding-top: 4px;
+}
+.aat-explorer-copy h2,
+.aat-section-title {
+    text-wrap: balance;
+}
+.aat-hub-section {
+    display: grid;
+    gap: 16px;
+}
+.aat-hub-section h2 {
+    max-width: 28ch;
+    line-height: 1.08;
+}
+.aat-hub-copy {
+    margin: 0;
+}
+.aat-hub-kicker {
+    margin-bottom: 8px;
+    color: rgba(224,196,129,0.94);
+}
+.aat-ceremony-marquee,
+.aat-category-latest-winner,
+.aat-explorer-shell {
+    box-shadow:
+        none;
+}
+.aat-ceremony-marquee {
+    gap: 22px;
+    padding: 28px;
+}
+.aat-ceremony-marquee-stack,
+.aat-hub-chip-stack {
+    align-content: start;
+}
+.aat-hub-chip-rich {
+    min-height: 58px;
+}
+.aat-hub-chip-rich {
+    align-content: start;
+}
+.aat-winner-circle-grid {
+    gap: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-winner-circle-card {
+    min-height: 100%;
+}
+.aat-explorer-shell {
+    grid-template-columns: minmax(0, 1.25fr) auto;
+    align-items: center;
+    gap: 18px 22px;
+}
+.aat-explorer-copy {
+    max-width: 62ch;
+}
+.aat-section-head,
+.aat-hub-header {
+    display: grid;
+    gap: 12px;
+}
+.aat-section-description,
+.aat-hub-copy,
+.aat-entity-summary,
+.aat-entity-status-summary {
+    max-width: 68ch;
+}
+.aat-ceremony-gallery-section .aat-filmography-grid,
+.aat-filmography-section .aat-filmography-grid,
+.aat-related-reviews-grid,
+.aat-winner-circle-grid {
+    align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-hub-spotlight-card,
+.aat-hub-chip-rich,
+.aat-explorer-callout {
+    backdrop-filter: blur(10px);
+}
+.aat-category-latest-winner .aat-ceremony-marquee-copy,
+.aat-ceremony-marquee .aat-ceremony-marquee-copy {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+}
+.aat-category-latest-winner .aat-hub-copy,
+.aat-ceremony-marquee .aat-hub-copy {
+    max-width: 62ch;
+}
+.aat-hub-chip-rich {
+    border-radius: 0;
+}
+.aat-explorer-callout {
+    overflow: hidden;
+}
+.aat-explorer-copy h2 {
+    max-width: 24ch;
+    line-height: 1.1;
+}
+.aat-hub-actions,
+.aat-view-toggle,
+.aat-related-review-actions,
+.aat-entity-actions {
+    gap: 12px;
+}
+.aat-btn {
+    min-height: 46px;
+    padding: 12px 20px;
+    font-size: .875rem;
+    font-weight: 700;
+    letter-spacing: normal;
+    box-shadow:
+        none;
+}
+.aat-btn-primary,
+.aat-btn-secondary {
+    position: relative;
+    overflow: hidden;
+}
+.aat-btn-primary > *,
+.aat-btn-secondary > * {
+    position: relative;
+    z-index: 1;
+}
+.aat-btn-primary:hover,
+.aat-btn-secondary:hover,
+.aat-btn-primary:focus-visible,
+.aat-btn-secondary:focus-visible {
+    transform: none;
+    box-shadow: none;
+}
+.aat-hub-header,
+.aat-section-head {
+    gap: 14px;
+    justify-items: center;
+    text-align: center;
+}
+.aat-hub-header .aat-hub-subtitle,
+.aat-section-description {
+    max-width: 62ch;
+}
+.aat-hub-kicker,
+.aat-entity-status-kicker,
+.aat-related-review-kicker {
+    text-shadow: none;
+}
+.aat-hub-section .aat-section-title,
+.aat-hub-section h2 {
+    letter-spacing: normal;
+}
+.aat-explorer-copy h2,
+.aat-ceremony-marquee h2,
+.aat-category-latest-winner h2,
+.aat-entity-status-title {
+    text-wrap: balance;
+}
+@media (max-width: 900px) {
+.aat-ceremony-marquee {
+        gap: 18px;
+        padding: 22px;
+    }
+.aat-explorer-shell {
+        grid-template-columns: 1fr;
+    }
+.aat-filmography-title {
+        font-size: 1rem;
+    }
+.aat-related-review-card {
+        border-radius: 0;
+    }
+.aat-related-review-body {
+        gap: 10px;
+        padding: 16px;
+    }
+}
+@media (max-width: 640px) {
+.aat-entity-kicker,
+    .aat-entity-status-kicker,
+    .aat-hub-kicker,
+    .aat-related-review-kicker {
+        font-size: .875rem;
+        letter-spacing: normal;
+    }
+.aat-history-category .aat-category-pill,
+    .aat-winner-badge,
+    .aat-nominee-badge {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+.aat-filmography-grid {
+        gap: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+.aat-filmography-title,
+    .aat-filmography-meta {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+.aat-related-review-title {
+        font-size: 1.02rem;
+    }
+.aat-related-review-actions {
+        flex-direction: column;
+    }
+.aat-related-review-actions .aat-btn {
+        width: 100%;
+        justify-content: center;
+    }
+.aat-container {
+        padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
+        border-radius: 0;
+        font-family: var(--lunara-font-body, Georgia, serif);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+.aat-btn {
+        min-height: 46px;
+        justify-content: center;
+    }
+.aat-table-wrapper,
+    .aat-entity-table-wrap {
+        margin-inline: -6px;
+        padding-inline: 6px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+.aat-table-top {
+        gap: 10px;
+        padding-bottom: 6px;
+    }
+table.aat-datatable {
+        min-width: 760px;
+    }
+table.aat-datatable thead th,
+    table.aat-datatable tbody td {
+        white-space: nowrap;
+    }
+.aat-database-landing-note {
+        margin-top: 14px;
+    }
+}
+.aat-category-dossier {
+    display: grid;
+    gap: 28px;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
+}
+.aat-hub-grid > *,
+.aat-winner-circle-grid > * { flex: 0 1 var(--lunara-oscars-dossier-card-min, 280px); max-width: 100%; box-sizing: border-box; }
+.aat-filmography-grid > * { flex: 0 1 160px; max-width: 100%; box-sizing: border-box; }
+.aat-related-reviews-grid > * { flex: 0 1 var(--lunara-oscars-related-review-min, 280px); max-width: 100%; box-sizing: border-box; }
+.aat-major-race-grid > * { flex: 0 1 calc(50% - 16px); max-width: 100%; box-sizing: border-box; }
+@media (max-width: 700px) {
+.aat-related-reviews-grid > * { flex-basis: 100%; }
+}
+.aat-category-dossier .aat-hub-spotlight-card::after,
+.aat-category-dossier .aat-hub-spotlight-media::after {
+    content: none;
+}
+.aat-category-dossier .aat-winner-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0 0 2px;
+    padding: 4px 9px;
+    border: 1px solid rgba(201, 169, 97, .32);
+    border-radius: 0;
+    background: none;
+    color: var(--aat-gold);
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-category-dossier .aat-winner-badge::before {
+    content: none;
+}
+.aat-category-dossier .aat-hub-film-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+    gap: 20px 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+@media (max-width: 640px) {
+.aat-category-dossier {
+        padding-inline: 8px;
+        box-sizing: border-box;
+    }
+}
+.aat-entity-timeline .aat-section-head,
+.aat-filmography-section .aat-section-head,
+.aat-related-reviews-section .aat-section-head {
+    align-items: end;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    position: relative;
+    padding-top: 18px;
+    margin-bottom: 18px;
+    justify-items: center;
+    text-align: center;
+}
+.aat-filmography-card {
+    transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease, background .24s ease;
+}
+.aat-filmography-card:hover,
+.aat-filmography-card:focus-within {
+    transform: none;
+    border-color: rgba(201,169,97,.34);
+    box-shadow: none;
+}
+.aat-filmography-link {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+}
+@media (max-width: 720px) {
+.aat-entity-timeline .aat-section-head,
+    .aat-filmography-section .aat-section-head,
+    .aat-related-reviews-section .aat-section-head {
+        align-items: start;
+        display: grid;
+        justify-items: center;
+    text-align: center;
+}
+}
+.aat-container,
+.aat-container *,
+.aat-entity-page,
+.aat-hub-page,
+.aat-inner-route-system {
+    box-sizing: border-box;
+}
+.aat-container {
+    max-width: min(1400px, 100%);
+    overflow-x: clip;
+    width: 100%;
+    font-family: var(--lunara-font-body, Georgia, serif);
+    font-size: 1rem;
+    line-height: 1.6;
+    padding: clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px);
+}
+.aat-entity-page,
+.aat-hub-page,
+.aat-inner-route-system,
+.aat-hub-section,
+.aat-entity-hero,
+.aat-entity-main,
+.aat-filmography-grid,
+.aat-timeline,
+.aat-records-grid,
+.aat-table-wrapper {
+    min-width: 0;
+    max-width: 100%;
+}
+.aat-hub-page .aat-best-picture-grid,
+.aat-hub-page .aat-filmography-grid {
+    grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
+    gap: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-hub-page .aat-filmography-title {
+    font-size: .95rem;
+    padding: 12px 12px 2px;
+}
+.aat-hub-page .aat-filmography-meta {
+    font-size: .875rem;
+    padding: 0 12px 12px;
+}
+.aat-entity-page .aat-filmography-grid {
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    gap: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-entity-page .aat-filmography-title {
+    font-size: 1rem;
+    padding: 12px 12px 2px;
+}
+@media (max-width: 720px) {
+body .aat-hub-page .aat-hub-chip-rich,
+    body.aat-shell-page .aat-hub-chip-rich {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        justify-items: start !important;
+        text-align: left !important;
+        align-content: start;
+        gap: 2px;
+        min-height: 0;
+        padding: 12px 14px;
+    }
+body .aat-hub-page .aat-hub-chip-rich > *,
+    body.aat-shell-page .aat-hub-chip-rich > * {
+        max-width: 100%;
+        min-width: 0;
+        overflow-wrap: break-word;
+        word-break: normal;
+        hyphens: none;
+    }
+.aat-hub-page .aat-best-picture-grid,
+    .aat-hub-page .aat-filmography-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+.aat-entity-page .aat-entity-actions .aat-btn,
+    .aat-hub-page .aat-winner-circle-action {
+        min-height: 44px;
+        width: 100%;
+    }
+}
+@media (max-width: 430px) {
+.aat-hub-page .aat-best-picture-grid,
+    .aat-hub-page .aat-filmography-grid,
+    .aat-entity-page .aat-filmography-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+.aat-hub-page .aat-filmography-title,
+    .aat-entity-page .aat-filmography-title {
+        font-size: .875rem;
+        line-height: 1.25;
+    }
+}
+.aat-hub-page .aat-filmography-card,
+.aat-entity-page .aat-filmography-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    align-content: start;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    isolation: auto;
+    transition: none;
+}
+.aat-hub-page .aat-filmography-link,
+.aat-entity-page .aat-filmography-link {
+    display: block;
+    height: auto;
+    color: inherit;
+    text-decoration: none;
+}
+.aat-hub-page .aat-filmography-poster-wrap,
+.aat-entity-page .aat-filmography-poster-wrap {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .03);
+    transition: border-color .18s ease;
+}
+.aat-hub-page .aat-filmography-link:hover .aat-filmography-poster-wrap,
+.aat-hub-page .aat-filmography-link:focus-visible .aat-filmography-poster-wrap,
+.aat-entity-page .aat-filmography-link:hover .aat-filmography-poster-wrap,
+.aat-entity-page .aat-filmography-link:focus-visible .aat-filmography-poster-wrap {
+    border-color: var(--aat-gold);
+}
+.aat-hub-page .aat-filmography-poster-wrap::after,
+.aat-entity-page .aat-filmography-poster-wrap::after,
+.aat-hub-page .aat-related-review-media::after,
+.aat-entity-page .aat-related-review-media::after,
+.aat-hub-page .aat-hub-spotlight-media::after,
+.aat-hub-page .aat-hub-spotlight-card::after {
+    content: none;
+}
+.aat-hub-page .aat-filmography-title,
+.aat-entity-page .aat-filmography-title {
+    margin: 0;
+    padding: 10px 0 2px;
+    color: var(--aat-white);
+    font-size: 1rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+.aat-hub-page .aat-filmography-title a,
+.aat-entity-page .aat-filmography-title a {
+    color: inherit;
+    text-decoration: none;
+}
+.aat-hub-page .aat-filmography-title a:hover,
+.aat-hub-page .aat-filmography-title a:focus-visible,
+.aat-entity-page .aat-filmography-title a:hover,
+.aat-entity-page .aat-filmography-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-hub-page .aat-filmography-meta,
+.aat-entity-page .aat-filmography-meta {
+    margin: 0;
+    padding: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+.aat-hub-page .aat-card-badge,
+.aat-entity-page .aat-card-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    border: 0;
+    border-radius: 0;
+    background: rgba(6, 13, 21, .86);
+    color: var(--aat-gold-light);
+    font-size: .8125rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-hub-page .aat-card-badge::before,
+.aat-entity-page .aat-card-badge::before {
+    content: none;
+}
+.aat-hub-page .aat-related-review-card,
+.aat-entity-page .aat-related-review-card {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+}
+.aat-hub-page .aat-related-review-media,
+.aat-entity-page .aat-related-review-media {
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .03);
+}
+.aat-hub-page .aat-related-review-body,
+.aat-entity-page .aat-related-review-body {
+    gap: 8px;
+    padding: 12px 0 0;
+}
+.aat-hub-page .aat-related-review-card.has-no-media .aat-related-review-body,
+.aat-entity-page .aat-related-review-card.has-no-media .aat-related-review-body {
+    min-height: 0;
+    padding: 0;
+}
+.aat-hub-page .aat-related-review-title,
+.aat-entity-page .aat-related-review-title {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+.aat-hub-page .aat-related-review-meta,
+.aat-entity-page .aat-related-review-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+.aat-hub-page .aat-related-review-meta a,
+.aat-entity-page .aat-related-review-meta a {
+    color: inherit;
+    border-bottom: 0;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+.aat-hub-page .aat-related-review-actions,
+.aat-entity-page .aat-related-review-actions {
+    gap: 10px;
+    padding-top: 2px;
+}
+.aat-ceremony-dossier {
+    display: grid;
+    gap: 28px;
+    min-width: 0;
+    max-width: 100%;
+}
+.aat-ceremony-dossier-hero > * {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+}
+.aat-ceremony-dossier-lead {
+    display: grid;
+    gap: clamp(16px, 2.4vw, 28px);
+    align-content: start;
+    min-width: 0;
+}
+.aat-ceremony-dossier-poster {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    width: min(100%, 182px);
+    margin-inline: auto;
+}
+.aat-ceremony-dossier-copy {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    min-width: 0;
+    justify-items: center;
+    width: 100%;
+}
+.aat-ceremony-command-band {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+    align-self: start;
+    min-width: 0;
+    padding-top: 6px;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    width: min(100%, 720px);
+    text-align: center;
+}
+.aat-ceremony-command-card {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    min-width: 0;
+    min-height: 0;
+    padding: 12px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    transition: none;
+}
+.aat-ceremony-neighbor-slot {
+    display: flex;
+    min-width: 0;
+}
+.aat-ceremony-neighbor-card,
+.aat-ceremony-neighbor-index {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+    padding: 10px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    text-decoration: none;
+    box-shadow: none;
+    transition: color .18s ease;
+}
+.aat-ceremony-neighbor-index {
+    min-width: 0;
+    padding: 10px 16px;
+    place-items: center;
+    text-align: center;
+}
+.aat-ceremony-editorial-heading {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    min-width: 0;
+    max-width: 76ch;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(201, 169, 97, .2);
+}
+.aat-ceremony-guide-meta {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: clamp(1rem, .96rem + .3vw, 1.125rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-editorial-body {
+    min-width: 0;
+    max-width: 76ch;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.aat-major-race-card {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    min-width: 0;
+    padding: 20px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .18);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+}
+.aat-major-race-copy {
+    min-width: 0;
+}
+.aat-major-race-meta,
+.aat-major-race-summary {
+    margin: 6px 0 0;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+.aat-major-race-nominees {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    padding-top: 12px;
+    border-top: 1px solid rgba(201, 169, 97, .13);
+}
+.aat-ceremony-ballot-status {
+    min-width: 0;
+}
+.aat-ceremony-ballot-copy {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+.aat-ceremony-ballot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 0;
+}
+@media (max-width: 640px) {
+.aat-ceremony-dossier {
+        padding-inline: 8px;
+        box-sizing: border-box;
+    }
+.aat-ceremony-dossier,
+    .aat-ceremony-dossier *,
+    .aat-ceremony-dossier-hero,
+    .aat-ceremony-command-band,
+    .aat-ceremony-command-card,
+    .aat-ceremony-editorial-writeup,
+    .aat-ceremony-editorial-heading,
+    .aat-ceremony-editorial-body,
+    .aat-ceremony-ballot-row,
+    .aat-ceremony-ballot-copy {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+.aat-explorer-callout {
+    padding: clamp(18px, 2.4vw, 28px);
+}
+.aat-winner-circle-top {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    min-width: 0;
+}
+.aat-winner-circle-top .aat-winner-circle-category {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+.aat-winner-circle-top .aat-winner-badge {
+    flex: none;
+}
+.aat-winner-circle-card > * {
+    min-width: 0;
+}
+.aat-winner-circle-title,
+.aat-winner-circle-meta {
+    overflow-wrap: break-word;
+}
+@media (max-width: 720px) {
+.aat-winner-circle-grid.is-hero-latest,
+    .aat-winner-circle-grid.is-marquee-latest {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+.aat-winner-circle-card.is-hero-latest,
+    .aat-winner-circle-card.is-marquee-latest {
+        min-height: 0;
+        padding: 16px 0;
+    }
+}
+.aat-container :is(.aat-filmography-title, .aat-winner-circle-title, .aat-winner-circle-meta, .aat-major-race-nominee-primary, .aat-major-race-nominee-secondary, .aat-related-review-title, .aat-related-review-meta, .aat-ceremony-nominee-summary, .aat-ceremony-ballot-row h4, .aat-ceremony-ballot-group-head, .aat-category-history-title, .aat-category-history-meta, .aat-breadcrumbs, .aat-footer-line) a:not(.aat-hub-inline-link),
+.aat-container.aat-profile-file .aat-timeline-link:not(.aat-hub-inline-link) {
+    padding-block: 4px;
+}

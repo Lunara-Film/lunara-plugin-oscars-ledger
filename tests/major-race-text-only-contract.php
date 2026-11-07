@@ -7,7 +7,7 @@
  */
 $root = dirname(__DIR__);
 $hub = file_get_contents($root . '/templates/hub-page.php');
-$css = file_get_contents($root . '/assets/css/academy-awards-table.css');
+$css = implode("\n", array_map(static function ($sheet) use ($root) { return (string) file_get_contents($root . '/assets/css/' . $sheet); }, array('ledger-base.css', 'ledger-hub.css', 'ledger-profile.css', 'ledger-table.css'))); // 2.8.29: the four route sheets in cascade order
 $fail = array();
 if (strpos($hub, "<div class=\"aat-major-race-feature<?php echo empty(\$feature_visual['poster_url']) ? ' is-text-only' : ''; ?>\">") === false) {
     $fail[] = 'A race card with no poster is marked is-text-only.';

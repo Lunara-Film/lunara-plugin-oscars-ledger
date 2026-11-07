@@ -1,0 +1,2152 @@
+/**
+ * Academy Awards Table - Frontend Styles: the hub sheet (2.8.29).
+ *
+ * Loaded after ledger-base.css on the ceremonies, categories, about, ceremony and category routes
+ * (templates/hub-page.php). Every selector here carries a class only that template prints, and no rule
+ * here is overridden by a later base rule (tests/stylesheet-split-runtime.php).
+ */
+
+.aat-hub-subtitle {
+    margin: 0;
+    color: rgba(255,255,255,0.76);
+    max-width: 76ch;
+    margin-inline: auto;
+    line-height: 1.72;
+    text-wrap: balance;
+}
+.aat-hub-wp-content {
+    max-width: 62ch;
+    margin: 0 auto;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    text-align: left;
+}
+.aat-hub-wp-content,
+.aat-hub-wp-content p {
+    color: var(--aat-light-gray);
+    line-height: 1.75;
+}
+.aat-hub-wp-content a {
+    color: var(--aat-gold);
+}
+.aat-hub-wp-content a:hover {
+    color: var(--aat-gold-light);
+}
+.aat-department-credit-label {
+    color: var(--aat-light-gray);
+    font-style: italic;
+}
+.aat-hub-breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 18px 0;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgba(255,255,255,0.74);
+    text-align: center;
+}
+.aat-hub-breadcrumbs a {
+    color: var(--aat-gold-light);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+}
+.aat-hub-breadcrumbs a:hover {
+    color: var(--aat-gold-light);
+    border-bottom-color: rgba(224, 196, 129, 0.6);
+}
+.aat-hub-card-title {
+    color: var(--aat-white);
+    font-weight: 400;
+    margin: 0 0 4px 0;
+}
+.aat-hub-card-meta {
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+    margin: 0;
+}
+.aat-hub-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+.aat-hub-spotlight-card:hover {
+    border-color: rgba(201,169,97,.5);
+}
+.aat-hub-spotlight-media {
+    position: relative;
+    border-radius: 0;
+    overflow: hidden;
+    background: rgba(255,255,255,.04);
+    min-height: 100%;
+}
+.aat-hub-spotlight-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(3,10,22,.12) 38%, rgba(3,10,22,.42));
+    pointer-events: none;
+}
+.aat-hub-spotlight-media img,
+.aat-hub-spotlight-media .aat-poster-img,
+.aat-hub-spotlight-poster {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+.aat-hub-spotlight-media .aat-entity-poster-fallback {
+    border-radius: 0;
+    height: 100%;
+    min-height: 100%;
+}
+.aat-hub-spotlight-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 8px 4px 6px 0;
+}
+.aat-hub-spotlight-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.2rem, 2.4vw, 1.62rem);
+    line-height: 1.14;
+}
+.aat-hub-spotlight-meta {
+    margin: 0;
+    color: rgba(230,238,247,0.84);
+    line-height: 1.55;
+    font-size: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.aat-winner-circle-plaque-mark {
+    font-size: 30px;
+    line-height: 1;
+    color: rgba(201,169,97,0.74);
+}
+@media (max-width: 900px) {
+.aat-hub-spotlight-card {
+        grid-template-columns: minmax(88px, 108px) minmax(0, 1fr);
+        min-height: 180px;
+    }
+}
+@media (max-width: 720px) {
+.aat-hub-spotlight-card {
+        grid-template-columns: 1fr;
+    }
+.aat-hub-spotlight-media {
+        min-height: 220px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+.aat-hub-spotlight-card::after {
+        display: none;
+    }
+}
+.aat-hub-card-title {
+    font-size: 1.06rem;
+    letter-spacing: normal;
+}
+.aat-hub-card-meta {
+    color: rgba(235,228,212,0.74);
+    line-height: 1.62;
+}
+.aat-table-shell {
+    padding: 24px 0;
+}
+.aat-table-shell {
+    padding: 24px 0;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow:
+        none;
+}
+.aat-table-shell .aat-container.aat-embedded {
+    gap: 20px;
+}
+.aat-table-shell .aat-table-wrapper {
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow:
+        none;
+}
+.aat-table-shell .aat-filters {
+    margin-bottom: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow:
+        none;
+}
+.aat-table-shell .dataTables_wrapper .dataTables_length,
+.aat-table-shell .dataTables_wrapper .dataTables_filter,
+.aat-table-shell .dataTables_wrapper .dataTables_info,
+.aat-table-shell .dataTables_wrapper .dataTables_paginate {
+    color: rgba(235,228,212,0.82);
+}
+.aat-table-shell .dataTables_wrapper .dataTables_filter input,
+.aat-table-shell .dataTables_wrapper .dataTables_length select {
+    background: rgba(7,15,26,.88);
+    border-color: rgba(201,169,97,.24);
+}
+.aat-table-shell .dataTables_wrapper .dataTables_filter input:focus,
+.aat-table-shell .dataTables_wrapper .dataTables_length select:focus {
+    border-color: rgba(201,169,97,.42);
+    box-shadow: 0 0 0 3px rgba(201,169,97,.16);
+}
+@media (max-width: 900px) {
+.aat-hub-breadcrumbs {
+        gap: 8px 12px;
+        font-size: .875rem;
+    }
+}
+@media (max-width: 640px) {
+.aat-hub-spotlight-body {
+        gap: 12px;
+    }
+}
+.aat-hub-spotlight-body {
+    justify-content: flex-end;
+    gap: 10px;
+}
+.aat-hub-chip-stack {
+    gap: 12px;
+}
+.aat-best-picture-nominees-section {
+    gap: 14px;
+}
+.aat-best-picture-nominees-section .aat-hub-copy {
+    max-width: 76ch;
+}
+.aat-best-picture-grid {
+    grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-best-picture-card .aat-filmography-meta {
+    color: rgba(232,223,198,0.84);
+}
+.aat-best-picture-card.is-winner .aat-filmography-poster-wrap {
+    box-shadow:
+        none;
+}
+.aat-category-dossier > .aat-hub-section,
+.aat-category-dossier .aat-category-history {
+    margin-top: 0;
+}
+.aat-category-dossier .aat-dossier-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(22px, 4vw, 48px);
+    align-items: start;
+    padding: 8px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    justify-items: center;
+    text-align: center;
+}
+.aat-category-dossier .aat-dossier-hero > * {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+}
+.aat-category-dossier .aat-dossier-hero-copy {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    justify-items: center;
+    width: 100%;
+}
+.aat-category-dossier .aat-dossier-hero .aat-hub-title {
+    margin: 0;
+    max-width: 100%;
+    color: var(--aat-light-gray);
+    font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-align: center;
+    text-transform: none;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+}
+.aat-category-dossier .aat-dossier-hero .aat-hub-subtitle {
+    margin: 0 auto;
+    max-width: 58ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: clamp(1rem, .96rem + .3vw, 1.125rem);
+    line-height: 1.6;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+.aat-category-dossier .aat-dossier-command-band {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+    align-self: start;
+    min-width: 0;
+    padding-top: 6px;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    width: min(100%, 720px);
+    text-align: center;
+}
+.aat-category-dossier .aat-dossier-command-card {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    min-height: 0;
+    min-width: 0;
+    padding: 12px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+.aat-category-dossier .aat-dossier-command-card.is-latest {
+    grid-column: 1 / -1;
+    padding-top: 14px;
+    border-bottom: 1px solid rgba(201, 169, 97, .12);
+}
+.aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px;
+    column-gap: 16px;
+    align-items: center;
+}
+.aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster > span,
+.aat-category-dossier .aat-dossier-command-card.is-latest.has-hero-poster > strong {
+    grid-column: 1;
+    min-width: 0;
+}
+.aat-category-dossier .aat-category-hero-poster {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 72px;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .24);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .04);
+}
+.aat-category-dossier .aat-category-hero-poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    border: 0;
+    border-radius: 0;
+    object-fit: cover;
+    transition: none;
+}
+.aat-category-dossier .aat-dossier-command-card > span {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-category-dossier .aat-dossier-command-card strong {
+    color: var(--aat-white);
+    font-family: var(--lunara-font-display, inherit);
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    line-height: 1.15;
+    letter-spacing: normal;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+}
+.aat-category-dossier .aat-dossier-command-card.is-latest strong {
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.1;
+}
+.aat-category-dossier .aat-dossier-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
+    margin-top: 4px;
+}
+.aat-best-picture-grid > * { flex-basis: 168px; }
+@media (max-width: 700px) {
+.aat-major-race-grid > * { flex-basis: 100%; }
+}
+.aat-category-dossier .aat-category-latest-winner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.aat-category-dossier .aat-category-latest-winner .aat-ceremony-marquee-copy {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+}
+.aat-category-dossier .aat-category-latest-winner h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-wrap: balance;
+}
+.aat-category-dossier .aat-category-latest-winner .aat-hub-copy {
+    margin: 0;
+    max-width: 58ch;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+.aat-category-dossier .aat-ceremony-marquee-stack {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+}
+.aat-category-dossier .aat-hub-spotlight-card {
+    display: grid;
+    grid-template-columns: minmax(104px, 148px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: none;
+}
+.aat-category-dossier .aat-hub-spotlight-media {
+    position: relative;
+    min-height: 0;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .04);
+}
+.aat-category-dossier .aat-hub-spotlight-media img,
+.aat-category-dossier .aat-hub-spotlight-media .aat-poster-img,
+.aat-category-dossier .aat-hub-spotlight-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.aat-category-dossier .aat-hub-spotlight-body {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 2px 0 0;
+}
+.aat-category-dossier .aat-hub-spotlight-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    line-height: 1.2;
+}
+.aat-category-dossier .aat-hub-spotlight-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    align-items: baseline;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+.aat-category-dossier .aat-hub-chip-stack {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+}
+.aat-category-dossier .aat-hub-chip-rich {
+    display: grid;
+    gap: 2px;
+    min-height: 44px;
+    padding: 12px 14px;
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    text-decoration: none;
+    transition: border-color .18s ease;
+}
+.aat-category-dossier .aat-hub-chip-rich:hover,
+.aat-category-dossier .aat-hub-chip-rich:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+}
+.aat-category-dossier .aat-hub-chip-rich strong {
+    color: var(--aat-gold-light);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+.aat-category-dossier .aat-hub-chip-rich span {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+.aat-category-dossier .aat-category-history {
+    display: grid;
+    gap: 22px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+.aat-category-dossier .aat-category-history > .aat-section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    margin: 0;
+    justify-items: center;
+    text-align: center;
+}
+.aat-category-dossier .aat-section-title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-wrap: balance;
+}
+.aat-category-dossier .aat-section-description {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+.aat-category-dossier .aat-category-history-mode {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+}
+.aat-category-dossier .aat-decade-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    list-style: none;
+    overflow: visible;
+}
+.aat-category-dossier .aat-decade-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 6px 12px;
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: none;
+    color: var(--aat-light-gray);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    transition: border-color .18s ease, color .18s ease;
+}
+.aat-category-dossier .aat-decade-pill:hover,
+.aat-category-dossier .aat-decade-pill:focus-visible {
+    border-color: var(--aat-gold);
+    background: none;
+    color: var(--aat-white);
+    transform: none;
+    text-decoration: none;
+}
+.aat-category-dossier .aat-decade-pill-count {
+    display: inline;
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: inherit;
+    letter-spacing: normal;
+    font-variant-numeric: tabular-nums;
+}
+.aat-category-dossier .aat-decade-pill:hover .aat-decade-pill-count,
+.aat-category-dossier .aat-decade-pill:focus-visible .aat-decade-pill-count {
+    background: none;
+    color: var(--aat-gold-light);
+}
+.aat-category-dossier .aat-decade-groups {
+    display: grid;
+    gap: clamp(36px, 5vw, 56px);
+}
+.aat-category-dossier .aat-decade-group {
+    margin: 0;
+    padding: 22px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: none;
+    scroll-margin-top: 88px;
+}
+.aat-category-dossier .aat-decade-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    margin: 0 0 14px;
+}
+.aat-category-dossier .aat-decade-head.has-era-poster {
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: 14px;
+}
+.aat-category-dossier .aat-decade-heading {
+    position: static;
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    color: var(--aat-white);
+    font-family: inherit;
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: normal;
+}
+.aat-category-dossier .aat-era-chapter-media {
+    display: block;
+    width: 56px;
+    min-height: 0;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .04);
+    text-decoration: none;
+}
+.aat-category-dossier .aat-era-chapter-media img,
+.aat-category-dossier .aat-era-chapter-media .aat-poster-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.aat-category-dossier .aat-decade-ceremonies {
+    display: grid;
+    gap: 0;
+}
+.aat-category-dossier .aat-category-ceremony-row {
+    display: grid;
+    grid-template-columns: minmax(112px, .22fr) minmax(0, 1fr);
+    gap: 8px 24px;
+    align-items: start;
+    margin: 0;
+    padding: 18px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .12);
+    border-radius: 0;
+    background: transparent;
+    position: relative;
+    overflow: visible;
+}
+.aat-category-dossier .aat-decade-ceremonies > .aat-category-ceremony-row:first-child {
+    border-top: 0;
+    padding-top: 4px;
+}
+.aat-category-dossier .aat-category-ceremony-row > * {
+    position: relative;
+    min-width: 0;
+}
+.aat-category-dossier .aat-category-ceremony-meta {
+    display: grid;
+    align-content: start;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+.aat-category-dossier .aat-category-ceremony-year {
+    display: block;
+    color: var(--aat-white);
+    font-family: var(--lunara-font-display, inherit);
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    line-height: 1.35;
+    letter-spacing: normal;
+    font-variant-numeric: tabular-nums;
+}
+.aat-category-dossier .aat-category-ceremony-meta .aat-timeline-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    width: fit-content;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-weight: 400;
+    font-size: .9375rem;
+    line-height: 1.3;
+    text-decoration: none;
+}
+.aat-category-dossier .aat-category-ceremony-meta .aat-timeline-link:hover,
+.aat-category-dossier .aat-category-ceremony-meta .aat-timeline-link:focus-visible {
+    color: var(--aat-white);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-category-dossier .aat-category-history-winner {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.aat-category-dossier .aat-category-history-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-family: inherit;
+    font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+.aat-category-dossier .aat-category-history-title a {
+    color: inherit;
+    text-decoration: none;
+}
+.aat-category-dossier .aat-category-history-title a:hover,
+.aat-category-dossier .aat-category-history-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-category-dossier .aat-category-history-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    font-family: inherit;
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+.aat-category-dossier .aat-category-history-detail {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+.aat-category-dossier .aat-hub-inline-link,
+.aat-category-dossier .aat-category-history .aat-entity-link {
+    display: inline;
+    min-height: 0;
+    padding: .2em 0;
+    border: 0;
+    line-height: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+    transition: color .18s ease, text-decoration-color .18s ease;
+}
+.aat-category-dossier .aat-hub-inline-link:hover,
+.aat-category-dossier .aat-hub-inline-link:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration-color: currentColor;
+    border: 0;
+}
+.aat-category-dossier .aat-hub-inline-link-title {
+    text-decoration: none;
+}
+.aat-category-dossier .aat-category-person-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 12px;
+    margin: 2px 0 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+.aat-category-dossier .aat-category-person-strip-label {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-category-dossier .aat-category-person-chip {
+    display: inline;
+    min-height: 0;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    line-height: inherit;
+    text-align: left;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+}
+.aat-category-dossier .aat-category-person-chip:hover,
+.aat-category-dossier .aat-category-person-chip:focus-visible {
+    color: var(--aat-gold-light);
+    background: none;
+    border: 0;
+    text-decoration-color: currentColor;
+}
+.aat-category-dossier .aat-category-history-actions,
+.aat-category-dossier .aat-nominee-trail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 6px 0 0;
+    padding: 0;
+    border: 0;
+}
+.aat-category-dossier .aat-winner-circle-action,
+.aat-category-dossier .aat-winner-circle-action.is-kind-ceremony,
+.aat-category-dossier .aat-winner-circle-action.is-kind-category,
+.aat-category-dossier .aat-winner-circle-action.is-kind-film-history,
+.aat-category-dossier .aat-winner-circle-action.is-kind-person-history,
+.aat-category-dossier .aat-winner-circle-action.is-kind-producer-history,
+.aat-category-dossier .aat-winner-circle-action.is-kind-company-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    width: auto;
+    padding: 6px 12px;
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    box-shadow: none;
+    transition: border-color .18s ease, color .18s ease;
+}
+.aat-category-dossier .aat-winner-circle-action:hover,
+.aat-category-dossier .aat-winner-circle-action:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+    transform: none;
+}
+.aat-category-dossier .aat-nominee-trail {
+    grid-column: 2;
+    margin: 4px 0 0;
+    padding: 0;
+    border: 0;
+}
+.aat-category-dossier .aat-nominee-trail-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    width: fit-content;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--aat-light-gray);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: color .18s ease;
+}
+.aat-category-dossier .aat-nominee-trail-summary::-webkit-details-marker {
+    display: none;
+}
+.aat-category-dossier .aat-nominee-trail-summary::before {
+    content: "\25B8";
+    display: inline-block;
+    color: var(--aat-gold);
+    transition: transform .2s ease;
+}
+.aat-category-dossier .aat-nominee-trail[open] > .aat-nominee-trail-summary::before {
+    transform: rotate(90deg);
+}
+.aat-category-dossier .aat-nominee-trail-summary:hover {
+    color: var(--aat-white);
+}
+.aat-category-dossier .aat-nominee-trail-summary:focus-visible {
+    outline: 2px solid var(--aat-focus-ring);
+    outline-offset: 3px;
+}
+.aat-category-dossier .aat-nominee-trail-list {
+    display: grid;
+    gap: 0;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+}
+.aat-category-dossier .aat-nominee-trail-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px 10px;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .1);
+    border-radius: 0;
+    background: none;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+.aat-category-dossier .aat-nominee-trail-item:first-child {
+    border-top: 0;
+}
+.aat-category-dossier .aat-category-history .aat-nominee-badge {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+.aat-category-dossier .aat-nominee-primary {
+    color: var(--aat-white);
+    font-family: inherit;
+    font-weight: 400;
+}
+.aat-category-dossier .aat-nominee-primary a {
+    color: inherit;
+}
+.aat-category-dossier .aat-nominee-secondary,
+.aat-category-dossier .aat-nominee-detail,
+.aat-category-dossier .aat-category-person-strip.is-compact,
+.aat-category-dossier .aat-nominee-trail-actions {
+    grid-column: auto;
+}
+.aat-category-dossier .aat-nominee-secondary {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-style: italic;
+}
+.aat-category-dossier .aat-nominee-detail {
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+}
+.aat-category-dossier .aat-category-person-strip.is-compact {
+    margin: 0;
+    padding: 0;
+}
+.aat-category-dossier .aat-nominee-trail-actions {
+    margin: 4px 0 0;
+}
+.aat-category-dossier .aat-nominee-trail-compact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 16px;
+    grid-column: 2;
+    margin: 4px 0 0;
+    padding: 0;
+}
+.aat-category-dossier .aat-nominee-trail-count {
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+.aat-category-dossier .aat-category-gallery-section {
+    display: grid;
+    gap: 16px;
+}
+.aat-category-dossier .aat-category-gallery-section h2,
+.aat-category-dossier .aat-related-reviews-section h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: normal;
+}
+.aat-category-dossier .aat-explorer-callout {
+    padding: 22px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.aat-category-dossier .aat-explorer-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding: 0;
+}
+.aat-category-dossier .aat-explorer-copy {
+    display: grid;
+    gap: 8px;
+    max-width: 62ch;
+}
+.aat-category-dossier .aat-explorer-copy h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    line-height: 1.12;
+    letter-spacing: normal;
+}
+.aat-category-dossier .aat-table-shell {
+    padding: 8px 0 0;
+    animation: none;
+}
+@media (min-width: 840px) {
+.aat-category-dossier .aat-explorer-shell {
+        grid-template-columns: minmax(0, 1.25fr) auto;
+        gap: 18px 22px;
+    }
+}
+@media (min-width: 900px) {
+.aat-category-dossier .aat-dossier-command-band {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: min(100%, 720px);
+    text-align: center;
+}
+.aat-category-dossier .aat-category-latest-winner {
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+        align-items: start;
+    }
+.aat-category-dossier .aat-category-history > .aat-section-head {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        column-gap: 24px;
+        justify-items: center;
+    text-align: center;
+}
+.aat-category-dossier .aat-section-head .aat-section-title,
+    .aat-category-dossier .aat-section-head .aat-section-description {
+        grid-column: 1;
+    }
+.aat-category-dossier .aat-category-history-mode {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: end;
+    }
+}
+@media (max-width: 899px) {
+.aat-category-dossier .aat-dossier-hero {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    text-align: center;
+}
+}
+@media (max-width: 640px) {
+.aat-category-dossier .aat-dossier-hero {
+        padding-top: 0;
+        grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+}
+.aat-category-dossier .aat-dossier-command-band {
+        gap: 0 16px;
+        width: min(100%, 720px);
+    text-align: center;
+}
+.aat-category-dossier .aat-dossier-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        max-width: 100%;
+    }
+.aat-category-dossier .aat-dossier-actions .aat-btn {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        justify-content: center;
+    }
+.aat-category-dossier .aat-hub-spotlight-card {
+        grid-template-columns: minmax(0, 1fr);
+    }
+.aat-category-dossier .aat-hub-spotlight-media {
+        width: min(100%, 148px);
+    }
+.aat-category-dossier .aat-decade-head.has-era-poster {
+        grid-template-columns: 48px minmax(0, 1fr);
+    }
+.aat-category-dossier .aat-era-chapter-media {
+        width: 48px;
+    }
+.aat-category-dossier .aat-category-ceremony-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+    }
+.aat-category-dossier .aat-category-ceremony-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 12px;
+    }
+.aat-category-dossier .aat-nominee-trail,
+    .aat-category-dossier .aat-nominee-trail-compact {
+        grid-column: auto;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+.aat-category-dossier .aat-decade-pill,
+    .aat-category-dossier .aat-winner-circle-action,
+    .aat-category-dossier .aat-hub-inline-link,
+    .aat-category-dossier .aat-hub-chip-rich,
+    .aat-category-dossier .aat-nominee-trail-summary,
+    .aat-category-dossier .aat-nominee-trail-summary::before {
+        transition: none;
+    }
+}
+.aat-inner-route-system {
+    display: grid;
+    gap: 28px;
+    overflow-x: clip;
+}
+.aat-hub-page .aat-winner-circle-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-hub-page .aat-winner-circle-grid.is-hero-latest,
+.aat-hub-page .aat-winner-circle-grid.is-marquee-latest {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+.aat-hub-page .aat-winner-circle-card,
+.aat-hub-page .aat-winner-circle-card.is-hero-latest,
+.aat-hub-page .aat-winner-circle-card.is-marquee-latest {
+    align-content: start;
+    gap: 10px;
+    min-height: 0;
+    padding: 16px;
+}
+.aat-hub-page .aat-winner-circle-media,
+.aat-hub-page .aat-winner-circle-card.is-hero-latest .aat-winner-circle-media,
+.aat-hub-page .aat-winner-circle-card.is-marquee-latest .aat-winner-circle-media {
+    aspect-ratio: 2 / 3;
+    border: 1px solid rgba(201,169,97,.22);
+    border-radius: 0;
+    margin: 0 auto 4px;
+    max-width: 168px;
+    min-height: 0;
+    width: min(100%, 168px);
+}
+.aat-hub-page .aat-winner-circle-card.is-hero-latest .aat-winner-circle-title,
+.aat-hub-page .aat-winner-circle-card.is-marquee-latest .aat-winner-circle-title {
+    font-size: clamp(1.08rem, 1.7vw, 1.35rem);
+}
+.aat-hub-page .aat-winner-circle-card.is-hero-latest .aat-winner-circle-meta,
+.aat-hub-page .aat-winner-circle-card.is-marquee-latest .aat-winner-circle-meta {
+    font-size: .94rem;
+    line-height: 1.5;
+}
+.aat-hub-page .aat-hub-spotlight-card {
+    grid-template-columns: minmax(92px, 132px) minmax(0, 1fr);
+    min-height: 0;
+    padding: 14px;
+}
+.aat-hub-page .aat-hub-spotlight-media {
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+}
+@media (max-width: 720px) {
+.aat-hub-page .aat-winner-circle-grid,
+    .aat-hub-page .aat-winner-circle-grid.is-hero-latest,
+    .aat-hub-page .aat-winner-circle-grid.is-marquee-latest {
+        grid-template-columns: 1fr;
+    }
+.aat-hub-page .aat-winner-circle-card,
+    .aat-hub-page .aat-winner-circle-card.is-hero-latest,
+    .aat-hub-page .aat-winner-circle-card.is-marquee-latest {
+        padding: 14px;
+        min-height: 0;
+        grid-template-columns: 104px minmax(0, 1fr);
+        column-gap: 14px;
+        row-gap: 8px;
+        align-content: start;
+    }
+.aat-hub-page .aat-winner-circle-top {
+        grid-column: 1 / -1;
+    }
+.aat-hub-page .aat-winner-circle-media,
+    .aat-hub-page .aat-winner-circle-card.is-hero-latest .aat-winner-circle-media,
+    .aat-hub-page .aat-winner-circle-card.is-marquee-latest .aat-winner-circle-media {
+        grid-column: 1;
+        grid-row: 2 / span 3;
+        align-self: start;
+        width: 104px;
+        max-width: 104px;
+        margin: 0;
+    }
+.aat-hub-page .aat-winner-circle-title,
+    .aat-hub-page .aat-winner-circle-meta,
+    .aat-hub-page .aat-winner-circle-actions {
+        grid-column: 2;
+    }
+.aat-hub-page .aat-winner-circle-media.is-plaque {
+        padding: 10px;
+        gap: 6px;
+    }
+.aat-hub-page .aat-winner-circle-plaque-mark {
+        font-size: 20px;
+    }
+.aat-hub-page .aat-winner-circle-plaque-label {
+        font-size: 14px;
+        letter-spacing: normal;
+    }
+}
+.aat-hub-page .aat-hub-chips {
+    justify-content: flex-start;
+    gap: 8px;
+}
+.aat-hub-page .aat-hub-chip {
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: transparent;
+    transition: border-color .18s ease;
+}
+.aat-hub-page .aat-hub-chip:hover,
+.aat-hub-page .aat-hub-chip:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+}
+.aat-ceremony-dossier > * {
+    margin-top: 0;
+}
+.aat-ceremony-dossier-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(22px, 4vw, 48px);
+    align-items: start;
+    padding: 8px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+    justify-items: center;
+    text-align: center;
+}
+.aat-ceremony-dossier-hero.has-dossier-poster .aat-ceremony-dossier-lead {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(18px, 2.4vw, 30px);
+    justify-items: center;
+    width: 100%;
+}
+.aat-ceremony-dossier-poster-frame {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 0;
+    background: rgba(6, 15, 26, .72);
+    box-shadow: none;
+    transition: none;
+}
+.aat-ceremony-dossier-poster-frame img,
+.aat-ceremony-dossier-poster-frame .aat-entity-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: none;
+}
+.aat-ceremony-dossier-poster-frame .aat-entity-poster-fallback {
+    border: 0;
+    border-radius: 0;
+}
+.aat-ceremony-dossier-poster-tag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 6px;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: .875rem;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+    text-align: center;
+    justify-content: center;
+}
+.aat-ceremony-dossier .aat-ceremony-dossier-hero .aat-hub-title {
+    margin: 0;
+    max-width: 100%;
+    color: var(--aat-light-gray);
+    font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-align: center;
+    text-transform: none;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+}
+.aat-ceremony-dossier .aat-ceremony-dossier-hero .aat-hub-subtitle {
+    margin: 0 auto;
+    max-width: 58ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: clamp(1rem, .96rem + .3vw, 1.125rem);
+    line-height: 1.6;
+}
+.aat-ceremony-command-card.is-primary {
+    grid-row: auto;
+    min-height: 0;
+}
+.aat-ceremony-command-card span {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-command-card strong {
+    color: var(--aat-white);
+    max-width: 100%;
+    font-family: var(--lunara-font-display, inherit);
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    line-height: 1.15;
+    letter-spacing: normal;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+.aat-ceremony-command-card.is-primary strong {
+    color: var(--aat-white);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.1;
+}
+.aat-ceremony-dossier-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
+    margin-top: 4px;
+}
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: stretch;
+    margin: 0;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0 0 14px;
+    border-bottom: 1px solid rgba(201, 169, 97, .16);
+}
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-older {
+    grid-template-columns: auto minmax(0, 1fr);
+}
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-newer {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-older .aat-ceremony-neighbor-slot.is-older,
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-newer .aat-ceremony-neighbor-slot.is-newer {
+    display: none;
+}
+.aat-ceremony-neighbor-slot.is-older {
+    justify-content: flex-start;
+    text-align: left;
+}
+.aat-ceremony-neighbor-slot.is-newer {
+    justify-content: flex-end;
+    text-align: right;
+}
+.aat-ceremony-neighbor-kicker,
+.aat-ceremony-neighbor-index span {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-neighbor-card strong,
+.aat-ceremony-neighbor-index strong {
+    color: var(--aat-white);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.3;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+    transition: text-decoration-color .18s ease;
+}
+.aat-ceremony-neighbor-card:hover strong,
+.aat-ceremony-neighbor-card:focus-visible strong,
+.aat-ceremony-neighbor-index:hover strong,
+.aat-ceremony-neighbor-index:focus-visible strong {
+    color: var(--aat-gold-light);
+    text-decoration-color: currentColor;
+}
+.aat-ceremony-neighbor-card span:last-child {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .9375rem;
+}
+.aat-ceremony-editorial-writeup {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+}
+.aat-ceremony-editorial-writeup h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+    text-wrap: balance;
+}
+.aat-ceremony-editorial-body p {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .9;
+    font-size: clamp(1.0625rem, 1.1vw, 1.125rem);
+    line-height: 1.7;
+}
+.aat-ceremony-editorial-body p + p {
+    margin-top: 1em;
+}
+.aat-ceremony-dossier .aat-ceremony-marquee {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+}
+.aat-ceremony-dossier .aat-ceremony-marquee-copy {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+}
+.aat-ceremony-dossier .aat-ceremony-marquee h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+}
+.aat-ceremony-dossier .aat-ceremony-marquee .aat-hub-copy {
+    margin: 0;
+    max-width: 58ch;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+.aat-ceremony-dossier .aat-ceremony-marquee-stack {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+.aat-ceremony-leaders-title {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+.aat-ceremony-dossier .aat-ceremony-leaders {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: leaders;
+}
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich {
+    display: grid;
+    grid-template-columns: 2.5ch minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    row-gap: 2px;
+    min-height: 0;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    color: var(--aat-light-gray);
+    counter-increment: leaders;
+}
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich::before {
+    content: counter(leaders);
+    grid-row: 1 / span 2;
+    align-self: start;
+    color: var(--aat-light-gray);
+    opacity: .6;
+    font-size: 1rem;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+}
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich strong {
+    color: var(--aat-white);
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.3;
+}
+.aat-ceremony-dossier .aat-ceremony-leaders .aat-hub-chip-rich span {
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.4;
+}
+.aat-ceremony-dossier .aat-best-picture-nominees-section {
+    display: grid;
+    gap: 16px;
+}
+.aat-ceremony-dossier .aat-hub-section > h2,
+.aat-ceremony-dossier .aat-section-title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-wrap: balance;
+}
+.aat-ceremony-dossier .aat-section-description {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+.aat-ceremony-dossier .aat-best-picture-grid {
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 20px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-ceremony-major-races {
+    display: grid;
+    gap: 18px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+}
+.aat-ceremony-major-races .aat-section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    margin: 0;
+    justify-items: center;
+    text-align: center;
+}
+.aat-major-race-grid {
+    display: flex;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-major-race-card > * {
+    position: relative;
+    z-index: 1;
+}
+.aat-major-race-card.is-best-picture {
+    grid-column: span 2;
+    flex-basis: 100%;
+}
+.aat-major-race-top,
+.aat-major-race-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+}
+.aat-major-race-category {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-major-race-feature {
+    display: grid;
+    grid-template-columns: minmax(92px, 126px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+.aat-major-race-card.is-best-picture .aat-major-race-feature {
+    grid-template-columns: minmax(132px, 180px) minmax(0, 1fr);
+}
+.aat-major-race-feature.is-text-only,
+.aat-major-race-card.is-best-picture .aat-major-race-feature.is-text-only {
+    grid-template-columns: minmax(0, 1fr);
+}
+.aat-major-race-media {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .22);
+    background: rgba(255, 255, 255, .03);
+}
+.aat-major-race-media img,
+.aat-major-race-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.aat-major-race-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    line-height: 1.12;
+    text-wrap: balance;
+    /* Names break between words, never inside one; a single word longer than
+       the card may still wrap rather than overflow. */
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: manual;
+}
+.aat-major-race-nominee-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.aat-major-race-card.is-best-picture .aat-major-race-nominee-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.aat-major-race-nominee-list li {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    border-top: 1px solid rgba(201, 169, 97, .1);
+}
+.aat-major-race-nominee-primary {
+    color: var(--aat-white);
+    font-size: 1rem;
+    line-height: 1.45;
+}
+.aat-major-race-nominee-secondary {
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-ceremony-ballot-ledger {
+    display: grid;
+    gap: 16px;
+}
+.aat-ceremony-ballot-ledger .aat-section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    margin: 0;
+    justify-items: center;
+    text-align: center;
+}
+.aat-ceremony-ledger-mode {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 0;
+}
+.aat-ceremony-ballot-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.aat-ceremony-ballot-summary span {
+    display: inline;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-ballot-groups {
+    display: grid;
+    gap: 8px;
+}
+.aat-ceremony-ballot-group {
+    display: grid;
+    gap: 6px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(201, 169, 97, .18);
+}
+.aat-ceremony-ballot-group-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+}
+.aat-ceremony-ballot-group-head h3 {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    line-height: 1.18;
+}
+.aat-ceremony-ballot-group-count {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-ballot-rows {
+    display: grid;
+    gap: 0;
+}
+.aat-ceremony-nominee-summary {
+    margin: 0;
+    padding: 2px 0 6px;
+    border: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-ballot-row {
+    display: grid;
+    grid-template-columns: minmax(84px, .14fr) minmax(0, 1fr) auto;
+    gap: 8px 20px;
+    align-items: start;
+    padding: 12px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .1);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.aat-ceremony-ballot-rows > .aat-ceremony-ballot-row:first-child {
+    border-top: 0;
+}
+.aat-ceremony-ballot-status .aat-winner-badge,
+.aat-ceremony-ballot-status .aat-nominee-badge {
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
+}
+.aat-ceremony-ballot-copy h4 {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: 1.05rem;
+    line-height: 1.3;
+}
+.aat-ballot-main-link {
+    font-weight: 400;
+}
+.aat-ballot-credit,
+.aat-ballot-detail,
+.aat-ballot-note {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .8;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.aat-ballot-credit strong {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ballot-note {
+    font-size: .9375rem;
+}
+.aat-ceremony-dossier .aat-winner-badge,
+.aat-ceremony-dossier .aat-nominee-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    width: fit-content;
+    padding: 4px 9px;
+    border: 1px solid rgba(201, 169, 97, .32);
+    border-radius: 0;
+    background: none;
+    color: var(--aat-gold);
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-ceremony-dossier .aat-nominee-badge {
+    border-color: rgba(201, 169, 97, .18);
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-weight: 400;
+}
+.aat-ceremony-dossier .aat-winner-badge::before {
+    content: none;
+}
+.aat-ceremony-dossier .aat-winner-circle-action,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-ceremony,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-category,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-review,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-film-history,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-person-history,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-producer-history,
+.aat-ceremony-dossier .aat-winner-circle-action.is-kind-company-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    width: auto;
+    padding: 6px 12px;
+    border: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    box-shadow: none;
+    transition: border-color .18s ease, color .18s ease;
+}
+.aat-ceremony-dossier .aat-winner-circle-action:hover,
+.aat-ceremony-dossier .aat-winner-circle-action:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+    transform: none;
+}
+.aat-ceremony-dossier .aat-hub-inline-link {
+    display: inline;
+    min-height: 0;
+    padding: .2em 0;
+    border: 0;
+    line-height: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+.aat-ceremony-dossier .aat-hub-inline-link:hover,
+.aat-ceremony-dossier .aat-hub-inline-link:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration-color: currentColor;
+}
+.aat-ceremony-dossier .aat-hub-inline-link-title {
+    text-decoration: none;
+}
+.aat-ceremony-dossier .aat-winner-circle-section {
+    display: grid;
+    gap: 16px;
+}
+.aat-ceremony-dossier .aat-winner-circle-card {
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+}
+.aat-ceremony-dossier .aat-winner-circle-category {
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+.aat-ceremony-dossier .aat-winner-circle-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+.aat-ceremony-dossier .aat-winner-circle-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .84;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.aat-ceremony-dossier .aat-winner-circle-actions {
+    margin-top: 4px;
+    padding-top: 0;
+    border-top: 0;
+    gap: 8px;
+}
+.aat-ceremony-dossier .aat-explorer-callout {
+    padding: 22px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.aat-ceremony-dossier .aat-explorer-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding: 0;
+}
+.aat-ceremony-dossier .aat-explorer-copy {
+    display: grid;
+    gap: 8px;
+    max-width: 62ch;
+}
+.aat-ceremony-dossier .aat-explorer-copy h2 {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    line-height: 1.12;
+    letter-spacing: normal;
+}
+.aat-ceremony-dossier .aat-table-shell {
+    padding: 8px 0 0;
+    animation: none;
+}
+@media (min-width: 840px) {
+.aat-ceremony-dossier .aat-explorer-shell {
+        grid-template-columns: minmax(0, 1.25fr) auto;
+        gap: 18px 22px;
+    }
+}
+@media (min-width: 900px) {
+.aat-ceremony-dossier .aat-ceremony-marquee {
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, .9fr);
+        gap: clamp(22px, 4vw, 48px);
+    }
+.aat-ceremony-major-races .aat-section-head,
+    .aat-ceremony-ballot-ledger .aat-section-head {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        column-gap: 24px;
+        justify-items: center;
+    text-align: center;
+}
+.aat-ceremony-ballot-ledger .aat-section-head .aat-section-title,
+    .aat-ceremony-ballot-ledger .aat-section-head .aat-section-description {
+        grid-column: 1;
+    }
+.aat-ceremony-ballot-ledger .aat-ceremony-ledger-mode {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: end;
+    }
+}
+@media (max-width: 980px) {
+.aat-ceremony-dossier-hero {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    text-align: center;
+}
+.aat-ceremony-dossier-hero.has-dossier-poster .aat-ceremony-dossier-lead {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    width: 100%;
+}
+.aat-major-race-grid,
+    .aat-major-race-card.is-best-picture {
+        grid-template-columns: minmax(0, 1fr);
+        grid-column: auto;
+        flex-basis: 100%;
+}
+.aat-major-race-card.is-best-picture .aat-major-race-nominee-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+.aat-ceremony-ballot-row {
+        grid-template-columns: minmax(72px, .2fr) minmax(0, 1fr);
+    }
+.aat-ceremony-ballot-actions {
+        grid-column: 2;
+        justify-content: flex-start;
+    }
+}
+@media (max-width: 640px) {
+.aat-ceremony-dossier-hero {
+        padding: 0;
+        grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+}
+.aat-ceremony-dossier-hero.has-dossier-poster .aat-ceremony-dossier-lead {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        gap: 16px;
+        width: 100%;
+}
+.aat-ceremony-dossier-poster {
+        max-width: 150px;
+        width: min(100%, 182px);
+    margin-inline: auto;
+}
+.aat-ceremony-dossier .aat-ceremony-neighbor-nav,
+    .aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-older,
+    .aat-ceremony-dossier .aat-ceremony-neighbor-nav.has-no-newer {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px;
+    }
+.aat-ceremony-neighbor-slot,
+    .aat-ceremony-neighbor-slot.is-older,
+    .aat-ceremony-neighbor-slot.is-newer {
+        justify-content: stretch;
+        text-align: left;
+    }
+.aat-ceremony-neighbor-card,
+    .aat-ceremony-neighbor-index {
+        width: 100%;
+        padding: 10px 0;
+        place-items: start;
+        text-align: left;
+    }
+.aat-ceremony-command-band {
+        gap: 0 16px;
+        width: min(100%, 720px);
+    text-align: center;
+}
+.aat-ceremony-dossier-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        justify-content: center;
+}
+.aat-ceremony-dossier-actions .aat-btn {
+        width: 100%;
+        justify-content: center;
+    }
+.aat-major-race-feature,
+    .aat-major-race-card.is-best-picture .aat-major-race-feature {
+        grid-template-columns: minmax(0, 1fr);
+    }
+.aat-major-race-media {
+        width: min(148px, 100%);
+    }
+.aat-major-race-nominee-list,
+    .aat-major-race-card.is-best-picture .aat-major-race-nominee-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+.aat-ceremony-ballot-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+    }
+.aat-ceremony-ballot-actions {
+        grid-column: auto;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+.aat-ceremony-neighbor-card,
+    .aat-ceremony-neighbor-index,
+    .aat-ceremony-neighbor-card strong,
+    .aat-ceremony-neighbor-index strong,
+    .aat-ceremony-dossier .aat-winner-circle-action,
+    .aat-hub-page .aat-filmography-poster-wrap,
+    .aat-hub-page .aat-hub-chip {
+        transition: none;
+    }
+}

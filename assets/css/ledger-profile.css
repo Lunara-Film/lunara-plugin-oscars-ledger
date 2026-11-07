@@ -1,0 +1,2055 @@
+/**
+ * Academy Awards Table - Frontend Styles: the profile sheet (2.8.29).
+ *
+ * Loaded after ledger-base.css on the title, name and company routes (templates/entity-page.php and the
+ * Ledger Motion markup). Every selector here carries a class only those templates print.
+ */
+
+.aat-entity-title {
+    margin: 0;
+    color: var(--aat-light-gray);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.12;
+    text-transform: none;
+    letter-spacing: normal;
+}
+.aat-entity-subtitle {
+    margin: 10px 0 0 0;
+    color: rgba(255,255,255,0.75);
+}
+.aat-entity-section {
+    margin-top: 25px;
+}
+.aat-lunara-review-module {
+    margin: 22px 0 26px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: hidden;
+}
+.aat-lunara-review-inner {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 18px;
+    padding: 18px;
+    align-items: start;
+}
+.aat-lunara-review-poster {
+    display: block;
+    width: 120px;
+    aspect-ratio: 2 / 3;
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    box-shadow: none;
+}
+.aat-lunara-review-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.aat-lunara-review-kicker {
+    font-size: 14px;
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgba(201,169,97,0.95);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+.aat-lunara-review-title {
+    margin: 0 0 10px;
+    font-size: 22px;
+    line-height: 1.2;
+}
+.aat-lunara-review-title a {
+    color: var(--aat-light-gray);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.35);
+    padding-bottom: 2px;
+}
+.aat-lunara-review-title a:hover {
+    color: #ffffff;
+    border-bottom-color: rgba(201, 169, 97, 0.9);
+}
+.aat-lunara-review-excerpt {
+    margin: 0 0 14px;
+    color: rgba(230,238,247,0.92);
+    line-height: 1.55;
+}
+.aat-lunara-review-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.aat-lunara-review-more {
+    margin-top: 12px;
+    font-size: 14px;
+    color: rgba(230,238,247,0.88);
+}
+.aat-lunara-review-more-label {
+    color: rgba(201,169,97,0.9);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 14px;
+    margin-right: 6px;
+}
+.aat-lunara-review-more a {
+    color: rgba(230,238,247,0.92);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.25);
+}
+.aat-lunara-review-more a:hover {
+    border-bottom-color: rgba(201, 169, 97, 0.85);
+    color: #ffffff;
+}
+@media (max-width: 600px) {
+.aat-lunara-review-inner {
+        grid-template-columns: 92px 1fr;
+        padding: 14px;
+        gap: 14px;
+    }
+.aat-lunara-review-poster {
+        width: 92px;
+    }
+.aat-lunara-review-title {
+        font-size: 18px;
+    }
+}
+.aat-breadcrumbs {
+    margin: 0 0 18px;
+    font-size: 0.92rem;
+    color: var(--aat-light-gray);
+    opacity: 0.88;
+}
+.aat-breadcrumbs a {
+    color: var(--aat-gold-light);
+    text-decoration: none;
+}
+.aat-breadcrumbs a:hover {
+    color: var(--aat-gold);
+}
+.aat-entity-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 26px;
+    position: relative;
+    overflow: hidden;
+    padding: 16px 0;
+}
+.aat-entity-hero > * {
+    position: relative;
+    z-index: 1;
+}
+.aat-entity-poster-wrap {
+    max-width: 320px;
+}
+.aat-entity-hero.aat-card-has-backdrop {
+    padding: 16px 0;
+    border-radius: 0;
+    border: 1px solid rgba(201,169,97,.2);
+    box-shadow: none;
+}
+.aat-entity-status-banner.aat-card-has-backdrop {
+    min-height: 226px;
+    border-color: rgba(201,169,97,.26);
+    box-shadow: none;
+}
+.aat-entity-status-banner.is-winner {
+    border-color: rgba(201,169,97,.32);
+    background: transparent;
+}
+.aat-entity-status-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.3rem, 2.6vw, 2rem);
+    line-height: 1.1;
+}
+.aat-entity-status-summary {
+    margin: 12px 0 0;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.65;
+}
+.aat-entity-status-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 0;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(201,169,97,.18);
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    transition: background .24s ease, border-color .24s ease, color .24s ease, transform .24s ease;
+}
+.aat-entity-status-tag:hover {
+    background: rgba(201,169,97,.14);
+    border-color: rgba(201,169,97,.34);
+    color: var(--aat-white);
+    transform: none;
+}
+.aat-entity-crossroads {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 34px;
+}
+.aat-crossroads-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+.aat-crossroads-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow: none;
+}
+.aat-crossroads-card h3 {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: 1.08rem;
+    line-height: 1.2;
+}
+.aat-crossroads-list,
+.aat-editorial-ref-list {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+}
+.aat-crossroad-pill,
+.aat-editorial-ref-card {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    text-decoration: none;
+    transition: transform .24s ease, border-color .24s ease, background .24s ease;
+}
+.aat-crossroad-pill:hover,
+.aat-editorial-ref-card:hover {
+    transform: none;
+    border-color: rgba(201,169,97,.3);
+    background: rgba(201,169,97,.08);
+}
+.aat-crossroad-pill-title,
+.aat-editorial-ref-card strong {
+    color: var(--aat-white);
+    font-size: .98rem;
+    font-weight: 800;
+    line-height: 1.28;
+    overflow-wrap: anywhere;
+}
+.aat-crossroad-pill-meta,
+.aat-editorial-ref-meta {
+    color: rgba(230,238,247,0.74);
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-editorial-ref-excerpt {
+    color: rgba(230,238,247,0.82);
+    font-size: .9rem;
+    line-height: 1.55;
+}
+.aat-timeline-list {
+    display: grid;
+    gap: 18px;
+}
+.aat-timeline-card.aat-card-has-backdrop {
+    border-color: rgba(201,169,97,.24);
+    box-shadow: none;
+}
+.aat-timeline-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(201,169,97,.16);
+}
+.aat-timeline-ceremony {
+    color: var(--aat-gold);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+.aat-timeline-year {
+    color: var(--aat-gold-light);
+    font-size: .95rem;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-history-item.is-winner {
+    border-color: rgba(201,169,97,.35);
+    background: transparent;
+}
+.aat-history-detail {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+}
+.aat-history-line {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--aat-light-gray);
+}
+.aat-history-line .aat-entity-link {
+    color: var(--aat-gold);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(201,169,97,.55);
+}
+.aat-history-line .aat-entity-link:hover {
+    color: var(--aat-gold-light);
+    text-decoration-color: rgba(224,196,129,.8);
+}
+.aat-history-line-muted {
+    color: rgba(255,255,255,0.74);
+    font-style: italic;
+}
+.aat-history-status {
+    display: flex;
+    align-items: start;
+}
+.aat-history-category .aat-category-pill {
+    margin-bottom: 0;
+}
+@media (max-width: 900px) {
+.aat-crossroads-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+.aat-crossroads-card-editorial {
+        grid-column: 1 / -1;
+    }
+.aat-entity-hero {
+        grid-template-columns: 1fr;
+    }
+.aat-entity-poster-wrap {
+        max-width: 220px;
+    }
+}
+@media (max-width: 720px) {
+.aat-entity-status-tags {
+        justify-content: flex-start;
+    }
+.aat-crossroads-grid {
+        grid-template-columns: 1fr;
+    }
+.aat-crossroads-card {
+        padding: 16px;
+    }
+.aat-crossroads-card-editorial {
+        grid-column: auto;
+    }
+.aat-history-item {
+        grid-template-columns: 1fr;
+    }
+.aat-timeline-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+.aat-entity-meta-line{display:flex;flex-wrap:wrap;gap:10px 16px;margin:10px 0 14px;color:#d9d0bb;font-size:.95rem}
+.aat-entity-overview{max-width:72ch;line-height:1.7;color:#efe8d6;margin-top:10px}
+.aat-related-review-excerpt{margin:0;color:rgba(230,238,247,0.9);line-height:1.62}
+.aat-entity-poster-wrap.is-person{max-width:280px}
+.aat-entity-poster-wrap.is-company{max-width:280px}
+.aat-entity-portrait{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;border-radius:0;border:1px solid rgba(201,169,97,.28);box-shadow:none}
+.aat-entity-meta-line span+span:before{content:'•';margin-right:14px;color:rgba(201,169,97,0.74)}
+.aat-timeline-card,
+.aat-history-item {
+    overflow: hidden;
+}
+.aat-history-item.is-winner::before {
+    opacity: .55;
+}
+.aat-entity-hero.is-no-poster {
+    grid-template-columns: minmax(0, 1fr);
+}
+.aat-entity-hero.has-person-visual-state-no-portrait {
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+}
+.aat-entity-poster-wrap.is-person-fallback {
+    width: min(100%, 300px);
+    max-width: 300px;
+}
+.aat-entity-poster-wrap.is-person-fallback .aat-person-portrait-fallback {
+    min-height: 340px;
+    aspect-ratio: 4 / 5;
+    align-items: end;
+    background:
+        transparent;
+}
+.aat-entity-poster-wrap.is-person-fallback .aat-fallback-kicker {
+    color: rgba(224,196,129,0.88);
+}
+.aat-entity-poster-wrap.is-person-fallback .aat-fallback-title {
+    font-size: clamp(1.38rem, 2.4vw, 1.88rem);
+    max-width: 10ch;
+}
+.aat-entity-hero.is-meta-only {
+    grid-template-columns: 1fr;
+}
+@media (max-width: 900px) {
+.aat-entity-hero.is-no-poster {
+        grid-template-columns: 1fr;
+    }
+}
+.aat-entity-meta-line span+span::before { content: "\2022"; margin-right: 10px; }
+@media (max-width: 900px) {
+.aat-entity-meta-line {
+        gap: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+@media (max-width: 640px) {
+.aat-entity-poster-wrap,
+    .aat-entity-poster-wrap.is-person,
+    .aat-entity-poster-wrap.is-company {
+        max-width: min(100%, 260px);
+    }
+}
+.aat-lunara-review-excerpt,
+.aat-related-review-excerpt {
+    color: rgba(230,238,247,0.88);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+.aat-lunara-review-excerpt {
+    max-width: 64ch;
+}
+.aat-entity-status-banner {
+    position: relative;
+    overflow: hidden;
+    padding: 28px 30px;
+    border-radius: 0;
+    background:
+        transparent;
+    box-shadow:
+        none;
+}
+.aat-entity-status-banner > * {
+    position: relative;
+    z-index: 1;
+}
+.aat-entity-status-title {
+    max-width: 18ch;
+    line-height: 1.04;
+}
+.aat-entity-status-tags {
+    align-content: start;
+    gap: 10px;
+}
+.aat-entity-status-tag {
+    box-shadow:
+        none;
+}
+.aat-timeline-list {
+    display: grid;
+    gap: 20px;
+}
+.aat-timeline-card {
+    position: relative;
+    display: grid;
+    gap: 18px;
+    padding: 16px 0;
+    border-radius: 0;
+    border: 0;
+    background:
+        transparent;
+}
+.aat-timeline-meta {
+    display: grid;
+    grid-template-columns: minmax(140px, 180px) minmax(0, 1fr);
+    gap: 10px 18px;
+    align-items: end;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.aat-timeline-ceremony {
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-timeline-year {
+    justify-self: start;
+    padding: 6px 12px;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-timeline-body {
+    display: grid;
+    gap: 14px;
+}
+.aat-history-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px 18px;
+    align-items: start;
+    padding: 16px 0;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+}
+.aat-history-item.aat-card-has-backdrop {
+    border-color: rgba(201,169,97,.18);
+    box-shadow: none;
+}
+.aat-history-item.aat-card-has-backdrop .aat-history-line,
+.aat-history-item.aat-card-has-backdrop .aat-history-line a {
+    color: rgba(255,255,255,0.9);
+}
+.aat-history-main {
+    display: grid;
+    gap: 10px;
+}
+.aat-history-category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+.aat-history-detail {
+    display: grid;
+    gap: 9px;
+}
+.aat-history-line {
+    color: rgba(235,228,212,0.9);
+    line-height: 1.65;
+}
+.aat-history-line strong {
+    color: var(--aat-gold-light);
+    font-size: .875rem;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-history-line-muted {
+    color: rgba(218,205,178,0.74);
+    font-style: italic;
+}
+.aat-history-status {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+@media (max-width: 900px) {
+.aat-entity-hero {
+        gap: 22px;
+        padding: 16px 0;
+    }
+.aat-entity-hero.aat-card-has-backdrop {
+        padding: 16px 0;
+        border-radius: 0;
+    }
+.aat-entity-hero-copy {
+        display: grid;
+        gap: 12px;
+    }
+.aat-entity-poster-wrap,
+    .aat-entity-poster-wrap.is-person,
+    .aat-entity-poster-wrap.is-company {
+        margin-inline: auto;
+    }
+.aat-entity-actions {
+        gap: 10px;
+    }
+.aat-entity-actions .aat-btn {
+        width: 100%;
+        justify-content: center;
+    }
+.aat-entity-status-summary {
+        margin-top: 10px;
+    }
+.aat-entity-status-banner {
+        padding: 22px 20px;
+        border-radius: 0;
+    }
+.aat-entity-status-banner.aat-card-has-backdrop {
+        min-height: 0;
+    }
+.aat-timeline-meta {
+        grid-template-columns: 1fr;
+    }
+.aat-timeline-card {
+        padding: 16px 0;
+    }
+.aat-history-item {
+        padding: 16px 0;
+        grid-template-columns: 1fr;
+    }
+.aat-history-detail {
+        gap: 7px;
+    }
+.aat-history-line {
+        font-size: 1.0625rem;
+        line-height: 1.6;
+    }
+}
+@media (max-width: 640px) {
+.aat-entity-meta-line {
+        display: grid;
+        gap: 8px;
+        margin: 8px 0 12px;
+        font-size: 0.9rem;
+    }
+.aat-entity-summary,
+    .aat-entity-overview {
+        margin-top: 12px;
+    }
+.aat-entity-status-title {
+        font-size: clamp(1.18rem, 6vw, 1.6rem);
+    }
+.aat-entity-status-tags {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+.aat-entity-status-tag {
+        width: 100%;
+        justify-content: center;
+    }
+.aat-entity-hero.aat-card-has-backdrop {
+        padding: 16px 0;
+        border-radius: 0;
+    }
+.aat-timeline-card {
+        padding: 16px 0;
+        border-radius: 0;
+    }
+.aat-timeline-meta {
+        gap: 10px;
+        padding-bottom: 12px;
+        margin-bottom: 14px;
+    }
+.aat-timeline-year {
+        justify-self: start;
+    }
+.aat-history-item {
+        padding: 16px 0;
+        border-radius: 0;
+    }
+.aat-history-status {
+        width: 100%;
+    }
+}
+.aat-entity-page > .aat-entity-section {
+    margin-top: clamp(34px, 5vw, 58px);
+}
+.aat-entity-page > .aat-entity-section[id] {
+    scroll-margin-top: 96px;
+}
+.aat-entity-page > .aat-entity-crossroads {
+    margin-top: 0;
+}
+.aat-entity-mode-link {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    margin: 0;
+}
+.aat-entity-compact-notice {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    color: rgba(230,238,247,0.74);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: .875rem;
+    font-weight: 700;
+    gap: 10px;
+    justify-content: space-between;
+    letter-spacing: normal;
+    margin-top: 16px;
+    padding: 13px 14px;
+    text-transform: none;
+}
+.aat-entity-compact-notice .aat-winner-circle-action {
+    margin: 0;
+}
+.aat-entity-timeline .aat-timeline-list {
+    gap: 22px;
+}
+.aat-entity-timeline .aat-timeline-card {
+    position: relative;
+    overflow: hidden;
+    padding: 16px 0;
+    border-radius: 0;
+    border-color: rgba(201,169,97,.22);
+}
+.aat-entity-timeline .aat-timeline-meta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 14px 18px;
+}
+.aat-entity-timeline .aat-timeline-ceremony {
+    font-size: clamp(1.18rem, 2vw, 1.48rem);
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-entity-timeline .aat-timeline-year {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 7px 14px;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    color: var(--aat-gold-light);
+    line-height: 1.4;
+}
+.aat-entity-timeline .aat-timeline-year a {
+    color: inherit;
+    text-decoration: none;
+}
+.aat-entity-timeline .aat-history-item {
+    align-items: start;
+    border-radius: 0;
+    background:
+        transparent;
+}
+.aat-entity-timeline .aat-history-item.is-winner {
+    border-color: rgba(201,169,97,.42);
+    background:
+        transparent;
+}
+.aat-entity-timeline .aat-history-status {
+    align-items: flex-start;
+}
+.aat-entity-timeline .aat-winner-badge,
+.aat-entity-timeline .aat-nominee-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 86px;
+}
+.aat-filmography-trail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 8px 14px 16px;
+}
+.aat-filmography-trail span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 5px 8px;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    color: rgba(234,219,179,0.92);
+    font-size: .875rem;
+    font-weight: 800;
+    letter-spacing: normal;
+    line-height: 1.3;
+    text-transform: none;
+}
+.aat-filmography-card:hover .aat-filmography-trail span,
+.aat-filmography-card:focus-within .aat-filmography-trail span {
+    border-color: rgba(201,169,97,.32);
+    background: rgba(201,169,97,.08);
+}
+@media (max-width: 720px) {
+.aat-entity-page > .aat-entity-section {
+        margin-top: 38px;
+    }
+.aat-entity-mode-link,
+    .aat-entity-compact-notice {
+        justify-content: flex-start;
+    }
+.aat-entity-timeline .aat-timeline-meta {
+        grid-template-columns: 1fr;
+    }
+.aat-entity-timeline .aat-timeline-year {
+        justify-self: start;
+    }
+.aat-entity-timeline .aat-history-status,
+    .aat-entity-timeline .aat-winner-badge,
+    .aat-entity-timeline .aat-nominee-badge {
+        width: 100%;
+    }
+.aat-filmography-trail {
+        padding-inline: 12px;
+    }
+}
+.aat-entity-page .aat-entity-hero {
+    grid-template-columns: minmax(0, clamp(150px, 16vw, 210px)) minmax(0, 1fr);
+    gap: clamp(16px, 2.2vw, 24px);
+    align-items: start;
+    margin-bottom: 18px;
+}
+.aat-entity-page .aat-entity-hero.aat-card-has-backdrop {
+    padding: 16px 0;
+    border-radius: 0;
+}
+.aat-entity-page .aat-entity-poster-wrap,
+.aat-entity-page .aat-entity-poster-wrap.is-person,
+.aat-entity-page .aat-entity-poster-wrap.is-company {
+    max-width: clamp(150px, 16vw, 210px);
+    width: 100%;
+}
+.aat-entity-page .aat-entity-poster-wrap img,
+.aat-entity-page .aat-entity-poster,
+.aat-entity-page .aat-entity-portrait {
+    border-radius: 0;
+    max-height: 320px;
+    object-fit: cover;
+}
+.aat-entity-page .aat-entity-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+}
+.aat-entity-page .aat-entity-overview,
+.aat-entity-page .aat-entity-summary {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+.aat-entity-page .aat-entity-status-banner {
+    padding: clamp(16px, 1.8vw, 20px);
+    border-radius: 0;
+    gap: 14px;
+    min-height: 0;
+}
+.aat-entity-page .aat-entity-status-title {
+    font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+}
+.aat-entity-page .aat-entity-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 10px;
+    margin: 16px 0 30px;
+}
+.aat-entity-page .aat-stat {
+    min-width: 0;
+    padding: 11px 12px;
+    text-align: left;
+}
+.aat-entity-page .aat-stat-number {
+    font-size: 1.28rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+}
+.aat-entity-page .aat-stat-label {
+    display: block;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-entity-page .aat-filmography-meta,
+.aat-entity-page .aat-filmography-trail {
+    padding-inline: 12px;
+}
+.aat-entity-page .aat-timeline-card {
+    padding: 16px 0;
+}
+.aat-entity-page .aat-history-item {
+    padding: 16px 0;
+}
+@media (max-width: 720px) {
+.aat-entity-page .aat-entity-hero {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+.aat-entity-page .aat-entity-poster-wrap,
+    .aat-entity-page .aat-entity-poster-wrap.is-person,
+    .aat-entity-page .aat-entity-poster-wrap.is-company {
+        justify-self: start;
+        max-width: 146px;
+    }
+.aat-entity-page .aat-entity-poster-wrap img,
+    .aat-entity-page .aat-entity-poster,
+    .aat-entity-page .aat-entity-portrait {
+        max-height: 220px;
+    }
+.aat-entity-page .aat-entity-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+.aat-entity-page .aat-stat {
+        padding: 10px;
+    }
+.aat-entity-page .aat-stat-number {
+        font-size: 1.08rem;
+    }
+.aat-entity-page .aat-stat-label {
+        font-size: .875rem;
+    }
+}
+@media (max-width: 430px) {
+.aat-entity-page .aat-entity-poster-wrap,
+    .aat-entity-page .aat-entity-poster-wrap.is-person,
+    .aat-entity-page .aat-entity-poster-wrap.is-company {
+        max-width: 132px;
+    }
+}
+.aat-profile-file {
+    display: grid;
+    gap: var(--lunara-oscars-dossier-section-gap, clamp(28px, 4vw, 48px));
+    min-width: 0;
+}
+.aat-profile-file > *,
+.aat-profile-file .aat-entity-hero > * {
+    min-width: 0;
+    max-width: 100%;
+}
+.aat-profile-file .aat-breadcrumbs {
+    margin: 0;
+    color: rgba(255, 255, 255, .74);
+    opacity: 1;
+    font-size: .9375rem;
+    line-height: 1.5;
+    text-align: center;
+}
+.aat-profile-file .aat-breadcrumbs a {
+    color: var(--aat-gold-light);
+}
+.aat-profile-file .aat-breadcrumbs [aria-current] {
+    color: var(--aat-light-gray);
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-breadcrumbs .aat-sep {
+    margin: 0 .4em;
+    opacity: .6;
+}
+.aat-profile-file .aat-entity-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(20px, 3vw, 36px);
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+    justify-items: center;
+    text-align: center;
+}
+.aat-profile-file .aat-entity-hero.is-meta-only,
+.aat-profile-file .aat-entity-hero.is-no-poster {
+    grid-template-columns: minmax(0, 1fr);
+}
+.aat-profile-file .aat-entity-poster-wrap,
+.aat-profile-file .aat-entity-poster-wrap.is-person,
+.aat-profile-file .aat-entity-poster-wrap.is-company {
+    position: relative;
+    width: 100%;
+    max-width: 210px;
+    margin-inline: auto;
+    justify-self: center;
+    aspect-ratio: var(--lunara-oscars-profile-media-aspect, 2 / 3);
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 0;
+    background: transparent;
+}
+.aat-profile-file .aat-entity-poster-wrap img,
+.aat-profile-file .aat-entity-poster,
+.aat-profile-file .aat-entity-portrait {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    object-fit: var(--lunara-oscars-profile-media-fit, cover);
+    object-position: var(--lunara-oscars-image-focus, center center);
+    transform: none;
+    transition: none;
+}
+.aat-profile-file .aat-entity-poster-wrap .aat-entity-poster-fallback,
+.aat-profile-file .aat-entity-poster-wrap .aat-person-portrait-fallback {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+    padding: 16px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+.aat-profile-file .aat-entity-poster-wrap .aat-fallback-kicker {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    line-height: 1.4;
+}
+.aat-profile-file .aat-entity-poster-wrap .aat-fallback-title {
+    max-width: 100%;
+    color: var(--aat-white);
+    font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-entity-poster-wrap .is-company-plate .aat-fallback-title {
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    line-height: 1;
+    color: var(--aat-gold-light);
+}
+.aat-profile-file .aat-entity-poster-wrap .aat-fallback-meta {
+    color: var(--aat-light-gray);
+    font-size: .9375rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-entity-hero-copy {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    min-width: 0;
+    justify-items: center;
+    width: 100%;
+}
+.aat-profile-file .aat-entity-title {
+    margin: 0;
+    max-width: 100%;
+    color: var(--aat-light-gray);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+    text-align: center;
+    text-transform: none;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+.aat-profile-file .aat-entity-subtitle {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.aat-profile-file .aat-entity-subtitle .aat-meta-sep {
+    margin: 0 .45em;
+}
+.aat-profile-file .aat-entity-summary,
+.aat-profile-file .aat-entity-overview {
+    margin-inline: auto;
+    margin: 0;
+    max-width: 64ch;
+    color: var(--aat-light-gray);
+    opacity: 1;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+.aat-profile-file .aat-entity-summary a,
+.aat-profile-file .aat-entity-meta-line a,
+.aat-profile-file .aat-entity-status-summary a {
+    color: var(--aat-gold-light);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-entity-summary a:hover,
+.aat-profile-file .aat-entity-meta-line a:hover,
+.aat-profile-file .aat-entity-status-summary a:hover {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+.aat-profile-file .aat-entity-meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 0;
+    margin: 0;
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    line-height: 1.5;
+    justify-content: center;
+}
+.aat-profile-file .aat-entity-meta-line span + span::before {
+    content: "\2022";
+    margin: 0 .55em;
+    color: rgba(201, 169, 97, .7);
+}
+.aat-profile-file .aat-profile-command-band {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0 20px;
+    margin: 4px 0 0;
+    min-width: 0;
+    width: min(100%, 760px);
+    text-align: center;
+}
+.aat-profile-file .aat-profile-command-card {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    min-width: 0;
+    min-height: 0;
+    padding: 12px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+.aat-profile-file .aat-profile-command-card span {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-profile-command-card strong {
+    color: var(--aat-white);
+    font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-entity-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 4px 0 0;
+    justify-content: center;
+}
+.aat-profile-file .aat-stats-bar.aat-entity-stats {
+    display: none;
+}
+.aat-profile-file .aat-entity-overview { text-align: left; }
+.aat-profile-file .aat-entity-status-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
+    gap: 16px 28px;
+    align-items: start;
+    margin: 0;
+    padding: 20px 0 0;
+    min-height: 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .22);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.aat-profile-file .aat-entity-status-banner.is-winner {
+    border-color: rgba(201, 169, 97, .22);
+    background: transparent;
+}
+.aat-profile-file .aat-entity-status-banner.has-status-media {
+    grid-template-columns: 96px minmax(0, 1.5fr) minmax(220px, 1fr);
+}
+.aat-profile-file .aat-entity-status-media {
+    width: 96px;
+}
+.aat-profile-file .aat-entity-status-media a {
+    display: block;
+}
+.aat-profile-file .aat-entity-status-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 0;
+}
+.aat-profile-file .aat-entity-status-copy {
+    min-width: 0;
+}
+.aat-profile-file .aat-entity-status-kicker {
+    margin: 0 0 6px;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-entity-status-title {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    line-height: 1.12;
+}
+.aat-profile-file .aat-entity-status-summary {
+    margin: 8px 0 0;
+    max-width: 64ch;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+.aat-profile-file .aat-entity-status-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+}
+.aat-profile-file .aat-entity-status-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid rgba(201, 169, 97, .24);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-size: .9375rem;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: none;
+    transition: border-color .18s ease, color .18s ease;
+}
+.aat-profile-file .aat-entity-status-tag:hover,
+.aat-profile-file .aat-entity-status-tag:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+    transform: none;
+}
+.aat-profile-file .aat-entity-section,
+.aat-profile-file .aat-lunara-review-module {
+    margin: 0;
+}
+.aat-profile-file .aat-entity-section[id] {
+    scroll-margin-top: 96px;
+}
+.aat-profile-file .aat-section-head {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 16px;
+    padding: 0 0 12px;
+    border-bottom: 1px solid rgba(201, 169, 97, .2);
+    justify-items: center;
+    text-align: center;
+}
+.aat-profile-file .aat-section-title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--aat-white);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.08;
+}
+.aat-profile-file .aat-section-description {
+    margin: 0;
+    max-width: 72ch;
+    color: var(--aat-light-gray);
+    opacity: 1;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+.aat-profile-file .aat-entity-mode-link {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0 0;
+}
+.aat-profile-file .aat-hub-inline-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border: 0;
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-hub-inline-link:hover,
+.aat-profile-file .aat-hub-inline-link:focus-visible {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+.aat-profile-file .aat-lunara-review-module {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+}
+.aat-profile-file .aat-lunara-review-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px 24px;
+    align-items: start;
+    padding: 20px 0 0;
+    border-top: 1px solid rgba(201, 169, 97, .22);
+}
+.aat-profile-file .aat-lunara-review-module.has-review-media .aat-lunara-review-inner {
+    grid-template-columns: 120px minmax(0, 1fr);
+}
+.aat-profile-file .aat-lunara-review-poster {
+    display: block;
+    width: 120px;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 0;
+    box-shadow: none;
+}
+.aat-profile-file .aat-lunara-review-poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.aat-profile-file .aat-lunara-review-kicker {
+    margin: 0 0 6px;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-lunara-review-title {
+    margin: 0 0 8px;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.2;
+}
+.aat-profile-file .aat-lunara-review-title a {
+    padding: 0;
+    border: 0;
+    color: var(--aat-white);
+    text-decoration: none;
+}
+.aat-profile-file .aat-lunara-review-title a:hover,
+.aat-profile-file .aat-lunara-review-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-lunara-review-excerpt {
+    margin: 0 0 14px;
+    max-width: 64ch;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+.aat-profile-file .aat-lunara-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+}
+.aat-profile-file .aat-lunara-review-more {
+    margin-top: 12px;
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+.aat-profile-file .aat-timeline-list {
+    display: grid;
+    gap: 8px;
+}
+.aat-profile-file .aat-timeline-card {
+    position: relative;
+    margin: 0;
+    padding: 12px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
+}
+.aat-profile-file .aat-timeline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    margin: 0 0 4px;
+    padding: 0;
+    border: 0;
+}
+.aat-profile-file .aat-timeline-ceremony {
+    margin: 0;
+    color: var(--aat-white);
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-timeline-ceremony a {
+    color: inherit;
+    text-decoration: none;
+}
+.aat-profile-file .aat-timeline-ceremony a:hover,
+.aat-profile-file .aat-timeline-ceremony a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-timeline-year {
+    display: inline;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: 1rem;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-timeline-body {
+    display: grid;
+    gap: 0;
+}
+.aat-profile-file .aat-history-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 16px;
+    align-items: start;
+    margin: 0;
+    padding: 14px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
+}
+.aat-profile-file .aat-history-item.has-history-media {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+}
+.aat-profile-file .aat-history-item.is-winner {
+    border-color: rgba(201, 169, 97, .14);
+    background: transparent;
+}
+.aat-profile-file .aat-history-item::before {
+    content: none;
+}
+.aat-profile-file .aat-history-media {
+    width: 56px;
+}
+.aat-profile-file .aat-history-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border: 1px solid rgba(201, 169, 97, .24);
+    border-radius: 0;
+}
+.aat-profile-file .aat-history-main {
+    min-width: 0;
+}
+.aat-profile-file .aat-history-category .aat-hub-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+}
+.aat-profile-file .aat-history-category .aat-category-pill {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-history-category > .aat-category-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--aat-light-gray);
+    text-decoration: none;
+}
+.aat-profile-file .aat-history-category .aat-hub-link:hover .aat-category-pill,
+.aat-profile-file .aat-history-category .aat-hub-link:focus-visible .aat-category-pill {
+    background: transparent;
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+.aat-profile-file .aat-history-detail {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+}
+.aat-profile-file .aat-history-line {
+    max-width: 100%;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-history-line strong {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: inherit;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+.aat-profile-file .aat-history-line .aat-entity-link {
+    color: var(--aat-gold-light);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-history-line .aat-entity-link:hover {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+.aat-profile-file .aat-history-line-muted {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-style: normal;
+}
+.aat-profile-file .aat-history-status {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: auto;
+    padding-top: 10px;
+}
+.aat-profile-file .aat-winner-badge,
+.aat-profile-file .aat-nominee-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 4px 10px;
+    border-radius: 0;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-winner-badge::before {
+    content: none;
+}
+.aat-profile-file .aat-nominee-badge {
+    border: 1px solid rgba(255, 255, 255, .18);
+    background: transparent;
+    color: var(--aat-light-gray);
+}
+.aat-profile-file .aat-no-results {
+    padding: 24px 0;
+    text-align: left;
+}
+.aat-profile-file .aat-filmography-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 22px 16px;
+    align-items: start;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-profile-file .aat-filmography-card {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+    align-content: start;
+    gap: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
+}
+.aat-profile-file .aat-filmography-card:hover,
+.aat-profile-file .aat-filmography-card:focus-within {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+}
+.aat-profile-file .aat-filmography-link {
+    display: block;
+    height: auto;
+}
+.aat-profile-file .aat-filmography-poster-wrap {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .03);
+    box-shadow: none;
+}
+.aat-profile-file .aat-filmography-poster-wrap::after {
+    content: none;
+}
+.aat-profile-file .aat-filmography-link:hover .aat-filmography-poster-wrap,
+.aat-profile-file .aat-filmography-link:focus-visible .aat-filmography-poster-wrap {
+    border-color: var(--aat-gold);
+}
+.aat-profile-file .aat-filmography-poster-placeholder {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+.aat-profile-file .aat-filmography-poster-placeholder span {
+    display: block;
+    color: var(--aat-light-gray);
+    font-size: .9375rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-filmography-title {
+    margin: 0;
+    padding: 10px 0 2px;
+    color: var(--aat-white);
+    font-size: 1rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-filmography-title a {
+    color: inherit;
+    text-decoration: none;
+}
+.aat-profile-file .aat-filmography-title a:hover,
+.aat-profile-file .aat-filmography-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-filmography-meta {
+    margin: 0;
+    padding: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+.aat-profile-file .aat-filmography-trail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 0;
+    margin: 4px 0 0;
+    padding: 0;
+}
+.aat-profile-file .aat-filmography-trail span {
+    display: inline;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-filmography-trail span + span::before {
+    content: "\2022";
+    margin: 0 .5em;
+    color: rgba(201, 169, 97, .7);
+}
+.aat-profile-file .aat-entity-compact-notice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    margin: 20px 0 0;
+    padding: 14px 0 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-winner-circle-action.is-kind-film-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 14px;
+    border: 1px solid rgba(201, 169, 97, .3);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-gold-light);
+    font-size: .9375rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-decoration: none;
+    text-transform: none;
+}
+.aat-profile-file .aat-winner-circle-action.is-kind-film-history:hover,
+.aat-profile-file .aat-winner-circle-action.is-kind-film-history:focus-visible {
+    border-color: var(--aat-gold);
+    background: transparent;
+    color: var(--aat-white);
+}
+.aat-profile-file .aat-related-reviews-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--lunara-oscars-related-review-min, 260px)), 1fr));
+    gap: 24px 20px;
+    align-items: start;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.aat-profile-file .aat-related-review-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    transition: none;
+}
+.aat-profile-file .aat-related-review-card.has-no-media {
+    min-height: 0;
+    border: 0;
+    background: transparent;
+}
+.aat-profile-file .aat-related-review-media {
+    display: block;
+    aspect-ratio: var(--lunara-oscars-related-review-media-aspect, 16 / 10);
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 97, .16);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .03);
+}
+.aat-profile-file .aat-related-review-media::after {
+    content: none;
+}
+.aat-profile-file .aat-related-review-media:hover,
+.aat-profile-file .aat-related-review-media:focus-visible {
+    border-color: var(--aat-gold);
+}
+.aat-profile-file .aat-related-review-body {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-height: 0;
+    padding: 12px 0 0;
+}
+.aat-profile-file .aat-related-review-card.has-no-media .aat-related-review-body {
+    min-height: 0;
+    padding: 12px 0 0;
+    border-top: 1px solid rgba(201, 169, 97, .2);
+}
+.aat-profile-file .aat-related-review-kicker {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-related-review-title {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.3;
+}
+.aat-profile-file .aat-related-review-title a {
+    color: var(--aat-white);
+    text-decoration: none;
+}
+.aat-profile-file .aat-related-review-title a:hover,
+.aat-profile-file .aat-related-review-title a:focus-visible {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-related-review-meta {
+    margin: 0;
+    color: var(--aat-light-gray);
+    opacity: .78;
+    font-size: .9375rem;
+    line-height: 1.45;
+}
+.aat-profile-file .aat-related-review-meta a {
+    border: 0;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 196, 129, .45);
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-related-review-meta a:hover {
+    color: var(--aat-white);
+    text-decoration-color: currentColor;
+}
+.aat-profile-file .aat-related-review-excerpt {
+    margin: 0;
+    min-height: 0;
+    max-width: 64ch;
+    color: var(--aat-light-gray);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+.aat-profile-file .aat-related-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+.aat-profile-file .aat-entity-crossroads {
+    display: grid;
+    gap: 0;
+    margin: 0;
+}
+.aat-profile-file .aat-crossroads-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px clamp(20px, 3vw, 40px);
+    align-items: start;
+}
+.aat-profile-file .aat-crossroads-card {
+    display: grid;
+    align-content: start;
+    gap: 0;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.aat-profile-file .aat-crossroads-card h3 {
+    margin: 0 0 6px;
+    color: var(--aat-white);
+    font-size: 1.125rem;
+    line-height: 1.25;
+}
+.aat-profile-file .aat-crossroads-list,
+.aat-profile-file .aat-editorial-ref-list {
+    display: grid;
+    gap: 0;
+    min-width: 0;
+}
+.aat-profile-file .aat-crossroad-pill,
+.aat-profile-file .aat-editorial-ref-card {
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid rgba(201, 169, 97, .14);
+    border-radius: 0;
+    background: transparent;
+    color: var(--aat-light-gray);
+    text-decoration: none;
+    transition: none;
+}
+.aat-profile-file .aat-crossroad-pill:hover,
+.aat-profile-file .aat-editorial-ref-card:hover {
+    background: transparent;
+    border-color: rgba(201, 169, 97, .14);
+    transform: none;
+}
+.aat-profile-file a.aat-crossroad-pill:hover .aat-crossroad-pill-title,
+.aat-profile-file a.aat-crossroad-pill:focus-visible .aat-crossroad-pill-title,
+.aat-profile-file a.aat-editorial-ref-card:hover strong,
+.aat-profile-file a.aat-editorial-ref-card:focus-visible strong {
+    color: var(--aat-gold-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.aat-profile-file .aat-crossroad-pill-title,
+.aat-profile-file .aat-editorial-ref-card strong {
+    color: var(--aat-white);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+.aat-profile-file .aat-crossroad-pill-meta,
+.aat-profile-file .aat-editorial-ref-meta,
+.aat-profile-file .aat-editorial-ref-type {
+    color: var(--aat-light-gray);
+    opacity: .72;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.aat-profile-file .aat-editorial-ref-excerpt {
+    color: var(--aat-light-gray);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+@media (max-width: 900px) {
+.aat-profile-file .aat-entity-hero {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+        justify-items: center;
+        text-align: center;
+    }
+.aat-profile-file .aat-entity-poster-wrap,
+    .aat-profile-file .aat-entity-poster-wrap.is-person,
+    .aat-profile-file .aat-entity-poster-wrap.is-company {
+        max-width: 180px;
+        justify-self: center;
+    }
+.aat-profile-file .aat-profile-command-band {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 760px);
+    text-align: center;
+}
+.aat-profile-file .aat-entity-status-banner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+.aat-profile-file .aat-entity-status-banner.has-status-media {
+        grid-template-columns: 72px minmax(0, 1fr);
+    }
+.aat-profile-file .aat-entity-status-media {
+        width: 72px;
+    }
+.aat-profile-file .aat-entity-status-banner.has-status-media .aat-entity-status-tags {
+        grid-column: 1 / -1;
+    }
+.aat-profile-file .aat-crossroads-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+.aat-profile-file .aat-crossroads-card-editorial {
+        grid-column: 1 / -1;
+    }
+.aat-profile-file .aat-lunara-review-module.has-review-media .aat-lunara-review-inner {
+        grid-template-columns: 96px minmax(0, 1fr);
+    }
+.aat-profile-file .aat-lunara-review-poster {
+        width: 96px;
+    }
+}
+@media (max-width: 720px) {
+.aat-profile-file .aat-history-item {
+        grid-template-columns: minmax(0, 1fr);
+    }
+.aat-profile-file .aat-history-item.has-history-media {
+        grid-template-columns: 56px minmax(0, 1fr);
+    }
+.aat-profile-file .aat-history-item.has-history-media .aat-history-status {
+        grid-column: 2;
+    }
+.aat-profile-file .aat-history-status {
+        justify-content: flex-start;
+        padding-top: 0;
+    }
+.aat-profile-file .aat-history-status,
+    .aat-profile-file .aat-winner-badge,
+    .aat-profile-file .aat-nominee-badge {
+        width: auto;
+    }
+.aat-profile-file .aat-crossroads-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+.aat-profile-file .aat-crossroads-card-editorial {
+        grid-column: auto;
+    }
+.aat-profile-file .aat-filmography-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 18px 12px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+.aat-profile-file .aat-related-reviews-grid {
+        grid-template-columns: minmax(0, 1fr);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+@media (max-width: 640px) {
+.aat-profile-file .aat-entity-meta-line {
+        display: flex;
+        gap: 6px 0;
+        margin: 0;
+        font-size: 1rem;
+        justify-content: center;
+}
+.aat-profile-file .aat-entity-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        width: 100%;
+        justify-content: center;
+}
+.aat-profile-file .aat-entity-actions .aat-btn {
+        width: 100%;
+        justify-content: center;
+    }
+.aat-profile-file .aat-entity-summary,
+    .aat-profile-file .aat-entity-overview,
+    .aat-profile-file .aat-section-description,
+    .aat-profile-file .aat-history-line {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+}
+@media (max-width: 480px) {
+.aat-profile-file .aat-filmography-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+@media (max-width:768px) {
+body .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero {gap:20px!important;padding:16px 0!important;grid-template-columns: minmax(0, 1fr);justify-items: center;text-align: center;}
+body .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-title {max-width:100%!important;font-size:clamp(2rem, 4vw, 3.5rem)!important;line-height:1.12!important;word-break:normal!important;overflow-wrap:break-word!important}
+body .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-summary,
+ body .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-overview {max-width:64ch!important;font-size:1rem!important;line-height:1.6!important}
+body .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-profile-command-band {grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+body .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-profile-command-card {min-height:72px!important;padding:16px 0!important}
+body .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-profile-command-card span {font-size:.875rem!important;letter-spacing:normal!important}
+body .aat-container.aat-entity-page.aat-profile-file .aat-entity-actions .aat-btn {min-height:44px!important;font-size:.875rem!important;line-height:1.4!important;white-space:normal!important}
+}
+@media (max-width:540px) {
+body.aat-shell-page .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap,
+ body.aat-shell-page .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap.is-person,
+ body.aat-shell-page .aat-container.aat-entity-page.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap.is-company {width:min(100%,45vw,180px);max-width:min(100%,45vw,180px);flex-basis:auto;height:auto;justify-self:center}
+}

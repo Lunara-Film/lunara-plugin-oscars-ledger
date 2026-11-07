@@ -2,7 +2,7 @@
 
 $root = dirname(__DIR__);
 $hub = file_get_contents($root . '/templates/hub-page.php');
-$css = file_get_contents($root . '/assets/css/academy-awards-table.css');
+$css = implode("\n", array_map(static function ($sheet) use ($root) { return (string) file_get_contents($root . '/assets/css/' . $sheet); }, array('ledger-base.css', 'ledger-hub.css', 'ledger-profile.css', 'ledger-table.css'))); // 2.8.29: the four route sheets in cascade order
 $failures = array();
 
 $assert = function ($condition, $message) use (&$failures) {
@@ -49,15 +49,20 @@ $assert(preg_match('/\.aat-winner-circle-media\.is-plaque \{[^}]*align-items: ce
 // Phones first: one column of 40+ full-height cards is an endless scroll, so the
 // phone layout is thumbnail-left/text-right with no forced card height.
 $assert(preg_match('/@media \(max-width: 720px\)/', $css) === 1, 'The phone breakpoint should exist.');
+// The phone rules: every 720px block across the route sheets, joined (2.8.29: the winner-card rules sit in the hub
+// sheet and the chip rules in the base sheet, so the block is gathered rather than sliced).
 $phone_block = '';
-$phone_marker = strpos($css, 'grid-template-columns: 104px minmax(0, 1fr);');
-if ($phone_marker !== false) {
-    $phone_open = strrpos(substr($css, 0, $phone_marker), '@media (max-width: 720px)');
-    $assert($phone_open !== false, 'The phone winner-card rules should live in the 720px breakpoint.');
-    if ($phone_open !== false) {
-        $phone_block = substr($css, $phone_open, $phone_marker - $phone_open + 4000);
+$cursor = 0;
+while (($phone_open = strpos($css, '@media (max-width: 720px)', $cursor)) !== false) {
+    $brace = strpos($css, '{', $phone_open);
+    $depth = 0;
+    for ($i = $brace; $i < strlen($css); $i++) {
+        if ($css[$i] === '{') { $depth++; } elseif ($css[$i] === '}') { $depth--; if ($depth === 0) { break; } }
     }
+    $phone_block .= substr($css, $phone_open, $i - $phone_open + 1) . "\n";
+    $cursor = $i + 1;
 }
+$assert(strpos($phone_block, 'grid-template-columns: 104px minmax(0, 1fr);') !== false, 'The phone winner-card rules should live in the 720px breakpoint.');
 $assert(strpos($phone_block, 'grid-template-columns: 104px minmax(0, 1fr);') !== false, 'Phone cards should put the media in a fixed left column.');
 $assert(preg_match('/\.aat-hub-page \.aat-winner-circle-card,[^{]*\{[^}]*min-height: 0;/s', $phone_block) === 1, 'Phone cards should drop the desktop minimum height.');
 $assert(strpos($phone_block, 'grid-row: 2 / span 3;') !== false, 'The phone media box should span the text rows beside it.');
