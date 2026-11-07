@@ -13,7 +13,11 @@ $fail = array();
 $check = function ($ok, $msg) use (&$fail) { if (!$ok) { $fail[] = $msg; } };
 
 $check(strpos($plugin, "define('AAT_BOOT_MS'") !== false, 'The boot probe is recorded when the plugin loads.');
-$check(strpos($plugin, 'const VIRTUAL_ROUTE_MAX_AGE = 900;') !== false, 'Anonymous Oscars routes keep a 900s cache life.');
+// 2.8.28: one edge lifetime for every public route. The theme sends max-age=300 (3.2.151) so a deploy reaches
+// the edge within five minutes; the plugin's rendered routes and its stored pages send the same.
+preg_match('/const VIRTUAL_ROUTE_MAX_AGE = (\d+);/', $plugin, $route_age);
+preg_match('/const HTTP_MAX_AGE = (\d+);/', file_get_contents($root . '/includes/class-aat-page-store.php'), $store_age);
+$check(isset($route_age[1], $store_age[1]) && (int) $route_age[1] === 300 && (int) $store_age[1] === 300, 'Anonymous Oscars routes and stored pages share the theme\'s 300s edge lifetime.');
 $check(strpos($plugin, "header('Cache-Control: public, max-age=' . \$max_age)") !== false && strpos($plugin, "apply_filters('aat_virtual_route_max_age'") !== false, 'The cache life is sent as Cache-Control and is filterable.');
 $check(strpos($plugin, 'if (is_user_logged_in()) {') !== false, 'Logged-in visitors are not sent the long cache life.');
 $check(strpos($plugin, "header('Server-Timing: aat-boot;dur='") !== false, 'Server-Timing reports aat-boot and aat-route.');

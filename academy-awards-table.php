@@ -3,7 +3,7 @@
  * Plugin Name: Lunara Film - Academy Awards Database
  * Plugin URI: https://lunarafilm.com/oscars/
  * Description: A premium, server-side searchable database of every Academy Award nominee and winner (1st ceremony through 2025), compiled and maintained by Lunara Film.
- * Version: 2.8.27
+ * Version: 2.8.28
  * Author: Lunara Film (Dalton Johnson)
  * Author URI: https://lunarafilm.com/
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('AAT_VERSION', '2.8.27');
+define('AAT_VERSION', '2.8.28');
 define('AAT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AAT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AAT_BUNDLED_CSV_PATH', AAT_PLUGIN_DIR . 'data/oscars.csv');
@@ -89,14 +89,41 @@ class Academy_Awards_Table {
      * existing tables get one in-place repair (relabel_shouted_entities()).
      */
     const LABEL_RULES = 'l2';
-    // 2.8.12: seconds Batcache/edge keep an anonymous Oscars route (was the platform's 300).
-    const VIRTUAL_ROUTE_MAX_AGE = 900;
-    // 2.8.21: what a poster tells the browser about its rendered width. Measured
-    // on lunarafilm.com: posters render 72-180px wide on phones and 86-340px on
-    // desktop, so WordPress's default "(max-width: 768px) 100vw, 768px" made a
-    // phone fetch the 780w file for a 96px card. Callers that know their layout
-    // pass their own 'sizes'; WordPress prepends "auto, " for lazy images itself.
-    const POSTER_SIZES_DEFAULT = '(max-width: 820px) 180px, 340px';
+    // 2.8.12: seconds Batcache/edge keep an anonymous Oscars route. 2.8.28: 300,
+    // the theme's lifetime since 3.2.151, so a plugin or theme deploy reaches
+    // the edge within the same five minutes on every public route.
+    const VIRTUAL_ROUTE_MAX_AGE = 300;
+    // 2.8.21: what a poster tells the browser about its rendered width. 2.8.28:
+    // the default is the entity hero's measured frame, the widest poster the
+    // plugin prints, so a caller that passes nothing is sharp rather than cheap;
+    // every template slot passes its own measured value from POSTER_SIZES
+    // through poster_sizes_for(). WordPress prepends "auto, " for lazy images.
+    const POSTER_SIZES_DEFAULT = '(max-width: 540px) min(45vw, 180px), (max-width: 700px) 260px, 340px';
+    // 2.8.28: the measured frame of every image slot the templates print, at 17
+    // viewport widths from 320 to 1920px on lunarafilm.com (2026-11-07, theme
+    // 3.2.154, which sizes the entity hero through its profile-media variables).
+    // The browser multiplies a sizes value by its pixel ratio to choose a
+    // candidate, so a value is never wider than the frame paints and never a
+    // viewport width unless the frame is one (the related-review stills on
+    // phones). tests/ledger-routes-browser.js measures each slot against its
+    // frame on every rendered route.
+    const POSTER_SIZES = array(
+        'hero'           => '(max-width: 540px) min(45vw, 180px), (max-width: 700px) 260px, 340px', // entity poster and portrait: the theme's profile-media rule (45vw to 180px, 260px, 340px)
+        'dossier'        => '(max-width: 640px) 150px, 182px',                              // ceremony dossier hero poster
+        'index'          => '84px',                                                         // ceremonies/categories index column
+        'card'           => '168px',                                                        // nominee and highlight cards (160-168px)
+        'card-small'     => '160px',                                                        // category highlights, filmographies
+        'winner'         => '(max-width: 599px) 132px, (max-width: 720px) 104px, 168px',   // Winner Circle media box
+        'major-race'     => '(max-width: 640px) 148px, 180px',                              // 126-180px from 641px: the widest card
+        'spotlight'      => '(max-width: 560px) 132px, 148px',                              // category latest-winner spotlight: 104-108px paints live, 132px is its column's cap; both pick the same candidate
+        'category-hero'  => '72px',                                                         // category command-card poster
+        'era'            => '(max-width: 640px) 48px, 56px',                                // category era chapter poster
+        'related'        => '(max-width: 719px) calc(100vw - 64px), 280px',                 // hub related-review stills
+        'related-entity' => '(max-width: 719px) calc(100vw - 52px), 280px',                 // entity related-review stills
+        'status'         => '(max-width: 960px) 72px, 96px',                                // entity latest-result poster
+        'history'        => '56px',                                                         // entity history row poster
+        'tracker'        => '72px',
+    );
     // 2.8.21: srcset widths added between WordPress's 200w and 683w, as image-CDN
     // resizes of the original, so a 96px card at 3x (288px) can pick 320w, not 683w.
     const POSTER_SRCSET_WIDTHS = array(320, 400, 480, 600);
@@ -9930,9 +9957,12 @@ public function get_title_visual_package($tt, $size = 'large', $allow_remote = f
     if ($display_year !== '') $meta_bits[] = esc_html($display_year);
     if ($out['director'] !== '') $meta_bits[] = esc_html($out['director']);
     $meta_line = !empty($meta_bits) ? '<div class="aat-fallback-meta">' . implode('<span class="aat-fallback-dot">•</span>', $meta_bits) . '</div>' : '';
-    $backdrop_style = !empty($out['backdrop_url']) ? ' style="background-image: linear-gradient(180deg, rgba(4,11,22,.28), rgba(4,11,22,.82)), url(' . esc_url($out['backdrop_url']) . '); background-size: cover; background-position: center;"' : '';
-    $out['fallback_html'] = '<div class="aat-entity-poster-fallback"' . $backdrop_style . '><div class="aat-fallback-inner"><div class="aat-fallback-kicker">LUNARA FILM</div><div class="aat-fallback-title">' . esc_html($display_title) . '</div>' . $meta_line . '</div></div>';
-    $out['card_fallback_html'] = '<div class="aat-filmography-poster-placeholder"' . $backdrop_style . '><div class="aat-fallback-inner"><div class="aat-fallback-kicker">Oscar Profile</div><div class="aat-fallback-title small">' . esc_html($display_title) . '</div>' . $meta_line . '</div></div>';
+    // 2.8.28: the plates are typographic (DESIGN.md: a film with no art is a
+    // plate on the surface colour). The inline TMDB w780 backdrop they carried
+    // was a CSS background, so every browser downloaded a 780px file no card
+    // could use, before the stylesheet could say otherwise.
+    $out['fallback_html'] = '<div class="aat-entity-poster-fallback"><div class="aat-fallback-inner"><div class="aat-fallback-kicker">LUNARA FILM</div><div class="aat-fallback-title">' . esc_html($display_title) . '</div>' . $meta_line . '</div></div>';
+    $out['card_fallback_html'] = '<div class="aat-filmography-poster-placeholder"><div class="aat-fallback-inner"><div class="aat-fallback-kicker">Oscar Profile</div><div class="aat-fallback-title small">' . esc_html($display_title) . '</div>' . $meta_line . '</div></div>';
 
     return $out;
 }
@@ -10033,8 +10063,9 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
 
         // 2.8.12: the per-request and transient caches are checked first. The
         // explicit portrait join below used to run (and rewrite the transient) on
-        // every call. Portrait imports delete this transient, so a new portrait
-        // still shows at once.
+        // every call. Portrait imports retire this transient and the stored
+        // pages built with the old portrait (2.8.28), so a new portrait shows
+        // at once.
         static $runtime_cache = array();
         if (array_key_exists($nm_id, $runtime_cache)) {
             $cached_runtime = $runtime_cache[$nm_id];
@@ -14039,6 +14070,24 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
         return new WP_Error('aat_profile_batch_source_invalid', 'The --source value must be an extracted image folder or the oscars-profile-images zip.');
     }
 
+    /**
+     * 2.8.28: a new, adopted or imported portrait reaches the page at once.
+     * The resolver's transient goes, and the stored name, ceremony and category
+     * pages built with the old portrait (or its plate) retire with it. Before
+     * this only the transient went, so a stored page kept the old picture for
+     * up to twelve hours (AAT_Page_Store::MAX_AGE) or until an unrelated bump.
+     */
+    private function retire_person_portrait_caches($person_id) {
+        $person_id = strtolower(trim((string) $person_id));
+        if ($person_id === '') {
+            return;
+        }
+        delete_transient('aat_person_profile_attachment_v2_' . $person_id);
+        if (class_exists('AAT_Page_Store')) {
+            AAT_Page_Store::bump('portrait_' . $person_id);
+        }
+    }
+
     private function import_manual_person_profile_image($row, $batch_label) {
         $person_id = strtolower(trim((string) ($row['person_id'] ?? '')));
         if (!$this->is_imdb_name_entity_id($person_id)) {
@@ -14108,7 +14157,7 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
         update_post_meta($attachment_id, '_aat_tmdb_person_id', intval($row['tmdb_person_id'] ?? 0));
         update_post_meta($attachment_id, '_aat_tmdb_profile_path', (string) ($row['profile_path'] ?? ''));
 
-        delete_transient('aat_person_profile_attachment_v2_' . $person_id);
+        $this->retire_person_portrait_caches($person_id);
 
         return array(
             'status' => 'imported',
@@ -14811,7 +14860,7 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
         update_post_meta($attachment_id, '_aat_person_portrait_adopted_at', current_time('mysql', true));
         update_post_meta($attachment_id, '_aat_person_portrait_adopted_by', get_current_user_id());
         update_post_meta($attachment_id, '_aat_person_portrait_adoption_note', $note);
-        delete_transient('aat_person_profile_attachment_v2_' . $person_id);
+        $this->retire_person_portrait_caches($person_id);
 
         return array(
             'attachment_id' => $attachment_id,
@@ -15073,7 +15122,7 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
         update_post_meta($attachment_id, '_aat_tmdb_person_id', intval($tmdb['id'] ?? 0));
         update_post_meta($attachment_id, '_aat_person_portrait_verified', '1');
 
-        delete_transient('aat_person_profile_attachment_v2_' . $person_id);
+        $this->retire_person_portrait_caches($person_id);
 
         return array(
             'status' => 'imported',
@@ -15189,12 +15238,7 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
         if (!is_array($sources) || !is_array($image_meta) || empty($image_meta['file']) || empty($image_meta['width'])) {
             return $sources;
         }
-        $cdn = null;
-        if (class_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core') && method_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url')) {
-            $cdn = array('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url');
-        } elseif (function_exists('jetpack_photon_url')) {
-            $cdn = 'jetpack_photon_url';
-        }
+        $cdn = $this->image_cdn_callback();
         if (!$cdn) {
             return $sources;
         }
@@ -15220,6 +15264,145 @@ public function get_person_visual_package($nm_id, $size = 'large', $allow_remote
         }
         ksort($sources);
         return $sources;
+    }
+
+    /**
+     * 2.8.28: the image CDN this site resizes through, or null when none is loaded.
+     *
+     * @return callable|null
+     */
+    private function image_cdn_callback() {
+        if (class_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core') && method_exists('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url')) {
+            return array('\Automattic\Jetpack\Image_CDN\Image_CDN_Core', 'cdn_url');
+        }
+        if (function_exists('jetpack_photon_url')) {
+            return 'jetpack_photon_url';
+        }
+        return null;
+    }
+
+    /**
+     * 2.8.28: the sizes value a template slot paints (POSTER_SIZES), or the
+     * default for a slot the map does not know.
+     *
+     * @param string $slot Slot name.
+     * @return string
+     */
+    public function poster_sizes_for($slot) {
+        $slot = (string) $slot;
+        return isset(self::POSTER_SIZES[$slot]) ? self::POSTER_SIZES[$slot] : self::POSTER_SIZES_DEFAULT;
+    }
+
+    /**
+     * 2.8.28: CDN crop candidates for an attachment in a fixed-ratio frame.
+     *
+     * A picture that covers a box of another shape (a 16:9 still in the 2:3
+     * Winner Circle box) needs a candidate as wide as the box's height asks
+     * for, not the box's width, so plain-width candidates leave it blurred on
+     * desktop. Each candidate here is cropped to the frame's ratio, so its
+     * width is the width it paints and the browser chooses by width alone.
+     * The CDN scales a crop up past the source, so no candidate is wider than
+     * the widest crop the original holds (the smaller of its width and its
+     * height times the frame ratio); that native crop joins the list only in
+     * place of widths the cap removed, and only when it is at least a tenth
+     * wider than the last kept one. Empty strings when the site has no CDN,
+     * the attachment has no measured size, or fewer than two candidates
+     * remain; the caller then keeps WordPress's own srcset.
+     *
+     * @param int   $attachment_id  Media Library attachment.
+     * @param int   $frame_width    Frame ratio width.
+     * @param int   $frame_height   Frame ratio height.
+     * @param int[] $widths         Candidate widths, normally 1x and 2x of the measured frame.
+     * @param int   $fallback_width The candidate the src falls back to (browsers without srcset).
+     * @return array{src:string,srcset:string}
+     */
+    public function get_attachment_crop_srcset($attachment_id, $frame_width, $frame_height, $widths = array(), $fallback_width = 0) {
+        $empty = array('src' => '', 'srcset' => '');
+        $attachment_id = (int) $attachment_id;
+        $frame_width = (int) $frame_width;
+        $frame_height = (int) $frame_height;
+        if ($attachment_id <= 0 || $frame_width < 1 || $frame_height < 1) {
+            return $empty;
+        }
+        $cdn = $this->image_cdn_callback();
+        if (!$cdn) {
+            return $empty;
+        }
+        $meta = wp_get_attachment_metadata($attachment_id);
+        if (!is_array($meta) || empty($meta['file']) || empty($meta['width']) || empty($meta['height'])) {
+            return $empty;
+        }
+        $widths = array_values(array_unique(array_filter(array_map('intval', (array) $widths), static function ($width) {
+            return $width > 0;
+        })));
+        sort($widths, SORT_NUMERIC);
+        $limit = min((int) $meta['width'], (int) floor((int) $meta['height'] * $frame_width / $frame_height));
+        $requested = empty($widths) ? 0 : max($widths);
+        $widths = array_values(array_filter($widths, static function ($width) use ($limit) {
+            return $width <= $limit;
+        }));
+        if ($limit > 0 && $limit < $requested && (empty($widths) || $limit >= max($widths) * 1.1)) {
+            $widths[] = $limit;
+        }
+        if (count($widths) < 2) {
+            return $empty;
+        }
+        $upload = wp_get_upload_dir();
+        $full_url = trailingslashit((string) ($upload['baseurl'] ?? '')) . ltrim((string) $meta['file'], '/');
+        $candidates = array();
+        $src = '';
+        $nearest = PHP_INT_MAX;
+        $fallback_width = (int) $fallback_width;
+        foreach ($widths as $width) {
+            $height = (int) round($width * $frame_height / $frame_width);
+            $url = call_user_func($cdn, $full_url, array('resize' => $width . ',' . $height));
+            if (!is_string($url) || $url === '') {
+                return $empty;
+            }
+            $candidates[] = $url . ' ' . $width . 'w';
+            $distance = abs($width - $fallback_width);
+            if ($src === '' || $distance < $nearest) {
+                $src = $url;
+                $nearest = $distance;
+            }
+        }
+        return array('src' => $src, 'srcset' => implode(', ', $candidates));
+    }
+
+    /**
+     * 2.8.28: the one <img> builder for a Media Library picture that is not a
+     * title poster (portraits, curated winner photos). WordPress builds the
+     * tag with its plain-width candidates and puts "auto, " in front of a lazy
+     * image's sizes; add_poster_srcset_widths() adds the CDN widths; a $frame
+     * (width, height) replaces them with crops to the frame's ratio through
+     * get_attachment_crop_srcset(). An eager picture keeps the sizes it is
+     * given, so the browser never resolves it to the viewport width.
+     *
+     * @param int    $attachment_id Media Library attachment.
+     * @param string $size          Registered size for the src and the tag's width/height.
+     * @param array  $attrs         Attributes; 'sizes' is the measured frame (poster_sizes_for()).
+     * @param array  $frame         Optional (width, height) ratio of the box the picture covers.
+     * @param int[]  $widths        Crop widths for $frame, 1x and 2x of the frame's measured widths.
+     * @param int    $fallback      Crop width the src falls back to.
+     * @return string
+     */
+    public function get_attachment_img_html($attachment_id, $size = 'medium_large', $attrs = array(), $frame = array(), $widths = array(), $fallback = 0) {
+        $attachment_id = (int) $attachment_id;
+        if ($attachment_id <= 0) {
+            return '';
+        }
+        $attrs = array_merge(array('loading' => 'lazy', 'decoding' => 'async'), is_array($attrs) ? $attrs : array());
+        if (is_array($frame) && count($frame) === 2 && empty($attrs['srcset'])) {
+            $set = $this->get_attachment_crop_srcset($attachment_id, (int) $frame[0], (int) $frame[1], $widths, $fallback);
+            if ($set['srcset'] !== '') {
+                $attrs['srcset'] = $set['srcset'];
+                $attrs['src'] = $set['src'];
+            }
+        }
+        add_filter('wp_calculate_image_srcset', array($this, 'add_poster_srcset_widths'), 20, 5);
+        $html = wp_get_attachment_image($attachment_id, $size, false, $attrs);
+        remove_filter('wp_calculate_image_srcset', array($this, 'add_poster_srcset_widths'), 20);
+        return is_string($html) ? $html : '';
     }
 
     /**

@@ -420,7 +420,14 @@ $entity_anchor_title = '';
 $entity_anchor_stats = array();
 $company_film_id = '';
 if ($entity === 'title' && method_exists($aat, 'get_title_visual_package')) {
-    $visual = $aat->get_title_visual_package($id, 'medium_large');
+    // 2.8.28: the poster is the page's largest paint, so it is eager with the
+    // frame's measured sizes (a lazy LCP image waited for layout, and its
+    // "auto, " resolved to the viewport width).
+    $visual = $aat->get_title_visual_package($id, 'medium_large', false, array(
+        'loading'       => 'eager',
+        'fetchpriority' => 'high',
+        'sizes'         => $aat->poster_sizes_for('hero'),
+    ));
 } elseif ($entity === 'name' && method_exists($aat, 'get_person_visual_package')) {
     $visual = $aat->get_person_visual_package($id, 'medium_large');
 } elseif ($entity === 'company' && !empty($distinct_films)) {
@@ -541,8 +548,15 @@ if ($entity !== 'title' && !empty($distinct_films)) {
             $related_film_label = strtoupper($related_film_id);
         }
 
-        $related_review_thumb = get_the_post_thumbnail_url($related_review_id, 'medium_large');
-        $related_film_visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($related_film_id, 'medium') : array();
+        // 2.8.28: the still prints with candidates and the box's measured sizes (it was a bare 768px URL).
+        $related_review_thumb = get_the_post_thumbnail($related_review_id, 'medium_large', array(
+            'class' => 'aat-related-review-image',
+            'alt' => get_the_title($related_review_id),
+            'loading' => 'lazy',
+            'decoding' => 'async',
+            'sizes' => $aat->poster_sizes_for('related-entity'),
+        ));
+        $related_film_visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($related_film_id, 'medium', false, array('sizes' => $aat->poster_sizes_for('related-entity'))) : array();
         // The card's media box is a wide still; the film's backdrop fits it, a poster is the last resort.
         $related_visual_media_html = '';
         if (!empty($related_film_visual['backdrop_url'])) {
@@ -606,6 +620,19 @@ get_header();
             <?php $aat_poster_html = ($entity === 'title' && !empty($visual['poster_html'])) ? $visual['poster_html'] : ''; ?>
             <?php $aat_poster_url = ($entity === 'title' && !empty($visual['poster_url'])) ? (string) $visual['poster_url'] : ''; ?>
             <?php $aat_person_portrait_url = ($entity === 'name' && !empty($visual['portrait_url'])) ? $visual['portrait_url'] : ''; ?>
+            <?php
+            // 2.8.28: a library portrait prints through the builder, eager with the
+            // frame's measured sizes and width candidates; a TMDB portrait stays a URL.
+            $aat_person_portrait_html = ($entity === 'name' && !empty($visual['portrait_attachment_id']))
+                ? $aat->get_attachment_img_html((int) $visual['portrait_attachment_id'], 'medium_large', array(
+                    'class'         => 'aat-entity-portrait',
+                    'alt'           => ($label ? $label : strtoupper($id)) . ' portrait',
+                    'loading'       => 'eager',
+                    'fetchpriority' => 'high',
+                    'sizes'         => $aat->poster_sizes_for('hero'),
+                ))
+                : '';
+            ?>
             <?php $aat_fallback_html = $entity === 'company' ? $aat_company_plate_html : (!empty($visual['fallback_html']) ? $visual['fallback_html'] : ''); ?>
             <?php if (!empty($aat_poster_html) || $aat_poster_url !== '' || !empty($aat_person_portrait_url) || !empty($aat_fallback_html)) : ?>
                 <?php
@@ -627,8 +654,10 @@ get_header();
                         <?php echo $aat_poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php elseif ($aat_poster_url !== '') : ?>
                         <img class="aat-entity-poster" src="<?php echo esc_url($aat_poster_url); ?>" alt="<?php echo esc_attr($label ? $label : strtoupper($id)); ?> poster" loading="eager" decoding="async" fetchpriority="high" />
+                    <?php elseif ($aat_person_portrait_html !== '') : ?>
+                        <?php echo $aat_person_portrait_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php elseif (!empty($aat_person_portrait_url)) : ?>
-                        <img class="aat-entity-portrait" src="<?php echo esc_url($aat_person_portrait_url); ?>" alt="<?php echo esc_attr($label ? $label : strtoupper($id)); ?> portrait" loading="eager" decoding="async" fetchpriority="high" />
+                        <img class="aat-entity-portrait" src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $aat_person_portrait_url, 680)); ?>" alt="<?php echo esc_attr($label ? $label : strtoupper($id)); ?> portrait" loading="eager" decoding="async" fetchpriority="high" />
                     <?php elseif (!empty($aat_fallback_html)) : ?>
                         <?php echo $aat_fallback_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php endif; ?>
@@ -725,7 +754,7 @@ get_header();
             $aat_latest_first_id = (string) key($aat_latest_films);
         }
         if ($aat_latest_first_id !== '' && method_exists($aat, 'get_poster_img_html_for_title')) {
-            $aat_latest_poster_html = (string) $aat->get_poster_img_html_for_title($aat_latest_first_id, 'medium', array('class' => 'aat-entity-status-poster', 'sizes' => '96px'));
+            $aat_latest_poster_html = (string) $aat->get_poster_img_html_for_title($aat_latest_first_id, 'medium', array('class' => 'aat-entity-status-poster', 'sizes' => $aat->poster_sizes_for('status')));
         }
         if ($aat_latest_poster_html !== '') { $latest_status_classes[] = 'has-status-media'; }
         ?>
@@ -914,7 +943,7 @@ get_header();
                                 $row_title_id = $entity === 'title' ? $id : $get_primary_pipe_value($r['film_id'] ?? '');
                                 // People and companies see the film beside each credit; a title page is already the film.
                                 $row_poster_html = ($entity !== 'title' && $row_title_id !== '' && method_exists($aat, 'get_poster_img_html_for_title'))
-                                    ? (string) $aat->get_poster_img_html_for_title($row_title_id, 'medium', array('class' => 'aat-history-poster', 'sizes' => '56px'))
+                                    ? (string) $aat->get_poster_img_html_for_title($row_title_id, 'medium', array('class' => 'aat-history-poster', 'sizes' => $aat->poster_sizes_for('history')))
                                     : '';
                                 $history_classes = array('aat-history-item');
                                 if ($is_winner) {
@@ -1033,7 +1062,7 @@ get_header();
                     $film_ceremony_count = !empty($film_stats['ceremonies']) && is_array($film_stats['ceremonies']) ? count($film_stats['ceremonies']) : 0;
                     $film_label = $get_title_label($fid);
                     if (!$film_label) { $film_label = strtoupper($fid); }
-                    $poster_html = $aat->get_poster_img_html_for_title($fid, 'medium', array('class' => 'aat-filmography-poster', 'sizes' => '(max-width: 720px) 132px, 160px'));
+                    $poster_html = $aat->get_poster_img_html_for_title($fid, 'medium', array('class' => 'aat-filmography-poster', 'sizes' => $aat->poster_sizes_for('card-small')));
                     $tmdb_item = method_exists($aat, 'get_tmdb_data_for_imdb_id') ? $aat->get_tmdb_data_for_imdb_id($fid, false) : array();
                     $film_url = $build_entity_url($fid);
                     $film_year = !empty($tmdb_item['release_date']) ? substr((string) $tmdb_item['release_date'], 0, 4) : '';
@@ -1044,7 +1073,7 @@ get_header();
                                 <?php if ($poster_html) : ?>
                                     <?php echo $poster_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                 <?php elseif (!empty($tmdb_item['poster_full'])) : ?>
-                                    <img class="aat-filmography-poster" src="<?php echo esc_url($tmdb_item['poster_full']); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
+                                    <img class="aat-filmography-poster" src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $tmdb_item['poster_full'], 320)); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
                                 <?php else : ?>
                                     <?php $film_visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($fid, 'medium') : array(); ?>
                                     <?php if (!empty($film_visual['card_fallback_html'])) : ?>
@@ -1100,7 +1129,7 @@ get_header();
                         <?php if ($aat_related_review_has_media) : ?>
                         <a class="aat-related-review-media" href="<?php echo esc_url($related_review['review_url']); ?>">
                             <?php if (!empty($related_review['review_thumb'])) : ?>
-                                <img class="aat-related-review-image" src="<?php echo esc_url($related_review['review_thumb']); ?>" alt="<?php echo esc_attr($related_review['review_title']); ?>" loading="lazy" decoding="async" />
+                                <?php echo $related_review['review_thumb']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                             <?php elseif (!empty($related_review['fallback_html'])) : ?>
                                 <?php echo $related_review['fallback_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                             <?php endif; ?>
@@ -1137,7 +1166,8 @@ get_header();
 if (class_exists('AAT_Ledger_Motion') && !empty($rows)) {
     echo AAT_Ledger_Motion::render($entity, $rows, array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderer escapes every value.
         'label' => $profile_subject_label,
-        'image_url' => ($entity === 'title' && !empty($visual['poster_url'])) ? (string) $visual['poster_url'] : '',
+        // 2.8.28: the disc paints at most 170px wide, so it asks for a 400px file, not the 768px one the hero already holds at 400w.
+        'image_url' => ($entity === 'title' && !empty($visual['poster_url'])) ? $aat->get_card_backdrop_image_url((string) $visual['poster_url'], 400) : '',
         'format_category' => $format_category,
         // 2.8.9: each spoke opens its race on the ceremony's full ballot.
         'race_url' => function($ceremony, $category) use ($build_ceremony_url) {

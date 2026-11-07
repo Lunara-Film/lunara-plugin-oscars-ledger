@@ -674,15 +674,10 @@ body.aat-shell-page aside[data-type="type-2"] {
     min-height: 272px;
     position: relative;
     overflow: hidden;
-    transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease;
+    transition: border-color .28s ease;
 }
 .aat-hub-spotlight-card:hover {
     border-color: rgba(201,169,97,.5);
-    transform: none;
-    box-shadow: none;
-}
-.aat-hub-spotlight-card:hover::after {
-    transform: translateX(140%);
 }
 .aat-hub-spotlight-media {
     position: relative;
@@ -705,13 +700,6 @@ body.aat-shell-page aside[data-type="type-2"] {
     height: 100%;
     display: block;
     object-fit: cover;
-    transform: scale(1.01);
-    transition: transform .45s ease;
-}
-.aat-hub-spotlight-card:hover .aat-hub-spotlight-media img,
-.aat-hub-spotlight-card:hover .aat-hub-spotlight-media .aat-poster-img,
-.aat-hub-spotlight-card:hover .aat-hub-spotlight-poster {
-    transform: none;
 }
 .aat-hub-spotlight-media .aat-entity-poster-fallback {
     border-radius: 0;
@@ -2280,13 +2268,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-entity-poster-wrap img,
 .aat-entity-poster,
 .aat-entity-portrait {
-    transition: transform .42s ease, box-shadow .42s ease, border-color .42s ease;
-}
-.aat-entity-poster-wrap:hover img,
-.aat-entity-poster-wrap:hover .aat-entity-poster,
-.aat-entity-poster-wrap:hover .aat-entity-portrait {
-    transform: none;
-    box-shadow: none;
+    transition: border-color .42s ease;
 }
 .aat-entity-kicker {
     font-size: .875rem;
@@ -2787,21 +2769,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     height: 56%;
     background: linear-gradient(180deg, rgba(5,10,18,0), rgba(5,10,18,.72));
     pointer-events: none;
-}
-
-.aat-filmography-poster,
-.aat-filmography-poster-wrap img,
-.aat-related-review-image,
-.aat-related-review-media img {
-    transition: transform .42s ease, filter .42s ease;
-}
-
-.aat-filmography-card:hover .aat-filmography-poster,
-.aat-filmography-card:hover .aat-filmography-poster-wrap img,
-.aat-related-review-card:hover .aat-related-review-image,
-.aat-related-review-card:hover .aat-related-review-media img {
-    transform: none;
-    filter: none;
 }
 
 .aat-filmography-title,
@@ -4291,8 +4258,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: none;
-    transition: none;
 }
 
 .aat-category-dossier .aat-hub-spotlight-body {
@@ -5764,33 +5729,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
 .aat-hub-page .aat-hub-spotlight-media::after,
 .aat-hub-page .aat-hub-spotlight-card::after {
     content: none;
-}
-
-.aat-hub-page .aat-filmography-poster,
-.aat-hub-page .aat-filmography-poster-wrap img,
-.aat-entity-page .aat-filmography-poster,
-.aat-entity-page .aat-filmography-poster-wrap img,
-.aat-hub-page .aat-related-review-image,
-.aat-hub-page .aat-related-review-media img,
-.aat-entity-page .aat-related-review-image,
-.aat-entity-page .aat-related-review-media img,
-.aat-hub-page .aat-hub-spotlight-media img,
-.aat-hub-page .aat-hub-spotlight-poster {
-    transform: none;
-    filter: none;
-    transition: none;
-}
-
-.aat-hub-page .aat-filmography-card:hover .aat-filmography-poster,
-.aat-hub-page .aat-filmography-card:hover .aat-filmography-poster-wrap img,
-.aat-entity-page .aat-filmography-card:hover .aat-filmography-poster,
-.aat-entity-page .aat-filmography-card:hover .aat-filmography-poster-wrap img,
-.aat-hub-page .aat-related-review-card:hover .aat-related-review-image,
-.aat-hub-page .aat-related-review-card:hover .aat-related-review-media img,
-.aat-entity-page .aat-related-review-card:hover .aat-related-review-image,
-.aat-entity-page .aat-related-review-card:hover .aat-related-review-media img {
-    transform: none;
-    filter: none;
 }
 
 .aat-hub-page .aat-filmography-title,
@@ -8545,4 +8483,20 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th.dtr-control:before
     .aat-footer-mobile-hint {
         display: inline;
     }
+}
+
+/* 2.8.28 hit areas. The text links inside cards and the profile breadcrumbs
+   are inline boxes, so vertical padding grows what a thumb can hit (from
+   20-33px to at least 28px) without moving a line or changing a pixel
+   (tests/ledger-routes-browser.js screenshots are byte-identical before and
+   after); the controls keep their 44px contract in hub-polish.css. Prose
+   links inside sentences are untouched. Flex items are not inline boxes and
+   would move their row, so the hub breadcrumbs, the winner card's category
+   link and the category person chips wait for a decision with pictures. The
+   category history's timeline links already stand 44px tall, so only the
+   profile pages' timeline links take the padding; the dossiers' inline
+   links (.aat-hub-inline-link) already carry .2em of it. */
+.aat-container :is(.aat-filmography-title, .aat-winner-circle-title, .aat-winner-circle-meta, .aat-major-race-nominee-primary, .aat-major-race-nominee-secondary, .aat-related-review-title, .aat-related-review-meta, .aat-ceremony-nominee-summary, .aat-ceremony-ballot-row h4, .aat-ceremony-ballot-group-head, .aat-category-history-title, .aat-category-history-meta, .aat-breadcrumbs, .aat-footer-line) a:not(.aat-hub-inline-link),
+.aat-container.aat-profile-file .aat-timeline-link:not(.aat-hub-inline-link) {
+    padding-block: 4px;
 }

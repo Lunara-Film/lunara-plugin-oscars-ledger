@@ -42,6 +42,20 @@ define('ARRAY_A', 'ARRAY_A');
 define('MINUTE_IN_SECONDS', 60);
 define('HOUR_IN_SECONDS', 3600);
 
+function ledger_const_source($source, $name) {
+    $start = strpos($source, '    const ' . $name . ' ');
+    if ($start === false) { throw new RuntimeException('Missing production constant: ' . $name); }
+    $out = ''; $depth = 0;
+    foreach (token_get_all('<?php ' . substr($source, $start)) as $token) {
+        if (is_array($token)) { if ($token[0] !== T_OPEN_TAG) $out .= $token[1]; continue; }
+        $out .= $token;
+        if ($token === '(' || $token === '[') { ++$depth; }
+        if ($token === ')' || $token === ']') { --$depth; }
+        if ($token === ';' && $depth === 0) { return $out . "\n"; }
+    }
+    throw new RuntimeException('Unclosed production constant: ' . $name);
+}
+
 function ledger_method_source($source, $name) {
     if (!preg_match('/\n\s*(?:public|private|protected) function ' . preg_quote($name, '/') . '\(/', $source, $match, PREG_OFFSET_CAPTURE)) {
         throw new RuntimeException('Missing production method: ' . $name);
@@ -117,20 +131,64 @@ function add_option(...$args) { throw new RuntimeException('Rendering must not w
 function status_header($code) { throw new RuntimeException('The route resolved to a ' . $code . ' response'); }
 function nocache_headers() { throw new RuntimeException('The route sent no-cache headers'); }
 function wp_get_upload_dir() { return array('baseurl' => 'https://example.test/wp-content/uploads', 'basedir' => '/srv/uploads'); }
-function wp_get_attachment_image_url($id, $size = 'medium') { return (int) $id > 0 ? 'https://img.example.test/' . (int) $id . '-' . $size . '.jpg' : false; }
+// ---- Pictures: the Media Library as the live site serves it ------------------------------
+// Attachment URLs come back in the image CDN's form (WordPress.com rewrites every upload URL
+// to i0.wp.com), measured sizes vary by id so the templates meet a 2:3 poster, a 16:9 still
+// and a small upload, and wp_get_attachment_image() builds what WordPress builds: width and
+// height for the size, a srcset of the registered sizes, and "auto, " in front of a lazy
+// image's sizes. The srcset filter is a no-op here (add_filter is), so the CDN widths the
+// plugin adds through it are covered by tests/poster-img-sizes-runtime.php instead.
+function ledger_image_sizes() { return array('thumbnail' => array(150, 150), 'medium' => array(200, 300), 'medium_large' => array(768, 1152), 'large' => array(683, 1024), 'full' => array(780, 1170)); }
+function ledger_attachment_file($id) { return 'uploads/2026/03/attachment-' . (int) $id . '.jpg'; }
+function wp_get_attachment_metadata($id) {
+    $id = (int) $id;
+    if ($id <= 0) { return false; }
+    $shape = array(array(780, 1170), array(768, 432), array(500, 750))[$id % 3];
+    return array('width' => $shape[0], 'height' => $shape[1], 'file' => '2026/03/attachment-' . $id . '.jpg');
+}
+function jetpack_photon_url($url, $args = array(), $scheme = null) {
+    $base = 'https://i0.wp.com/' . preg_replace('#^https?://#', '', strtok((string) $url, '?'));
+    if (isset($args['resize'])) { return $base . '?resize=' . $args['resize'] . '&ssl=1'; }
+    if (isset($args['w'])) { return $base . '?w=' . (int) $args['w'] . '&ssl=1'; }
+    return $base . '?ssl=1';
+}
+function wp_get_attachment_image_url($id, $size = 'medium') {
+    if ((int) $id <= 0) { return false; }
+    $box = ledger_image_sizes()[$size] ?? ledger_image_sizes()['full'];
+    return 'https://i0.wp.com/example.test/wp-content/' . ledger_attachment_file($id) . '?fit=' . $box[0] . '%2C' . $box[1] . '&ssl=1';
+}
+function wp_get_attachment_image($id, $size = 'thumbnail', $icon = false, $attr = array()) {
+    $id = (int) $id;
+    if ($id <= 0) { return ''; }
+    $box = ledger_image_sizes()[$size] ?? ledger_image_sizes()['full'];
+    $attr = array_merge(array('src' => wp_get_attachment_image_url($id, $size), 'class' => 'attachment-' . $size . ' size-' . $size, 'alt' => '', 'decoding' => 'async'), (array) $attr);
+    if (empty($attr['srcset'])) {
+        $meta = wp_get_attachment_metadata($id);
+        $candidates = array();
+        // WordPress offers every registered size narrower than the original, and the original itself.
+        foreach (array_unique(array_merge(array_filter(array(200, 683, 768), function ($width) use ($meta) { return $width < (int) $meta['width']; }), array((int) $meta['width']))) as $width) {
+            $candidates[] = 'https://i0.wp.com/example.test/wp-content/' . ledger_attachment_file($id) . '?w=' . $width . '&ssl=1 ' . $width . 'w';
+        }
+        if (count($candidates) > 1) { $attr['srcset'] = implode(', ', $candidates); }
+    }
+    if (empty($attr['srcset'])) { unset($attr['srcset'], $attr['sizes']); }
+    if (isset($attr['loading']) && $attr['loading'] === 'lazy' && !empty($attr['sizes']) && strpos($attr['sizes'], 'auto') !== 0) { $attr['sizes'] = 'auto, ' . $attr['sizes']; }
+    $html = '<img width="' . $box[0] . '" height="' . $box[1] . '"';
+    foreach ($attr as $key => $value) { $html .= ' ' . $key . '="' . esc_attr($value) . '"'; }
+    return $html . ' />';
+}
 function get_permalink($id) { return $GLOBALS['ledger']['reviews'][(int) $id]['url'] ?? ''; }
 function get_the_title($id) { return $GLOBALS['ledger']['reviews'][(int) $id]['title'] ?? ''; }
 function get_post_field($field, $id) { $review = $GLOBALS['ledger']['reviews'][(int) $id] ?? array(); return $field === 'post_excerpt' ? (string) ($review['excerpt'] ?? '') : (string) ($review['date'] ?? ''); }
 function get_post_time($format, $gmt, $id) { return strtotime($GLOBALS['ledger']['reviews'][(int) $id]['date'] ?? '') ?: 0; }
+function get_post_thumbnail_id($id) { return !empty($GLOBALS['ledger']['reviews'][(int) $id]['thumb']) ? 500000 + (int) $id : 0; }
 function get_the_post_thumbnail_url($id, $size = 'post-thumbnail') {
-    return !empty($GLOBALS['ledger']['reviews'][(int) $id]['thumb']) ? 'https://img.example.test/review-' . (int) $id . '-' . $size . '.jpg' : false;
+    $thumb = get_post_thumbnail_id($id);
+    return $thumb > 0 ? wp_get_attachment_image_url($thumb, $size) : false;
 }
 function get_the_post_thumbnail($id, $size = 'post-thumbnail', $attrs = array()) {
-    $url = get_the_post_thumbnail_url($id, $size);
-    if (!$url) { return ''; }
-    $html = '<img width="768" height="480" src="' . esc_url($url) . '" alt="' . esc_attr(get_the_title($id)) . '"';
-    foreach ((array) $attrs as $key => $value) { $html .= ' ' . $key . '="' . esc_attr($value) . '"'; }
-    return $html . ' />';
+    $thumb = get_post_thumbnail_id($id);
+    return $thumb > 0 ? wp_get_attachment_image($thumb, $size, false, array_merge(array('alt' => get_the_title($id)), (array) $attrs)) : '';
 }
 
 class Ledger_Routes_WPDB {
@@ -529,9 +587,9 @@ $ledger['editorial_refs'] = array(
     ),
 );
 $ledger['tmdb_people'] = array(
-    'nm0098010' => array('name' => 'Ingrid Maximiliana Vasquez-Halloran de la Fuente', 'biography' => 'Ingrid Maximiliana Vasquez-Halloran de la Fuente is a director and screenwriter whose films move between the harbour towns of her childhood and the studio sound stages where she learned the craft. Her work is known for long takes, double-barrelled family names and a refusal to cut away from an argument before it has been settled on screen, which is why the ledger keeps returning to her.', 'known_for_department' => 'Directing', 'birthday' => '1971-04-12', 'place_of_birth' => 'Valparaíso, Chile', 'backdrop_full' => 'https://img.example.test/nm0098010-backdrop.jpg'),
-    'nm0098020' => array('name' => 'Desmond Achterberg', 'biography' => 'Desmond Achterberg is an actor.', 'known_for_department' => 'Acting', 'birthday' => '1984-09-30', 'place_of_birth' => 'Rotterdam, Netherlands', 'profile_full' => 'https://img.example.test/nm0098020-profile.jpg'),
-    'nm0098011' => array('name' => 'Tobias Adeyemi', 'known_for_department' => 'Directing', 'profile_full' => 'https://img.example.test/nm0098011-profile.jpg'),
+    'nm0098010' => array('name' => 'Ingrid Maximiliana Vasquez-Halloran de la Fuente', 'biography' => 'Ingrid Maximiliana Vasquez-Halloran de la Fuente is a director and screenwriter whose films move between the harbour towns of her childhood and the studio sound stages where she learned the craft. Her work is known for long takes, double-barrelled family names and a refusal to cut away from an argument before it has been settled on screen, which is why the ledger keeps returning to her.', 'known_for_department' => 'Directing', 'birthday' => '1971-04-12', 'place_of_birth' => 'Valparaíso, Chile', 'backdrop_full' => 'https://image.tmdb.org/t/p/w780/nm0098010-backdrop.jpg'),
+    'nm0098020' => array('name' => 'Desmond Achterberg', 'biography' => 'Desmond Achterberg is an actor.', 'known_for_department' => 'Acting', 'birthday' => '1984-09-30', 'place_of_birth' => 'Rotterdam, Netherlands', 'profile_full' => 'https://image.tmdb.org/t/p/w342/nm0098020-profile.jpg'),
+    'nm0098011' => array('name' => 'Tobias Adeyemi', 'known_for_department' => 'Directing', 'profile_full' => 'https://image.tmdb.org/t/p/w342/nm0098011-profile.jpg'),
     'nm0098030' => array('name' => 'Marisol Everingham-Kaur', 'biography' => 'Marisol Everingham-Kaur is an actress.', 'known_for_department' => 'Acting', 'birthday' => '1979-01-02'),
     'nm0098060' => array('name' => 'Augustin Ferreira-Nakagawa', 'known_for_department' => 'Camera'),
 );
@@ -547,8 +605,13 @@ foreach (array(
     'is_title_entity_id', 'is_imdb_name_entity_id', 'is_local_name_entity_id', 'is_name_entity_id', 'is_company_entity_id',
     'get_entity_rows', 'get_card_backdrop_image_url', 'get_title_visual_package', 'get_person_visual_package',
     'get_route_context', 'is_entity_request', 'is_hub_request',
+    // 2.8.28: the picture builders are production code, so a route renders the srcset, sizes and loading the live site prints.
+    'get_poster_img_html_for_title', 'add_poster_srcset_widths', 'image_cdn_callback', 'poster_sizes_for', 'get_attachment_crop_srcset', 'get_attachment_img_html',
 ) as $name) {
     $methods .= ledger_method_source($source, $name);
+}
+foreach (array('POSTER_SIZES_DEFAULT', 'POSTER_SIZES', 'POSTER_SRCSET_WIDTHS') as $name) {
+    $methods .= ledger_const_source($source, $name);
 }
 eval('class Academy_Awards_Table {' . $methods . '
     const CARD_BACKDROP_WIDTH = 400;
@@ -584,23 +647,15 @@ eval('class Academy_Awards_Table {' . $methods . '
     public function get_entity_editorial_references($entity, $id, $label = "", $limit = 6) { return array_slice($this->ledger()["editorial_refs"][strtolower(trim((string) $id))] ?? array(), 0, $limit); }
     public function get_approved_ceremony_writeup($ceremony) { return $this->ledger()["writeups"][(int) $ceremony] ?? array(); }
     public function get_poster_attachment_id_for_title($tt) { $title = ledger_title($tt); return ($title["art"] ?? "") === "local" ? (int) substr($tt, 2) : 0; }
-    public function get_poster_img_html_for_title($tt, $size = "medium", $attrs = array()) {
-        $title = ledger_title($tt);
-        if (($title["art"] ?? "") !== "local") { return ""; }
-        $attrs = array_merge(array("loading" => "lazy", "decoding" => "async", "class" => "aat-poster-img", "sizes" => "(max-width: 820px) 180px, 340px", "alt" => $title["title"] . " poster"), (array) $attrs);
-        $html = "<img width=\"400\" height=\"600\" src=\"https://img.example.test/" . $tt . "-" . $size . ".jpg\"";
-        foreach ($attrs as $key => $value) { $html .= " " . $key . "=\"" . esc_attr($value) . "\""; }
-        return $html . " />";
-    }
     public function get_title_context_for_imdb_id($tt) { $title = ledger_title($tt); return array("title" => $title["title"] ?? "", "year" => $title["year"] ?? ""); }
     public function get_tmdb_data_for_imdb_id($tt, $allow_remote = true) {
         $title = ledger_title($tt);
         if (empty($title) || $title["art"] === "none") { return array(); }
         $data = array("title" => $title["title"], "release_date" => $title["year"] . "-03-01", "runtime" => 100 + ((int) substr($tt, 2) % 70),
             "overview" => "A dossier-length synopsis for " . $title["title"] . ": the film follows its people through one ceremony season, keeps every credit on screen, and ends where the ledger begins.",
-            "backdrop_full" => "https://img.example.test/" . $tt . "-backdrop.jpg",
+            "backdrop_full" => "https://image.tmdb.org/t/p/w780/" . $tt . "-backdrop.jpg",
             "credits" => array("crew" => array(array("job" => "Director", "name" => ledger_person_name((int) substr($tt, 2) % 60 + 100)))));
-        if ($title["art"] === "tmdb") { $data["poster_full"] = "https://img.example.test/" . $tt . "-tmdb.jpg"; }
+        if ($title["art"] === "tmdb") { $data["poster_full"] = "https://image.tmdb.org/t/p/w500/" . $tt . "-poster.jpg"; }
         return $data;
     }
     public function get_person_context_for_imdb_id($nm) { return array("name" => $this->ledger()["people"][$nm] ?? "", "latest_year" => "2025"); }

@@ -593,21 +593,22 @@ $aat_build_winner_actions = function($entry, $category_url = '', $ceremony_url =
     return $actions;
 };
 
-$aat_get_visual_package = function($film_id, $size = 'medium_large') use ($aat) {
+$aat_get_visual_package = function($film_id, $size = 'medium_large', $sizes = '') use ($aat) {
     static $visual_cache = array();
 
     $film_id = strtolower(trim((string) $film_id));
     $size = trim((string) $size);
+    $sizes = trim((string) $sizes); // 2.8.28: the measured frame the poster paints in.
     if ($film_id === '' || !preg_match('/^tt\d+$/', $film_id)) {
         return array();
     }
 
-    $cache_key = $film_id . '|' . $size;
+    $cache_key = $film_id . '|' . $size . '|' . $sizes;
     if (isset($visual_cache[$cache_key])) {
         return $visual_cache[$cache_key];
     }
 
-    $visual_cache[$cache_key] = method_exists($aat, 'get_title_visual_package') ? (array) $aat->get_title_visual_package($film_id, $size) : array();
+    $visual_cache[$cache_key] = method_exists($aat, 'get_title_visual_package') ? (array) $aat->get_title_visual_package($film_id, $size, false, $sizes !== '' ? array('sizes' => $sizes) : array()) : array();
 
     return $visual_cache[$cache_key];
 };
@@ -688,7 +689,21 @@ $aat_get_curated_winner_photo_map = function() {
     return $normalized;
 };
 
-$aat_get_curated_winner_visual = function($entry, $size = 'medium_large') use ($aat_get_curated_winner_photo_map) {
+/**
+ * 2.8.28: one builder for every Media Library picture in a Winner Circle box
+ * (curated photos and portraits): 2:3 crops at the box's 1x and 2x widths and
+ * the sizes the box paints, so a phone fetches about 10 KB, not the 768px file,
+ * and a 16:9 still covers the box sharp on desktop.
+ */
+$aat_winner_media_img = function ($attachment_id, $alt) use ($aat) {
+    return $aat->get_attachment_img_html((int) $attachment_id, 'medium_large', array(
+        'class' => 'aat-winner-circle-photo',
+        'alt'   => (string) $alt,
+        'sizes' => $aat->poster_sizes_for('winner'),
+    ), array(2, 3), array(104, 132, 168, 208, 264, 336), 336);
+};
+
+$aat_get_curated_winner_visual = function($entry, $size = 'medium_large') use ($aat_get_curated_winner_photo_map, $aat_winner_media_img) {
     $category = strtoupper(trim((string) ($entry['canonical_category'] ?? '')));
     if ($category === '') {
         return array();
@@ -722,11 +737,7 @@ $aat_get_curated_winner_visual = function($entry, $size = 'medium_large') use ($
     return array(
         'poster_url'   => $photo_url,
         'backdrop_url' => $photo_url,
-        'poster_html'  => sprintf(
-            '<img class="aat-winner-circle-photo" src="%s" alt="%s" loading="lazy" decoding="async" />',
-            esc_url($photo_url),
-            esc_attr($photo_alt)
-        ),
+        'poster_html'  => $aat_winner_media_img($attachment_id, $photo_alt),
     );
 };
 
@@ -810,7 +821,8 @@ $aat_build_hub_review_cards = function($title_entries, $limit = 6) use ($aat) {
     foreach ($cards as $i => $card) {
         $film_id = $card['film_id'];
         $film_label = $card['film_label'];
-        $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($film_id, 'medium_large') : array();
+        // 2.8.28: the still's box is the card's width on phones and 280px after; sizes says so.
+        $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($film_id, 'medium_large', false, array('sizes' => $aat->poster_sizes_for('related'))) : array();
         $visual_media_html = '';
         if (!empty($visual['poster_html'])) {
             $visual_media_html = (string) $visual['poster_html'];
@@ -823,7 +835,7 @@ $aat_build_hub_review_cards = function($title_entries, $limit = 6) use ($aat) {
             'class' => 'aat-related-review-image',
             'loading' => 'lazy',
             'decoding' => 'async',
-            'sizes' => '(max-width: 720px) 100vw, 360px',
+            'sizes' => $aat->poster_sizes_for('related'),
         ));
         $cards[$i]['fallback_html'] = $visual_media_html;
     }
@@ -837,7 +849,7 @@ $aat_build_title_spotlight = function($film_id, $fallback_label = '', $meta_line
         return array();
     }
 
-    $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($film_id, 'medium_large') : array();
+    $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($film_id, 'medium_large', false, array('sizes' => $aat->poster_sizes_for('spotlight'))) : array();
     $film_label = trim((string) $fallback_label);
     if ($film_label === '') {
         $film_label = $aat->lookup_title_label($film_id);
@@ -931,18 +943,26 @@ get_header();
     <?php
         // Resolve a small index poster for a tt ID — local library first,
         // cached TMDB URL second, never a remote lookup during render.
-        $aat_index_poster_html = function ($tt, $eager = false) use ($aat) {
+        // 2.8.28: the first cards are eager through the builder's own attributes
+        // (a lazy tag rewritten to eager kept WordPress's "auto, " and resolved
+        // its sizes to the viewport width, so a phone fetched 780px files for
+        // the 84px column), and every poster says the width its slot paints.
+        $aat_index_poster_html = function ($tt, $eager = false, $slot = 'index') use ($aat) {
             $tt = strtolower(trim((string) $tt));
             if ($tt === '' || !method_exists($aat, 'get_title_visual_package')) {
                 return '';
             }
-            $visual = $aat->get_title_visual_package($tt, 'medium', false);
+            $attrs = array('sizes' => $aat->poster_sizes_for($slot));
+            if ($eager) {
+                $attrs['loading'] = 'eager';
+            }
+            $visual = $aat->get_title_visual_package($tt, 'medium', false, $attrs);
             if (!empty($visual['poster_html'])) {
-                $poster_html = (string) $visual['poster_html'];
-                return $eager ? str_replace('loading="lazy"', 'loading="eager"', $poster_html) : $poster_html;
+                return (string) $visual['poster_html'];
             }
             if (!empty($visual['poster_url'])) {
-                return '<img src="' . esc_url((string) $visual['poster_url']) . '" alt="" loading="' . ($eager ? 'eager' : 'lazy') . '" decoding="async" />';
+                $poster_url = $aat->get_card_backdrop_image_url((string) $visual['poster_url'], $slot === 'index' ? 168 : 144);
+                return '<img src="' . esc_url($poster_url) . '" alt="" loading="' . ($eager ? 'eager' : 'lazy') . '" decoding="async" />';
             }
             return '';
         };
@@ -1524,8 +1544,8 @@ get_header();
                             array(
                                 'loading'       => 'eager',
                                 'fetchpriority' => 'high',
-                                // 2.8.21: the frame renders ~147px wide on phones, 180px on desktop. This is the LCP image on ceremony pages.
-                                'sizes'         => '(max-width: 820px) 150px, 180px',
+                                // 2.8.21: this is the LCP image on ceremony pages; 2.8.28: the frame measures 150px to 640px and 182px after.
+                                'sizes'         => $aat->poster_sizes_for('dossier'),
                             )
                         );
                         if (!empty($dossier_visual['poster_html'])) {
@@ -1726,7 +1746,7 @@ get_header();
                             continue;
                         }
                         $film_url = !empty($entry['film_url']) ? (string) $entry['film_url'] : ($fid !== '' ? $aat->get_entity_url($fid) : '');
-                        $visual = $fid !== '' && method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($fid, 'medium_large') : array();
+                        $visual = $fid !== '' && method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($fid, 'medium_large', false, array('sizes' => $aat->poster_sizes_for('card'))) : array();
                         $entry = $aat_enrich_winner_entry_links($entry);
                     ?>
                         <article class="aat-filmography-card aat-hub-film-card aat-best-picture-card<?php echo !empty($entry['winner']) ? ' is-winner' : ''; ?>">
@@ -1735,7 +1755,7 @@ get_header();
                                     <?php if (!empty($visual['poster_html'])) : ?>
                                         <?php echo $visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php elseif (!empty($visual['poster_url'])) : ?>
-                                        <img class="aat-filmography-poster" src="<?php echo esc_url($visual['poster_url']); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
+                                        <img class="aat-filmography-poster" src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $visual['poster_url'], 336)); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
                                     <?php elseif (!empty($visual['card_fallback_html'])) : ?>
                                         <?php echo $visual['card_fallback_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php else : ?>
@@ -1801,7 +1821,7 @@ get_header();
                             }
                         }
                         $feature_review_url = ($feature_title_id !== '' && !empty($ceremony_review_map[$feature_title_id])) ? (string) $ceremony_review_map[$feature_title_id] : '';
-                        $feature_visual = $feature_title_id !== '' ? $aat_get_visual_package($feature_title_id, 'medium_large') : array();
+                        $feature_visual = $feature_title_id !== '' ? $aat_get_visual_package($feature_title_id, 'medium_large', $aat->poster_sizes_for('major-race')) : array();
                         $feature_film_history_url = !empty($feature_row['film_history_url']) ? (string) $feature_row['film_history_url'] : '';
                         $feature_person_history_url = !empty($feature_row['person_history_url']) ? (string) $feature_row['person_history_url'] : '';
                         $feature_person_history_meta = $aat_person_history_action_meta($feature_person_history_url, $major_category_key);
@@ -1823,7 +1843,7 @@ get_header();
                                         <?php if (!empty($feature_visual['poster_html'])) : ?>
                                             <?php echo $feature_visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <?php else : ?>
-                                            <img class="aat-major-race-poster" src="<?php echo esc_url($feature_visual['poster_url']); ?>" alt="<?php echo esc_attr($feature_primary); ?>" loading="lazy" decoding="async" />
+                                            <img class="aat-major-race-poster" src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $feature_visual['poster_url'], 360)); ?>" alt="<?php echo esc_attr($feature_primary); ?>" loading="lazy" decoding="async" />
                                         <?php endif; ?>
                                     </a>
                                 <?php endif; ?>
@@ -2036,7 +2056,7 @@ get_header();
                     <?php foreach ($ceremony_highlight_titles as $entry) :
                         $fid = strtolower(trim((string) ($entry['film_id'] ?? '')));
                         if (!$fid) { continue; }
-                        $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($fid, 'medium_large') : array();
+                        $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($fid, 'medium_large', false, array('sizes' => $aat->poster_sizes_for('card'))) : array();
                         $film_label = !empty($entry['film']) ? (string) $entry['film'] : $aat->lookup_title_label($fid);
                         $film_url = $aat->get_entity_url($fid);
                         $entry = $aat_enrich_winner_entry_links($entry);
@@ -2047,7 +2067,7 @@ get_header();
                                     <?php if (!empty($visual['poster_html'])) : ?>
                                         <?php echo $visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php elseif (!empty($visual['poster_url'])) : ?>
-                                        <img class="aat-filmography-poster" src="<?php echo esc_url($visual['poster_url']); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
+                                        <img class="aat-filmography-poster" src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $visual['poster_url'], 336)); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
                                     <?php elseif (!empty($visual['card_fallback_html'])) : ?>
                                         <?php echo $visual['card_fallback_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php else : ?>
@@ -2140,7 +2160,7 @@ get_header();
                         $category_url = $winner_entry['category_url'] ?? $aat->get_category_url($winner_entry['canonical_category'] ?? '');
                         $winner_visual = $is_latest_ceremony ? $aat_get_curated_winner_visual($winner_entry, 'medium_large') : array();
                         if (empty($winner_visual['poster_html']) && empty($winner_visual['poster_url']) && !empty($winner_entry['film_id'])) {
-                            $winner_visual = $aat_get_visual_package((string) $winner_entry['film_id'], 'medium_large');
+                            $winner_visual = $aat_get_visual_package((string) $winner_entry['film_id'], 'medium_large', $aat->poster_sizes_for('winner'));
                         }
 
                         // Person-led categories show the winner's portrait; film-led cards keep the poster.
@@ -2151,13 +2171,19 @@ get_header();
                             : array();
                         $winner_media_html = '';
                         $winner_media_is_portrait = false;
-                        if (!empty($winner_portrait['portrait_url'])) {
-                            $winner_media_html = '<img class="aat-winner-circle-photo" src="' . esc_url($winner_portrait['portrait_url']) . '" alt="' . esc_attr($primary_label) . '" loading="lazy" decoding="async" />';
+                        // 2.8.28: a library portrait prints through the builder (crops and sizes);
+                        // only a TMDB portrait is a bare URL, asked for at the box's 2x width.
+                        if (!empty($winner_portrait['portrait_attachment_id'])) {
+                            $winner_media_html = $aat_winner_media_img((int) $winner_portrait['portrait_attachment_id'], $primary_label);
+                            $winner_media_is_portrait = $winner_media_html !== '';
+                        }
+                        if ($winner_media_html === '' && !empty($winner_portrait['portrait_url'])) {
+                            $winner_media_html = '<img class="aat-winner-circle-photo" src="' . esc_url($aat->get_card_backdrop_image_url((string) $winner_portrait['portrait_url'], 336)) . '" alt="' . esc_attr($primary_label) . '" loading="lazy" decoding="async" />';
                             $winner_media_is_portrait = true;
-                        } elseif (!empty($winner_visual['poster_html'])) {
+                        } elseif ($winner_media_html === '' && !empty($winner_visual['poster_html'])) {
                             $winner_media_html = (string) $winner_visual['poster_html'];
-                        } elseif (!empty($winner_visual['poster_url'])) {
-                            $winner_media_html = '<img class="aat-winner-circle-photo" src="' . esc_url($winner_visual['poster_url']) . '" alt="' . esc_attr($primary_label) . '" loading="lazy" decoding="async" />';
+                        } elseif ($winner_media_html === '' && !empty($winner_visual['poster_url'])) {
+                            $winner_media_html = '<img class="aat-winner-circle-photo" src="' . esc_url($aat->get_card_backdrop_image_url((string) $winner_visual['poster_url'], 336)) . '" alt="' . esc_attr($primary_label) . '" loading="lazy" decoding="async" />';
                         }
                         $winner_media_url = '';
                         if (!empty($winner_entry['primary_url'])) {
@@ -2421,7 +2447,7 @@ get_header();
                 $latest_winner_label = !empty($latest_winner['primary_label']) ? (string) $latest_winner['primary_label'] : (!empty($latest_winner['film']) ? (string) $latest_winner['film'] : (string) ($latest_winner['name'] ?? ''));
             }
     ?>
-        <?php $category_hero_poster = !empty($latest_winner['film_id']) ? $aat_index_poster_html((string) $latest_winner['film_id']) : ''; ?>
+        <?php $category_hero_poster = !empty($latest_winner['film_id']) ? $aat_index_poster_html((string) $latest_winner['film_id'], false, 'category-hero') : ''; ?>
         <div class="aat-category-dossier aat-inner-route-system<?php echo $is_premium_category_dossier ? ' aat-premium-category-dossier ' . esc_attr((string) $premium_category_profile['class']) : ' aat-generic-category-dossier'; ?>">
 <?php // Route section composer (2.7.82): every top-level category section is captured into $aat_sections and re-emitted through aat_hub_route_sections. Default output is byte-identical; the filter is inert until a consumer hooks it. ?>
 <?php $aat_sections = array(); $aat_route_context = $aat->get_route_context(); ob_start(); ?>
@@ -2545,7 +2571,7 @@ get_header();
                                     <?php if (!empty($category_spotlight['poster_html'])) : ?>
                                         <?php echo $category_spotlight['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php elseif (!empty($category_spotlight['poster_url'])) : ?>
-                                        <img class="aat-hub-spotlight-poster" src="<?php echo esc_url($category_spotlight['poster_url']); ?>" alt="<?php echo esc_attr($category_spotlight['film_label']); ?> poster" loading="lazy" decoding="async" />
+                                        <img class="aat-hub-spotlight-poster" src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $category_spotlight['poster_url'], 296)); ?>" alt="<?php echo esc_attr($category_spotlight['film_label']); ?> poster" loading="lazy" decoding="async" />
                                     <?php elseif (!empty($category_spotlight['fallback_html'])) : ?>
                                         <?php echo $category_spotlight['fallback_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php else : ?>
@@ -2651,7 +2677,7 @@ get_header();
                                         if ($era_film_id === '') {
                                             continue;
                                         }
-                                        $era_visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($era_film_id, 'medium') : array();
+                                        $era_visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($era_film_id, 'medium', false, array('sizes' => $aat->poster_sizes_for('era'))) : array();
                                         if (empty($era_visual['poster_html']) && empty($era_visual['poster_url']) && empty($era_visual['backdrop_url'])) {
                                             continue;
                                         }
@@ -2682,7 +2708,7 @@ get_header();
                                         <?php if (!empty($era_visual['poster_html'])) : ?>
                                             <?php echo $era_visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <?php elseif (!empty($era_visual['poster_url'])) : ?>
-                                            <img src="<?php echo esc_url($era_visual['poster_url']); ?>" alt="<?php echo esc_attr($era_film_label); ?> poster" loading="lazy" decoding="async" />
+                                            <img src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $era_visual['poster_url'], 112)); ?>" alt="<?php echo esc_attr($era_film_label); ?> poster" loading="lazy" decoding="async" />
                                         <?php endif; ?>
                                     </a>
                                 <?php endif; ?>
@@ -2872,7 +2898,7 @@ get_header();
                     <?php foreach ($category_titles as $entry) :
                         $fid = strtolower(trim((string) ($entry['film_id'] ?? '')));
                         if (!$fid) { continue; }
-                        $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($fid, 'medium') : array();
+                        $visual = method_exists($aat, 'get_title_visual_package') ? $aat->get_title_visual_package($fid, 'medium', false, array('sizes' => $aat->poster_sizes_for('card-small'))) : array();
                         $film_label = !empty($entry['film']) ? (string) $entry['film'] : $aat->lookup_title_label($fid);
                         $film_url = $aat->get_entity_url($fid);
                         $entry = $aat_enrich_winner_entry_links($entry);
@@ -2883,7 +2909,7 @@ get_header();
                                     <?php if (!empty($visual['poster_html'])) : ?>
                                         <?php echo $visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php elseif (!empty($visual['poster_url'])) : ?>
-                                        <img class="aat-filmography-poster" src="<?php echo esc_url($visual['poster_url']); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
+                                        <img class="aat-filmography-poster" src="<?php echo esc_url($aat->get_card_backdrop_image_url((string) $visual['poster_url'], 336)); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
                                     <?php elseif (!empty($visual['card_fallback_html'])) : ?>
                                         <?php echo $visual['card_fallback_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php else : ?>

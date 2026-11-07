@@ -33,13 +33,21 @@ if ($aat_min_ceremony > 0 && $aat_max_ceremony > 0) {
         $aat_span = $first_year . '&ndash;' . $last_year;
     }
 }
-$aat_get_visual_package = function($title_id, $size = 'medium_large') use ($aat_instance) {
+// 2.8.28: the landing sections sit inside the theme's /oscars/ page, so a poster
+// paints in the theme's grid; the theme's measured sizes apply when it offers
+// them, the plugin's card frame otherwise.
+$aat_landing_sizes = function_exists('lunara_image_sizes_for') ? trim((string) lunara_image_sizes_for('oscars-grid')) : '';
+if ($aat_landing_sizes === '') {
+    $aat_landing_sizes = $aat_instance->poster_sizes_for('card');
+}
+
+$aat_get_visual_package = function($title_id, $size = 'medium_large') use ($aat_instance, $aat_landing_sizes) {
     $title_id = trim((string) $title_id);
     if ($title_id === '' || !method_exists($aat_instance, 'get_title_visual_package')) {
         return array();
     }
 
-    $visual = $aat_instance->get_title_visual_package($title_id, $size);
+    $visual = $aat_instance->get_title_visual_package($title_id, $size, false, array('sizes' => $aat_landing_sizes));
 
     return is_array($visual) ? $visual : array();
 };
@@ -75,7 +83,7 @@ $aat_get_curated_winner_photo_map = function() {
     return $normalized;
 };
 
-$aat_get_curated_winner_visual = function($entry, $size = 'large') use ($aat_get_curated_winner_photo_map) {
+$aat_get_curated_winner_visual = function($entry, $size = 'large') use ($aat_get_curated_winner_photo_map, $aat_instance, $aat_landing_sizes) {
     $category = strtoupper(trim((string) ($entry['canonical_category'] ?? '')));
     if ($category === '') {
         return array();
@@ -109,11 +117,12 @@ $aat_get_curated_winner_visual = function($entry, $size = 'large') use ($aat_get
     return array(
         'poster_url'   => $photo_url,
         'backdrop_url' => $photo_url,
-        'poster_html'  => sprintf(
-            '<img class="aat-winner-circle-photo" src="%s" alt="%s" loading="lazy" decoding="async" />',
-            esc_url($photo_url),
-            esc_attr($photo_alt)
-        ),
+        // 2.8.28: 2:3 crops at the theme grid's widths, sized to the grid.
+        'poster_html'  => $aat_instance->get_attachment_img_html($attachment_id, 'medium_large', array(
+            'class' => 'aat-winner-circle-photo',
+            'alt'   => $photo_alt,
+            'sizes' => $aat_landing_sizes,
+        ), array(2, 3), array(96, 192, 256, 352, 512, 704), 352),
     );
 };
 
@@ -386,7 +395,7 @@ if (!empty($aat_winner_rows)) {
                                     <?php if (!empty($visual['poster_html'])) : ?>
                                         <?php echo $visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php elseif (!empty($visual['poster_url'])) : ?>
-                                        <img class="aat-filmography-poster" src="<?php echo esc_url($visual['poster_url']); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
+                                        <img class="aat-filmography-poster" src="<?php echo esc_url($aat_instance->get_card_backdrop_image_url((string) $visual['poster_url'], 680)); ?>" alt="<?php echo esc_attr($film_label); ?> poster" loading="lazy" decoding="async" />
                                     <?php elseif (!empty($visual['card_fallback_html'])) : ?>
                                         <?php echo $visual['card_fallback_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                     <?php else : ?>
@@ -456,7 +465,7 @@ if (!empty($aat_winner_rows)) {
                                         <?php if (!empty($winner_visual['poster_html'])) : ?>
                                             <?php echo $winner_visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <?php else : ?>
-                                            <img class="aat-winner-circle-photo" src="<?php echo esc_url($winner_visual['poster_url']); ?>" alt="<?php echo esc_attr($primary_label); ?>" loading="lazy" decoding="async" />
+                                            <img class="aat-winner-circle-photo" src="<?php echo esc_url($aat_instance->get_card_backdrop_image_url((string) $winner_visual['poster_url'], 680)); ?>" alt="<?php echo esc_attr($primary_label); ?>" loading="lazy" decoding="async" />
                                         <?php endif; ?>
                                     </a>
                                 <?php else : ?>
@@ -464,7 +473,7 @@ if (!empty($aat_winner_rows)) {
                                         <?php if (!empty($winner_visual['poster_html'])) : ?>
                                             <?php echo $winner_visual['poster_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <?php else : ?>
-                                            <img class="aat-winner-circle-photo" src="<?php echo esc_url($winner_visual['poster_url']); ?>" alt="<?php echo esc_attr($primary_label); ?>" loading="lazy" decoding="async" />
+                                            <img class="aat-winner-circle-photo" src="<?php echo esc_url($aat_instance->get_card_backdrop_image_url((string) $winner_visual['poster_url'], 680)); ?>" alt="<?php echo esc_attr($primary_label); ?>" loading="lazy" decoding="async" />
                                         <?php endif; ?>
                                     </div>
                                 <?php endif; ?>

@@ -16,6 +16,12 @@ const output = process.env.LEDGER_VISUAL_OUTPUT || path.join(os.tmpdir(), 'lunar
 const assets = ['academy-awards-table', 'ledger-explorer', 'ledger-motion', 'ceremony-dossier', 'hub-polish'];
 const css = assets.map(name => fs.readFileSync(path.join(root, 'assets/css', `${name}.css`), 'utf8')).join('\n');
 const base = 'html{font-size:16px}body{margin:0;background:#0a1520;color:#e6eef7;font-family:Georgia,serif}*,*::before,*::after{box-sizing:border-box}a{color:#eadbb3}button,input,select{font:inherit}';
+// The theme sizes the entity hero through its profile-media variables (lunara-theme-blocks inc/frontend.php, the
+// Site Studio Oscars block): 340px, 260px to 700px and min(45vw, 180px) to 540px. The plugin's own sheet stops at
+// 210px, so the contract rule is carried here, or the hero's measured sizes could not be checked against its frame.
+const themeContract = 'body.aat-shell-page .aat-profile-file .aat-entity-poster-wrap,body.aat-shell-page .aat-profile-file .aat-entity-poster-wrap.is-person,body.aat-shell-page .aat-profile-file .aat-entity-poster-wrap.is-company{aspect-ratio:var(--lunara-oscars-profile-media-aspect)!important;display:block!important;flex-basis:min(100%,var(--lunara-oscars-profile-media-width))!important;max-height:var(--lunara-oscars-profile-media-height)!important;max-width:min(100%,var(--lunara-oscars-profile-media-width))!important;overflow:hidden!important;width:min(100%,var(--lunara-oscars-profile-media-width))!important}'
+  + '@media (max-width:700px){body.aat-shell-page .aat-profile-file .aat-entity-poster-wrap,body.aat-shell-page .aat-profile-file .aat-entity-poster-wrap.is-person,body.aat-shell-page .aat-profile-file .aat-entity-poster-wrap.is-company{flex-basis:min(100%,var(--lunara-oscars-profile-media-width),260px)!important;max-height:min(var(--lunara-oscars-profile-media-height),420px)!important;max-width:min(100%,var(--lunara-oscars-profile-media-width),260px)!important;width:min(100%,var(--lunara-oscars-profile-media-width),260px)!important}}'
+  + '@media (max-width:540px){body.aat-shell-page .aat-container.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap,body.aat-shell-page .aat-container.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap.is-person,body.aat-shell-page .aat-container.aat-profile-file .aat-entity-hero .aat-entity-poster-wrap.is-company{flex-basis:auto!important;max-width:min(100%,var(--lunara-oscars-profile-media-width),45vw,180px)!important;width:min(100%,var(--lunara-oscars-profile-media-width),45vw,180px)!important}}';
 const variables = 'body.aat-shell-page{--lunara-oscars-dossier-section-gap:48px;--lunara-oscars-dossier-card-min:280px;--lunara-oscars-dossier-density-scale:1;--lunara-oscars-dossier-hero-max:1040px;--lunara-oscars-profile-media-max:340px;--lunara-oscars-profile-media-scale-max:340px;--lunara-oscars-profile-media-width:340px;--lunara-oscars-profile-media-height:500px;--lunara-oscars-profile-media-fit:cover;--lunara-oscars-profile-media-aspect:2 / 3;--lunara-oscars-writeup-max:880px;--lunara-oscars-major-race-gap:18px;--lunara-oscars-related-review-min:280px;--lunara-oscars-related-review-media-aspect:16 / 10;--lunara-oscars-related-review-count:6;--lunara-oscars-image-focus:center center}';
 const php = args => execFileSync(process.env.PHP_BINARY || 'php', [path.join(__dirname, 'fixtures/ledger-routes.php'), ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
 const routes = [
@@ -34,15 +40,44 @@ const reading = '.aat-hub-subtitle, .aat-hub-copy, .aat-section-description, .aa
 const metadata = '.aat-hub-card-type, .aat-hub-card-meta, .aat-stat-label, .aat-dossier-command-card > span, .aat-ceremony-command-card > span, .aat-profile-command-card > span, .aat-major-race-nominee-secondary, .aat-timeline-meta, .aat-category-ceremony-year, .lle-field__label, .lle-status';
 const surfaces = '.aat-hub-card, .aat-dossier-hero, .aat-dossier-command-card, .aat-ceremony-dossier-hero, .aat-ceremony-command-card, .aat-major-race-card, .aat-entity-hero, .aat-profile-command-card, .aat-timeline-card, .aat-history-item, .lle-hero, .lle-debrief';
 // One class per fixture record: ballot rows, race nominees, trail items, timeline entries, cards, explorer rows.
+/* 2.8.28 picture contract. Every artwork <img> sits in one of these frames; the frame's painted
+ * width is what the picture's sizes must describe. Measured, never pinned: the sizes string is
+ * resolved against the viewport the way the browser resolves it (media conditions through
+ * matchMedia, lengths through a probe element), then compared with the frame the image paints in. */
+const frames = '.aat-index-poster, .aat-ceremony-dossier-poster-frame, .aat-filmography-poster-wrap, .aat-winner-circle-media, .aat-major-race-media, .aat-hub-spotlight-media, .aat-category-hero-poster, .aat-era-chapter-media, .aat-related-review-media, .aat-entity-poster-wrap, .aat-history-media, .aat-entity-status-media, .aat-lunara-review-poster';
 const records = ['aat-hub-card', 'aat-ceremony-ballot-row', 'aat-major-race-card', 'aat-major-race-nominee-primary', 'aat-major-race-briefing-card', 'aat-winner-circle-card', 'aat-best-picture-card', 'aat-filmography-card', 'aat-related-review-card', 'aat-category-ceremony-row', 'aat-category-history-winner', 'aat-nominee-trail-item', 'aat-decade-pill', 'aat-timeline-card', 'aat-history-item', 'aat-crossroad-pill', 'aat-editorial-ref-card', 'aat-motion-spoke', 'lle-row', 'lle-group'];
 const countInOutput = (html, cls) => (html.match(new RegExp(`class="(?:[^"]*\\s)?${cls}(?:\\s[^"]*)?"`, 'g')) || []).length;
 const expectedRecords = html => Object.fromEntries(records.map(cls => [cls, countInOutput(html, cls)]));
 const placeholder = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600"><rect width="400" height="600" fill="#142a3d"/><path d="M0 400L400 140V600H0Z" fill="#29465a"/></svg>';
-const wrap = page => `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${base}${variables}${css}</style></head><body class="aat-shell-page${page.route === 'explorer' ? ' aat-shell-explorer' : ''}">${page.html}</body></html>`;
+const wrap = page => `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${base}${variables}${css}${themeContract}</style></head><body class="aat-shell-page${page.route === 'explorer' ? ' aat-shell-explorer' : ''}">${page.html}</body></html>`;
 
 /* Runs inside the page. Returns [check, detail] pairs for everything that misses the contract. */
-function measure({ controls, reading, metadata, surfaces, records }) {
+function measure({ controls, reading, metadata, surfaces, records, frames }) {
   const bad = [];
+  // The width a sizes value resolves to in this viewport, or null when it cannot be resolved.
+  const resolveSizes = sizes => {
+    const probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;left:-9999px;top:0;height:1px;visibility:hidden';
+    document.body.appendChild(probe);
+    let found = null;
+    const entries = String(sizes).split(/,(?![^(]*\))/).map(e => e.trim()).filter(Boolean);
+    for (const entry of entries) {
+      if (entry === 'auto') continue;
+      const m = entry.match(/^\((.+)\)\s+(.+)$/);
+      const length = m ? m[2] : entry;
+      if (m && !matchMedia('(' + m[1] + ')').matches) continue;
+      probe.style.width = length;
+      const w = probe.getBoundingClientRect().width;
+      if (w > 0) { found = w; break; }
+    }
+    probe.remove();
+    return found;
+  };
+  // The width a URL-only picture asks the CDN or TMDB for, or null when the URL carries none.
+  const urlWidth = src => {
+    const m = String(src).match(/[?&](?:w|resize|fit)=(\d+)/) || String(src).match(/\/t\/p\/w(\d+)\//);
+    return m ? parseInt(m[1], 10) : null;
+  };
   const label = el => {
     const classes = typeof el.className === 'string' ? el.className : (el.getAttribute('class') || '');
     return `${el.tagName.toLowerCase()}${classes ? '.' + classes.trim().split(/\s+/).join('.') : ''} "${(el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 48)}"`;
@@ -84,6 +119,36 @@ function measure({ controls, reading, metadata, surfaces, records }) {
     if (style.animationName !== 'none' && style.animationDuration.split(',').some(duration => parseFloat(duration) > 0)) bad.push(['animation', `${label(el)} runs ${style.animationName} for ${style.animationDuration}`]);
     if (style.opacity === '0' && (el.textContent || '').trim() !== '') bad.push(['staged entrance', `${label(el)} is opacity 0 with text inside`]);
   }
+  for (const img of document.querySelectorAll('img')) {
+    const frame = img.closest(frames);
+    if (!frame || !visible(img)) continue;
+    const painted = img.getBoundingClientRect().width;
+    const sizes = img.getAttribute('sizes') || '';
+    const srcset = img.getAttribute('srcset') || '';
+    if (img.loading === 'eager' && /^\s*auto/.test(sizes)) bad.push(['eager picture resolves to the viewport', `${label(img)} is eager with sizes "${sizes}"`]);
+    if (srcset) {
+      const resolved = resolveSizes(sizes);
+      if (resolved === null) bad.push(['picture sizes', `${label(img)} sizes "${sizes}" does not resolve in a ${innerWidth}px viewport`]);
+      // A grid's cards vary (the major race paints 126-180px on one row), so a sizes value may name the widest frame of its kind, up to half again the frame it paints in;
+      // this fixture's grids sit a few pixels from the live ones, so a tenth under the frame is layout noise, not a blurred picture (candidates sit further apart than that).
+      else if (resolved < painted * 0.9 || resolved > Math.max(painted * 1.5, painted + 24)) bad.push(['picture sizes', `${label(img)} says ${resolved.toFixed(0)}px but paints ${painted.toFixed(0)}px wide in ${label(frame)}`]);
+    } else {
+      const asked = urlWidth(img.currentSrc || img.src);
+      if (asked === null) bad.push(['picture candidates', `${label(img)} has no srcset and its src names no width: ${(img.getAttribute('src') || '').slice(0, 80)}`]);
+      // A URL-only picture is asked for at twice its frame; TMDB only has 185, 342, 500 and 780px steps, so the step at or above twice the frame passes.
+      else {
+        const src = img.currentSrc || img.src;
+        const allowed = /\/t\/p\/w\d+\//.test(src) ? ([185, 342, 500, 780].find(step => step >= painted * 2) || 780) : Math.max(painted * 2.5, painted * 2 + 100);
+        if (asked > allowed) bad.push(['picture candidates', `${label(img)} has no srcset and asks for ${asked}px for a ${painted.toFixed(0)}px frame`]);
+      }
+    }
+  }
+  for (const image of document.querySelectorAll('svg image[href]')) {
+    const asked = urlWidth(image.getAttribute('href'));
+    const painted = image.getBoundingClientRect().width;
+    if (asked === null || asked > Math.max(400, painted * 2.5)) bad.push(['picture candidates', `svg image asks for ${asked === null ? 'an unsized file' : asked + 'px'} for a ${painted.toFixed(0)}px disc`]);
+  }
+  for (const el of document.querySelectorAll('[style*="background-image"]')) bad.push(['inline background', `${label(el)} paints an inline background-image, which downloads before the stylesheet can hide it`]);
   for (const [cls, expected] of Object.entries(records)) {
     const all = [...document.querySelectorAll('.' + cls)];
     const present = all.filter(el => el.closest('details') || (el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden')).length;
@@ -136,8 +201,8 @@ function measure({ controls, reading, metadata, surfaces, records }) {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce', javaScriptEnabled: false });
       for (const page of pages) {
         const tab = await open(context, page);
-        const bad = await tab.evaluate(measure, { controls, reading, metadata, surfaces, records: expectedRecords(page.html) });
-        const groups = ['overflow', 'h1 fit', 'touch target', 'reading copy', 'metadata', 'ornament', 'hidden surface', 'animation', 'staged entrance', 'record completeness', 'centered identity', 'balanced gallery row', 'centered no-script action'];
+        const bad = await tab.evaluate(measure, { controls, reading, metadata, surfaces, records: expectedRecords(page.html), frames });
+        const groups = ['overflow', 'h1 fit', 'touch target', 'reading copy', 'metadata', 'ornament', 'hidden surface', 'animation', 'staged entrance', 'record completeness', 'centered identity', 'balanced gallery row', 'centered no-script action', 'eager picture resolves to the viewport', 'picture sizes', 'picture candidates', 'inline background'];
         for (const group of groups) {
           const misses = bad.filter(([name]) => name === group);
           check(page.name, width, group, misses.length === 0, misses.map(([, detail]) => detail));

@@ -95,7 +95,7 @@ foreach (array(
     '_aat_person_portrait_source',
     '_aat_tmdb_profile_path',
     '_aat_person_portrait_verified',
-    'delete_transient',
+    'retire_person_portrait_caches',
 ) as $needle) {
     $assert(strpos($import_method, $needle) !== false, "Import method should use verified person-profile media metadata: {$needle}");
 }

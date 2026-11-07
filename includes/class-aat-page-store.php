@@ -45,7 +45,7 @@ if (!defined('ABSPATH')) {
 class AAT_Page_Store {
     const TABLE = 'aat_page_store';
     const MAX_AGE = 43200;          // 12h: bounds staleness for review links, portraits and posters.
-    const HTTP_MAX_AGE = 900;       // What Batcache and the edge keep a served page for.
+    const HTTP_MAX_AGE = 300;       // What Batcache and the edge keep a served page for (2.8.28: the theme's 300, so a deploy reaches the edge within five minutes).
     const MIN_BYTES = 10000;
     const WARM_COOKIE = 'wp_aat_store_warm';
     const WARM_BUDGET = 25;         // Seconds of rendering per warm run.
